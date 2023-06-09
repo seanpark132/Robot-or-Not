@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 255, 231, 155;
+  --background-start-rgb: 64, 18, 139;
+  --background-end-rgb: 147, 54, 180;  
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+textarea { 
+  resize: none;
+}
+
+h2, label {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+@media (min-width: 600px) {
+  h2, label {
+    font-size: 1.5rem;
+  }
+
+  p, textarea {
+    font-size: 1.25rem;
+  }
+}
