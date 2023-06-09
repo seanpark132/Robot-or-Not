@@ -12,7 +12,7 @@ export default function UserResponse(props: Props) {
         if (props.userResponse.length < 1) {
             alert("Please enter a response with at least 1 word");
             return;
-        };
+        };        
         props.setGamePeriod("select")
         return;
     };

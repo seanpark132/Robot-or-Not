@@ -47,8 +47,10 @@ export default function Select(props: Props) {
     };
     
     return(
-        <div className="flex flex-col">            
-            <h2 className='font-normal'>{props.question}</h2>
+        <div className="flex flex-col">           
+            <h2>Question:</h2>                 
+            <p>{props.question}</p>
+            <h2 className='mt-8' >Click the response you think is made by a human:</h2>
             <button 
                 className={btnOption1} 
                 onClick={() => {
@@ -72,7 +74,7 @@ export default function Select(props: Props) {
                     props.setSelectedResponse(response2)    
                 }}
             >        
-                <div className='bg-cyan-800 px-6 py-4 border-r-2 rounded-l-2xl flex items-center'>
+                <div className='bg-blue-800 px-6 py-4 border-r-2 rounded-l-2xl flex items-center'>
                     <h2>B</h2>   
                 </div>       
                 <div className='flex items-center'>

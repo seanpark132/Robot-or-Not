@@ -7,9 +7,13 @@ import Incorrect from "./Incorrect";
 import { useState } from "react";
 
 interface Props {
+    questionArray: string[];
+    responseArray: string[];
     question: string;
     aiResponse: string;
     userResponse: string;
+    setQuestion: (value: string) => void;
+    setAiResponse: (value: string) => void;
     setUserResponse: (value: string) => void;
 };
 
@@ -20,7 +24,7 @@ export default function Main(props: Props) {
     const [selectedResponse, setSelectedResponse] = useState("");
 
     return (
-        <div>            
+        <div>                            
             {gamePeriod === "userResponse" && 
             <UserResponse                 
                 question={props.question}
@@ -43,13 +47,29 @@ export default function Main(props: Props) {
             }
             {gamePeriod === "correct" &&
             <Correct 
+                questionArray={props.questionArray}
+                responseArray={props.responseArray}
+                score={score}
+                roundNumber={roundNumber}
                 selectedResponse={selectedResponse}
+                setRoundNumber={setRoundNumber}
+                setQuestion={props.setQuestion}
+                setAiResponse={props.setAiResponse}
+                setUserResponse={props.setUserResponse}
                 setGamePeriod={setGamePeriod}
             />
             }
             {gamePeriod === "incorrect" &&
             <Incorrect 
+                questionArray={props.questionArray}
+                responseArray={props.responseArray}
+                score={score}
+                roundNumber={roundNumber}
                 selectedResponse={selectedResponse}
+                setRoundNumber={setRoundNumber}
+                setQuestion={props.setQuestion}
+                setAiResponse={props.setAiResponse}
+                setUserResponse={props.setUserResponse}
                 setGamePeriod={setGamePeriod}
             />
             }        

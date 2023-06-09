@@ -7,6 +7,7 @@ import Main from './Main';
 export default function Game() {
     const [isLoading, setIsLoading] = useState(true);      
     const [questionArray, setQuestionArray] = useState<string[]>([]);
+    const [responseArray, setResponseArray] = useState<string[]>([]);
     const [question, setQuestion] = useState("");
     const [aiResponse, setAiResponse] = useState("");
     const [userResponse, setUserResponse] = useState("");
@@ -39,24 +40,38 @@ export default function Game() {
     };
   
     useEffect(() => {
-        generateQuestions().then(questions => {
+        const generate = async () => {
+            const questions = await generateQuestions();
+
             setQuestionArray(questions);
             setQuestion(questions[0]);  
            
-            generateAIResponse(questions[0]).then(res => {
-                setAiResponse(res);
-                setIsLoading(false); 
-            })
-        });   
-    }, []);    
+            const firstResponse = await generateAIResponse(questions[0])
+            setAiResponse(firstResponse);
+            setIsLoading(false); 
+
+            const questionsExceptFirst = questions.slice(1);
+
+            for (const question of questionsExceptFirst) {
+                const res = await generateAIResponse(question);
+                setResponseArray(prev => [...prev, res]);
+            };
+        };
+                 
+        generate();
+    }, []);       
  
     return (
         <section>         
             {isLoading ? <Loading />: 
              <Main
+                questionArray={questionArray}
+                responseArray={responseArray}
                 question={question}
                 aiResponse={aiResponse}
                 userResponse={userResponse}
+                setQuestion={setQuestion}
+                setAiResponse={setAiResponse}                
                 setUserResponse={setUserResponse}
              />
             }                  
