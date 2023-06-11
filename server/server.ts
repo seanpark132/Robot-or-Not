@@ -1,6 +1,4 @@
-import {Server} from 'socket.io';
-
-declare var require: any;
+import { Server } from 'socket.io';
 
 const express = require('express');
 const http = require('http');

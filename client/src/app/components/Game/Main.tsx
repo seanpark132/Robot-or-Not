@@ -5,6 +5,7 @@ import Select from "./Select";
 import Correct from "./Correct";
 import Incorrect from "./Incorrect";
 import { useState } from "react";
+import EndScreen from "./EndScreen";
 
 interface Props {
     questionArray: string[];
@@ -24,7 +25,7 @@ export default function Main(props: Props) {
     const [selectedResponse, setSelectedResponse] = useState("");
 
     return (
-        <div>                            
+        <div>              
             {gamePeriod === "userResponse" && 
             <UserResponse                 
                 question={props.question}
@@ -73,6 +74,9 @@ export default function Main(props: Props) {
                 setGamePeriod={setGamePeriod}
             />
             }        
+            {gamePeriod === "endScreen" &&
+            <EndScreen />
+            }
         </div>
     );
 };

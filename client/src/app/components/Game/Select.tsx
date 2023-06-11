@@ -62,8 +62,8 @@ export default function Select(props: Props) {
                 <div className='bg-red-800 px-6 py-4 border-r-2 rounded-l-2xl flex items-center'>
                     <h2>A</h2>   
                 </div>       
-                <div className='flex items-center'>
-                    <p className='p-4'>{response1}</p>   
+                <div className='flex items-center text-left'>
+                    <p className='p-4 break-all'>{response1}</p>   
                 </div>                                          
             </button>
             <button 
@@ -77,8 +77,8 @@ export default function Select(props: Props) {
                 <div className='bg-blue-800 px-6 py-4 border-r-2 rounded-l-2xl flex items-center'>
                     <h2>B</h2>   
                 </div>       
-                <div className='flex items-center'>
-                    <p className='p-4'>{response2}</p>   
+                <div className='flex items-center text-left'>
+                    <p className='p-4 break-all'>{response2}</p>   
                 </div>                               
             </button>
             <button className='btn-submit' onClick={() => handleSubmit()}>
