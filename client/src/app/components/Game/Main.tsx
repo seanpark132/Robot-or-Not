@@ -1,11 +1,11 @@
 "use client"
 
-import UserResponse from "./UserResponse";
+import Write from "./Write";
 import Select from "./Select";
 import Correct from "./Correct";
 import Incorrect from "./Incorrect";
-import { useState } from "react";
 import EndScreen from "./EndScreen";
+import { useState } from "react";
 
 interface Props {
     questionArray: string[];
@@ -27,7 +27,7 @@ export default function Main(props: Props) {
     return (
         <div>              
             {gamePeriod === "userResponse" && 
-            <UserResponse                 
+            <Write               
                 question={props.question}
                 aiResponse={props.aiResponse}
                 userResponse={props.userResponse}

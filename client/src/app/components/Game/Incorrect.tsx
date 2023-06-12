@@ -12,18 +12,6 @@ interface Props {
 };
 
 export default function Incorrect(props: Props) {
-    function handleNextRound() {        
-        if (props.roundNumber === props.questionArray.length) {
-            props.setGamePeriod("endScreen");
-            return;
-        };
-        props.setQuestion(props.questionArray[props.roundNumber]);    
-        props.setAiResponse(props.responseArray[props.roundNumber - 1]);
-        props.setUserResponse("");
-        props.setRoundNumber(prev => prev + 1);
-        props.setGamePeriod("userResponse");
-        return;
-    };
 
     return (
         <div className="flex flex-col items-center text-center">
@@ -36,4 +24,17 @@ export default function Incorrect(props: Props) {
             </button>                      
         </div>
     );
+
+    function handleNextRound() {        
+        if (props.roundNumber === props.questionArray.length) {
+            props.setGamePeriod("endScreen");
+            return;
+        };
+        props.setQuestion(props.questionArray[props.roundNumber]);    
+        props.setAiResponse(props.responseArray[props.roundNumber - 1]);
+        props.setUserResponse("");
+        props.setRoundNumber(prev => prev + 1);
+        props.setGamePeriod("userResponse");
+        return;
+    };
 };

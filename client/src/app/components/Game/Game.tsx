@@ -12,33 +12,6 @@ export default function Game() {
     const [aiResponse, setAiResponse] = useState("");
     const [userResponse, setUserResponse] = useState("");
 
-    function generateQuestions() { 
-        return (
-            fetch('../api/generateQuestion', {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            })
-            .then(res => res.json())
-            .then(json => json.response)
-        );  
-    };
-
-    function generateAIResponse(question: string) {
-        return (
-            fetch('../api/generateResponse', {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ prompt: question })
-            })
-            .then(res => res.json())
-            .then(json => json.response)
-        )
-    };
-  
     useEffect(() => {
         const generate = async () => {
             const questions = await generateQuestions();
@@ -77,4 +50,31 @@ export default function Game() {
             }                  
         </section>       
     );
+    
+    function generateQuestions() { 
+        return (
+            fetch('../api/generateQuestion', {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(res => res.json())
+            .then(json => json.response)
+        );  
+    };
+
+    function generateAIResponse(question: string) {
+        return (
+            fetch('../api/generateResponse', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ prompt: question })
+            })
+            .then(res => res.json())
+            .then(json => json.response)
+        )
+    };
 };              

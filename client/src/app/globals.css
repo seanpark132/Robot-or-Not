@@ -27,12 +27,12 @@ h2, label {
   font-weight: 600;
 }
 
-@media (min-width: 600px) {
+@media (min-width: 40rem) {
   h2, label {
     font-size: 1.5rem;
   }
 
-  p, textarea {
+  p, textarea, input, button {
     font-size: 1.25rem;
   }
 }

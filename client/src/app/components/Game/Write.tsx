@@ -6,17 +6,8 @@ interface Props {
     setGamePeriod: (value: string) => void;
 };
 
-export default function UserResponse(props: Props) {
+export default function Write(props: Props) {
     
-    function handleSubmit() {
-        if (props.userResponse.length < 1) {
-            alert("Please enter a response with at least 1 word");
-            return;
-        };        
-        props.setGamePeriod("select")
-        return;
-    };
-
     return(
         <div className="flex flex-col">
             <h2>Question:</h2>
@@ -39,4 +30,13 @@ export default function UserResponse(props: Props) {
             </button>
         </div>
     );
+
+    function handleSubmit() {
+        if (props.userResponse.length < 1) {
+            alert("Please enter a response with at least 1 word");
+            return;
+        };        
+        props.setGamePeriod("select")
+        return;
+    };
 };

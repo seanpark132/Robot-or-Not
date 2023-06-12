@@ -26,26 +26,7 @@ export default function Select(props: Props) {
         setResponse1(twoResponses[index1]);
         setResponse2(twoResponses[index2]);
     }, []);
-
-    function handleSubmit() {
-        if (props.selectedResponse.length === 0) {
-            alert("Please select a response before submitting.");
-            return;
-        };
-
-        if (props.selectedResponse === props.aiResponse) {
-            props.setGamePeriod("incorrect");
-            
-            return;
-        } else {
-            props.setScore(prev => prev + 1);
-            props.setGamePeriod("correct");         
-            return;
-        };
-        // Need to add logic for next question
-        
-    };
-    
+   
     return(
         <div className="flex flex-col">           
             <h2>Question:</h2>                 
@@ -86,4 +67,23 @@ export default function Select(props: Props) {
             </button>            
         </div>
     );
+
+    function handleSubmit() {
+        if (props.selectedResponse.length === 0) {
+            alert("Please select a response before submitting.");
+            return;
+        };
+
+        if (props.selectedResponse === props.aiResponse) {
+            props.setGamePeriod("incorrect");
+            
+            return;
+        } else {
+            props.setScore(prev => prev + 1);
+            props.setGamePeriod("correct");         
+            return;
+        };
+        // Need to add logic for next question
+        
+    };
 };

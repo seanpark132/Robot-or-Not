@@ -1,3 +1,24 @@
+.lobby-input {
+    background-color: #F1D4E5;
+    color: #0C134F;
+    width: clamp(10rem, 7rem + 30vw, 44rem);
+    border: 1px solid #0C134F; 
+    padding: 0.25rem 0.5rem;
+}
+
+.lobby-input:focus {
+    outline: none;
+    border: 1px solid #49d4f7;
+}
+
+.lobby-highlight {
+    font-weight: 800;
+    color: #0C134F;
+    background-color: #DD58D6;
+    padding: 0 0.25rem;
+
+}
+
 .input-human-response {
     border: transparent;
     border-radius: 0.25rem;
@@ -17,7 +38,7 @@
     padding: 0.5rem 1rem;
     border: transparent;
     border-radius: 0.5rem;
-    align-self: center;
+    align-self: center;    
 }
 
 .btn-submit:hover {
@@ -45,12 +66,12 @@
 }
 
 
-@media (min-width: 600px) {
+@media (min-width: 40rem) {
     .input-human-response {
         height: 6.375rem;
     }
 
-    .btn-response {
+    .btn-response, .btn-submit {
         font-size: 1.75rem;
     }
 
