@@ -1,7 +1,7 @@
 .lobby-input {
     background-color: #F1D4E5;
     color: #0C134F;
-    width: clamp(10rem, 7rem + 30vw, 44rem);
+    width: clamp(10rem, 7rem + 35vw, 48rem);
     border: 1px solid #0C134F; 
     padding: 0.25rem 0.5rem;
 }
@@ -12,11 +12,9 @@
 }
 
 .lobby-highlight {
-    font-weight: 800;
+    font-weight: 900;
     color: #0C134F;
-    background-color: #DD58D6;
-    padding: 0 0.25rem;
-
+    padding: 0 0.5rem;
 }
 
 .input-human-response {

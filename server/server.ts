@@ -10,3 +10,15 @@ const io = new Server(server, {
         origin: '*',
     },    
 });
+
+io.on("connection", (socket) => {
+
+    socket.on("join-room", (gameId:string) => {
+        console.log(`Socket ${socket.id} Joined room ${gameId}`)
+        socket.join(gameId);         
+    }); 
+});
+
+server.listen(3001, () => {
+    console.log('Server listening on port 3001');
+});
