@@ -4,22 +4,19 @@ import { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useSearchParams } from 'next/navigation'
 
-interface FormData {
-    nickname: string,
+interface Settings {    
     numRounds: number,
     timerSeconds: number
 };
 
 interface Props {
-    formData: FormData;
-    setFormData: (value: ((value: FormData) => FormData)) => void;
+    settings: Settings;
+    setSettings: (value: ((value: Settings) => Settings)) => void;
     setGameActive: (value: boolean) => void;
 };
 
 export default function Lobby(props: Props) {
     const [gameId, setGameId] = useState("");
-    const searchParams = useSearchParams();   
-    const sharedGameId = searchParams.get("id");
     
     useEffect(() => {
         const uid = uuidv4();
@@ -29,7 +26,7 @@ export default function Lobby(props: Props) {
     const RoundsButton = (rounds :number) => {
         return(      
         <button 
-            className={props.formData.numRounds === rounds ? 'lobby-highlight': 'px-2'} 
+            className={props.settings.numRounds === rounds ? 'lobby-highlight': 'px-2'} 
             type='button' 
             onClick={() => handleSettingButton('numRounds', rounds)}
             >
@@ -41,7 +38,7 @@ export default function Lobby(props: Props) {
     const TimerButton = (seconds: number) => {
         return(
             <button 
-                className={props.formData.timerSeconds === seconds ? 'lobby-highlight': 'px-2'} 
+                className={props.settings.timerSeconds === seconds ? 'lobby-highlight': 'px-2'} 
                 type='button' 
                 onClick={() => handleSettingButton('timerSeconds', seconds)}
             >
@@ -87,7 +84,7 @@ export default function Lobby(props: Props) {
     );
  
     function handleSettingButton(setting:string, n: number) {
-        props.setFormData(prev => {
+        props.setSettings(prev => {
             return {
                 ...prev,
                 [setting]: n

@@ -11,12 +11,23 @@ const io = new Server(server, {
     },    
 });
 
-io.on("connection", (socket) => {
+io.on("connection", (socket) => {    
 
-    socket.on("join-room", (gameId:string) => {
-        console.log(`Socket ${socket.id} Joined room ${gameId}`)
-        socket.join(gameId);         
+    socket.on("join-room", async (gameId:string) => {       
+        socket.join(gameId);            
     }); 
+
+    socket.on("data-to-room", (data: any, purpose: string, room: string) => {   
+        
+        if (purpose === "new-name") {
+            socket.to(room).emit("new-name", data);
+        };
+
+        if (purpose === "name-array") {
+            socket.to(room).emit("name-array", data);
+        };
+
+    })
 });
 
 server.listen(3001, () => {

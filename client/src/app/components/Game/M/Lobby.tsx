@@ -2,136 +2,108 @@
 
 import { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { useSearchParams } from 'next/navigation'
 import { io } from "socket.io-client";
+import LobbySettings from './LobbySettings';
+import { animals } from '../../../../../lib/utils';
 
 const socket = io("http://localhost:3001")
 
-interface FormData {
-    nickname: string,
+interface Settings {    
     numRounds: number,
     timerSeconds: number
 };
 
 interface Props {
-    formData: FormData;
-    setFormData: (value: ((value: FormData) => FormData)) => void;
-    setGameActive: (value: boolean) => void;
+    setName: (value: string) => void;
+    settings: Settings;
+    setSettings: (value: ((value: Settings) => Settings)) => void;
+    setGameActive: (value: boolean) => void;    
+    sharedGameId: string | null
 };
 
 export default function Lobby(props: Props) {
     const [gameId, setGameId] = useState("");
-    const searchParams = useSearchParams();   
-    const sharedGameId = searchParams.get("id");
+    const [inputName, setInputName] = useState("");
+    const [isLobbyMaster, setIsLobbyMaster] = useState(true);   
+    const [nameArray, setNameArray] = useState<string[]>([]);   
     
-    useEffect(() => {
-        if (sharedGameId) {
-            setGameId(sharedGameId);   
-            socket.emit("join-room", sharedGameId)     
+    useEffect(() => {        
+        const randomNum = (Math.floor(Math.random() * 100) + 1).toString();
+        const randomIndex = (Math.floor(Math.random() * animals.length));
+        const randomAnimal = animals[randomIndex];
+        const defaultName = randomAnimal + randomNum;
+        setInputName(defaultName);  
+
+        if (props.sharedGameId) {     
+            setGameId(props.sharedGameId);  
+            setIsLobbyMaster(false);
+
+            socket.emit("join-room", props.sharedGameId);             
+            socket.emit("data-to-room", defaultName, "new-name", props.sharedGameId);                          
         } else {
-            const uid = uuidv4();
-            setGameId(uid);
-            socket.emit("join-room", uid);
+            setNameArray(prev => [...prev, defaultName]);
+            const uid = uuidv4();            
+            setGameId(uid);      
+                 
+            socket.emit("join-room", uid);  
+                
+            socket.on("new-name", newName => {                
+                setNameArray(prev => {
+                    const newNameArray = [...prev, newName]
+                    socket.emit("data-to-room", newNameArray, "name-array", uid )
+                    return newNameArray
+                });                                    
+            });                                 
         };
 
-    }, []);
-    
-    const RoundsButton = (rounds :number) => {
-        return(
-            <button 
-                className={props.formData.numRounds === rounds ? 'lobby-highlight': 'px-1'} 
-                type='button' 
-                onClick={() => handleSettingButton('numRounds', rounds)}
-            >
-            {rounds}
-            </button>
-        )
-    };
+        socket.on("name-array", updatedNameArray => {            
+            setNameArray(updatedNameArray);            
+        });   
 
-    const TimerButton = (seconds: number) => {
-        return(
-            <button 
-                className={props.formData.timerSeconds === seconds ? 'lobby-highlight': 'px-1'} 
-                type='button' 
-                onClick={() => handleSettingButton('timerSeconds', seconds)}
-            >
-            {`${seconds}s`}
-            </button>
-        )
-    };
+    }, []);
 
     return(
-        <div>   
-            <div>
-                {gameId}
-            </div>
-            <form className='flex flex-col'>           
+        <div className='flex flex-col items-center'>    
+            <div className='lobby-nickname-container'>
+                <h2>Joined Users:</h2>
+                <div className='flex flex-wrap'>
+                    {nameArray.map((nickname, index) => 
+                        <h2 key={index} className='py-2 px-8'>{nickname}</h2>    
+                    )}   
+                </div>              
+            </div>                
+            <div className='flex'>
+                <section>                                     
+                <label className="text-lg" htmlFor='link'>Share Link:</label>
+                <div className='flex mb-2'>
+                    <input className="lobby-input" type="text" value={`http://localhost:3000/game-m?id=${gameId}`} name='link' readOnly/>                        
+                    <button className="bg-dark-blue p-2" type="button" onClick={() => handleCopy()}>Copy</button>
+                </div>                                 
+                <label className="text-lg" htmlFor='nickname'>Nickname:</label>
                 <div className='flex'>
-                    <section>                                     
-                        <label className="text-lg" htmlFor='link'>Share Link:</label>
-                        <div className='flex mb-2'>
-                            <input className="lobby-input" type="text" value={`http://localhost:3000/game?id=${gameId}`} name='link' readOnly/>                        
-                            <button className="bg-dark-blue p-2" type="button" onClick={() => handleCopy()}>Copy</button>
-                        </div>                                 
-                        <label className="text-lg" htmlFor='nickname'>Nickname:</label>
-                        <div className='flex'>
-                            <input 
-                                className="lobby-input" 
-                                type="text" 
-                                value={props.formData.nickname}
-                                name="nickname"
-                                onChange={(e) => handleChange(e)}
-                            />                    
-                        </div>
-                        <h2 className='mt-6 underline'>Lobby Settings</h2>
-                        <div className='w-full'>
-                            <div className='flex mt-2 w-full'>
-                                <p className='w-1/4'># of rounds:</p>
-                                <div className='flex w-2/3 justify-around'>
-                                    {RoundsButton(5)}
-                                    {RoundsButton(10)}
-                                    {RoundsButton(15)}
-                                    {RoundsButton(20)}                                    
-                                </div>      
-                            </div>      
-                            <div className='flex mt-2'>
-                                <p className='w-1/4'>Round Timer:</p>
-                                <div className='flex w-2/3 justify-around'>
-                                    {TimerButton(30)}
-                                    {TimerButton(45)}
-                                    {TimerButton(60)}
-                                    {TimerButton(90)}
-                                </div>
-                            </div>    
-                        </div>         
-                    </section>
-                </div>
-                <button className="btn-submit" type="button" onClick={() => props.setGameActive(true)}>Start Game</button>
-            </form>
+                    <input 
+                        className="lobby-input" 
+                        type="text"                                                 
+                        value={inputName}                        
+                        name="nickname"
+                        onChange={(e) => setInputName(e.target.value)}
+                    />        
+                    <button className="bg-dark-blue py-2 px-4-5" type="button" onClick={() => handleNameButton()}>OK</button>            
+                </div>                        
+                {isLobbyMaster && <LobbySettings settings={props.settings} setSettings={props.setSettings} />}
+                </section>
+            </div>
+            {isLobbyMaster ? <button className="btn-submit" type="button" onClick={() => props.setGameActive(true)}>Start Game</button>: 
+            <h2 className='mt-6 self-center'>Waiting for lobby maker to start...</h2>}            
         </div>        
     );
  
     function handleCopy() {
-        navigator.clipboard.writeText(`http://localhost:3000/game?${gameId}`);
+        navigator.clipboard.writeText(`http://localhost:3000/game-m?id=${gameId}`);
         alert("URL copied to clipboard");
     };
 
-    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-        const { name, value } = e.target;
-        props.setFormData(prev  => {
-            return {
-                ...prev,
-                [name]: value
-            };
-        });
-    };
+    function handleNameButton() {    
+    };    
 
-    function handleSettingButton(setting:string, n: number) {
-        props.setFormData(prev => {
-            return {
-                ...prev,
-                [setting]: n
-            }
-        });
-    };
 };

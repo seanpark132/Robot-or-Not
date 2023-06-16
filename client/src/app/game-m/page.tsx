@@ -1,28 +1,46 @@
 "use client"
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation'
 import Lobby from '@/app/components/Game/M/Lobby'
 import Game from '@/app/components/Game/M/Game';
 import '../game.css'
 
-interface FormData {
-    nickname: string,
+interface Settings {    
     numRounds: number,
     timerSeconds: number
 };
 
 export default function GameMPage() {
     const [gameActive, setGameActive] = useState(false);   
-    const [formData, setFormData] = useState<FormData>({
-        nickname: "",
+    const [name, setName] = useState("");
+    const [settings, setSettings] = useState<Settings>({        
         numRounds: 5,       
         timerSeconds: 30
     });  
+    const [isParamsChecked, setIsParamsChecked] = useState(false);
+
+    const searchParams = useSearchParams();    
+    const sharedGameId = searchParams.get("id");
+
+    useEffect(() => {
+        if (searchParams) {
+            setIsParamsChecked(true);
+        };
+    },[searchParams]);
 
     return (
         <main className='flex min-h-screen flex-col items-center justify-center p-8'>           
-            {!gameActive ? <Lobby formData={formData} setFormData={setFormData} setGameActive={setGameActive}/>
-            :<Game />}          
+            {gameActive ? <Game />:          
+                isParamsChecked &&      
+                <Lobby 
+                    setName={setName}
+                    settings={settings} 
+                    setSettings={setSettings} 
+                    setGameActive={setGameActive}   
+                    sharedGameId={sharedGameId}                 
+                />
+            }          
         </main>
     )
 }   

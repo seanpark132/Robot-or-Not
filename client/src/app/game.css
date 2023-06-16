@@ -1,3 +1,17 @@
+.px-4-5 {
+    padding-left: 1.125rem;
+    padding-right: 1.125rem;
+}
+
+.lobby-nickname-container {
+    padding: 1.5rem;
+    border: 1px solid;
+    border-radius: 1.5rem;
+    margin-bottom: 1rem;
+    width: 100%;
+    max-width: 52rem;
+}
+
 .lobby-input {
     background-color: #F1D4E5;
     color: #0C134F;
@@ -13,7 +27,7 @@
 
 .lobby-highlight {
     font-weight: 900;
-    color: #0C134F;
+    color: #00ff37;
     padding: 0 0.5rem;
 }
 
@@ -62,7 +76,6 @@
     border: 2px solid;
     border-radius: 1rem;  
 }
-
 
 @media (min-width: 40rem) {
     .input-human-response {
