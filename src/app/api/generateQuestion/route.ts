@@ -27,7 +27,7 @@ export async function GET(request: Request) {
     
   } catch(error) {
     console.error("An error has occured when generating questions (OpenAI API)");
-    return;
+    return new NextResponse('InternalError', { status: 500 });
   };  
 };
 

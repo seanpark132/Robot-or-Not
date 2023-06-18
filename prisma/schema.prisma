@@ -1,6 +1,6 @@
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
 
@@ -8,9 +8,36 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Star {
-  id              Int       @default(autoincrement()) @id
-  createdAt       DateTime  @default(now())
-  name            String    @db.VarChar(255)
-  constellation   String    @db.VarChar(255)
+model Game {
+  id           String     @id
+  rounds       Int
+  timer        Boolean
+  timerSeconds Int
+  users        User[]
+  data         GameData[]
+}
+
+model User {
+  id       String     @id
+  nickname String
+  score    Int
+  gameId   String
+  game     Game       @relation(fields: [gameId], references: [id])
+  data     GameData[]
+
+  @@index([gameId])
+}
+
+model GameData {
+  id           Int     @id @default(autoincrement())
+  question     String
+  aiResponse   String
+  userResponse String?
+  gameId       String
+  userId       String
+  game         Game    @relation(fields: [gameId], references: [id])
+  user         User    @relation(fields: [userId], references: [id])
+
+  @@index([gameId])
+  @@index([userId])
 }

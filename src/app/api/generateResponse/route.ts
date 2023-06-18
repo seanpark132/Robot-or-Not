@@ -24,13 +24,13 @@ export async function POST(request: Request) {
             max_tokens: 200        
         });  
         const choices = responseCompletion.data.choices;
-        const response = choices[0].message?.content;    
+        const response = choices[0].message?.content;            
         const aiResponse = response?.replace(/"/g, '')   // Sometimes Chat Completion API wraps response in "" 
 
         return NextResponse.json({response: aiResponse});  
     } catch(error) {
         console.error("An error has occured when generating a response (OpenAI API)")
-        return;
+        return new NextResponse('InternalError', { status: 500 });
     }
 };
 

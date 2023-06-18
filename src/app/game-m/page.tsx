@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation'
 import Lobby from '@/app/components/Game/M/Lobby'
 import Game from '@/app/components/Game/M/Game';
 import '../game.css'
-
+ 
 interface Settings {    
     numRounds: number,
     timerSeconds: number
@@ -13,17 +13,16 @@ interface Settings {
 
 export default function GameMPage() {
     const [gameActive, setGameActive] = useState(false);   
-    const [name, setName] = useState("");
     const [settings, setSettings] = useState<Settings>({        
         numRounds: 5,       
-        timerSeconds: 30
+        timerSeconds: 30 
     });  
     const [isParamsChecked, setIsParamsChecked] = useState(false);
 
     const searchParams = useSearchParams();    
     const sharedGameId = searchParams.get("id");
 
-    useEffect(() => {
+   useEffect(() => {
         if (searchParams) {
             setIsParamsChecked(true);
         };
@@ -33,8 +32,7 @@ export default function GameMPage() {
         <main className='flex min-h-screen flex-col items-center justify-center p-8'>           
             {gameActive ? <Game />:          
                 isParamsChecked &&      
-                <Lobby 
-                    setName={setName}
+                <Lobby                     
                     settings={settings} 
                     setSettings={setSettings} 
                     setGameActive={setGameActive}   

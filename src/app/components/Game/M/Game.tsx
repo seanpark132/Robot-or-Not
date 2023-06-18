@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from 'react';
+import { generateAIResponse, generateQuestions } from '../../../../../lib/utils';
 import Loading from './Loading';
 import Main from './Main';
 
@@ -50,31 +51,4 @@ export default function Game() {
             }                  
         </section>       
     );
-    
-    function generateQuestions() { 
-        return (
-            fetch('../api/generateQuestion', {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            })
-            .then(res => res.json())
-            .then(json => json.response)
-        );  
-    };
-
-    function generateAIResponse(question: string) {
-        return (
-            fetch('../api/generateResponse', {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ prompt: question })
-            })
-            .then(res => res.json())
-            .then(json => json.response)
-        )
-    };
-};              
+};

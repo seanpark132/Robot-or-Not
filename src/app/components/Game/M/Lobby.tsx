@@ -3,15 +3,15 @@
 import { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import LobbySettings from './LobbySettings';
-import { animals } from '../../../../../lib/utils';
+import { addUser, animals, initGame, retrieveNames } from '../../../../../lib/utils';
+import { pusherClient } from '../../../../../lib/pusher';
 
 interface Settings {    
     numRounds: number,
     timerSeconds: number
 };
 
-interface Props {
-    setName: (value: string) => void;
+interface Props {    
     settings: Settings;
     setSettings: (value: ((value: Settings) => Settings)) => void;
     setGameActive: (value: boolean) => void;    
@@ -20,27 +20,34 @@ interface Props {
 
 export default function Lobby(props: Props) {
     const [gameId, setGameId] = useState("");
-    const [inputName, setInputName] = useState("");
-    const [isLobbyMaster, setIsLobbyMaster] = useState(true);   
+    const [inputName, setInputName] = useState("");    
     const [nameArray, setNameArray] = useState<string[]>([]);   
     
-    useEffect(() => {        
+    useEffect(() => {   
+        const dbFunctions = async (gameId: string, userId: string, name: string) => {
+            await initGame(gameId);
+            await addUser(gameId, userId, name);
+            const names = await retrieveNames(gameId);  
+            setNameArray(names);    
+            return;          
+        };
+        
         const randomNum = (Math.floor(Math.random() * 100) + 1).toString();
         const randomIndex = (Math.floor(Math.random() * animals.length));
         const randomAnimal = animals[randomIndex];
         const defaultName = randomAnimal + randomNum;
-        setInputName(defaultName);  
+        setInputName(defaultName);                               
+      
+        const uid = uuidv4();  
+        const TEMP_USER_ID = uuidv4();          
+        setGameId(uid);     
+        dbFunctions(uid, TEMP_USER_ID, defaultName);        
 
-        if (props.sharedGameId) {     
-            setGameId(props.sharedGameId);  
-            setIsLobbyMaster(false);
-                                   
-        } else {
-            setNameArray(prev => [...prev, defaultName]);
-            const uid = uuidv4();            
-            setGameId(uid);                              
-        };   
-
+        // const channel = pusherClient.subscribe(uid);
+        // channel.bind('message', (data: any) => {
+        //     setNameArray(data);
+        // })           
+        
     }, []);
 
     return(
@@ -71,11 +78,10 @@ export default function Lobby(props: Props) {
                     />        
                     <button className="bg-dark-blue py-2 px-4-5" type="button" onClick={() => handleNameButton()}>OK</button>            
                 </div>                        
-                {isLobbyMaster && <LobbySettings settings={props.settings} setSettings={props.setSettings} />}
+                <LobbySettings settings={props.settings} setSettings={props.setSettings} />
                 </section>
-            </div>
-            {isLobbyMaster ? <button className="btn-submit" type="button" onClick={() => props.setGameActive(true)}>Start Game</button>: 
-            <h2 className='mt-6 self-center'>Waiting for lobby maker to start...</h2>}            
+            </div>            
+            <button className="btn-submit" type="button" onClick={() => props.setGameActive(true)}>Start Game</button>            
         </div>        
     );
  
