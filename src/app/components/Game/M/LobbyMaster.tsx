@@ -1,9 +1,8 @@
 "use client"
 
 import { useState, useEffect } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import LobbySettings from './LobbySettings';
-import { addUser, animals, initGame, retrieveNames } from '../../../../../lib/utils';
+import { addUser, animals, initGame, retrieveNames, updateName } from '../../../../../lib/utils';
 import { pusherClient } from '../../../../../lib/pusher';
 
 interface Settings {    
@@ -11,15 +10,15 @@ interface Settings {
     timerSeconds: number
 };
 
-interface Props {    
+interface Props { 
+    gameId: string;   
+    userId: string;
     settings: Settings;
     setSettings: (value: ((value: Settings) => Settings)) => void;
-    setGameActive: (value: boolean) => void;    
-    sharedGameId: string | null
+    setGameActive: (value: boolean) => void;
 };
 
-export default function Lobby(props: Props) {
-    const [gameId, setGameId] = useState("");
+export default function LobbyMaster(props: Props) {   
     const [inputName, setInputName] = useState("");    
     const [nameArray, setNameArray] = useState<string[]>([]);   
     
@@ -27,31 +26,36 @@ export default function Lobby(props: Props) {
         const dbFunctions = async (gameId: string, userId: string, name: string) => {
             await initGame(gameId);
             await addUser(gameId, userId, name);
-            const names = await retrieveNames(gameId);  
-            setNameArray(names);    
-            return;          
+            await retrieveNames(gameId);                   
         };
         
         const randomNum = (Math.floor(Math.random() * 100) + 1).toString();
         const randomIndex = (Math.floor(Math.random() * animals.length));
         const randomAnimal = animals[randomIndex];
         const defaultName = randomAnimal + randomNum;
-        setInputName(defaultName);                               
+        setInputName(defaultName);          
       
-        const uid = uuidv4();  
-        const TEMP_USER_ID = uuidv4();          
-        setGameId(uid);     
-        dbFunctions(uid, TEMP_USER_ID, defaultName);        
+        dbFunctions(props.gameId, props.userId, defaultName); 
 
-        // const channel = pusherClient.subscribe(uid);
-        // channel.bind('message', (data: any) => {
-        //     setNameArray(data);
-        // })           
-        
+    }, []);
+
+    useEffect(() => {  
+        const channel = pusherClient.subscribe(props.gameId);
+        channel.bind("updateNames", (names: string[]) => {
+            setNameArray(names);
+        });
+
+        return () => {
+            pusherClient.unsubscribe(props.gameId);
+            pusherClient.unbind("updateNames", (names: string[]) => {
+                setNameArray(names)
+            });
+        };
+
     }, []);
 
     return(
-        <div className='flex flex-col items-center'>    
+        <div className='flex flex-col items-center'>                  
             <div className='lobby-nickname-container'>
                 <h2>Joined Users:</h2>
                 <div className='flex flex-wrap'>
@@ -64,7 +68,7 @@ export default function Lobby(props: Props) {
                 <section>                                     
                 <label className="text-lg" htmlFor='link'>Share Link:</label>
                 <div className='flex mb-2'>
-                    <input className="lobby-input" type="text" value={`http://localhost:3000/game-m?id=${gameId}`} name='link' readOnly/>                        
+                    <input className="lobby-input" type="text" value={`http://localhost:3000/game-m?id=${props.gameId}`} name='link' readOnly/>                        
                     <button className="bg-dark-blue p-2" type="button" onClick={() => handleCopy()}>Copy</button>
                 </div>                                 
                 <label className="text-lg" htmlFor='nickname'>Nickname:</label>
@@ -76,7 +80,7 @@ export default function Lobby(props: Props) {
                         name="nickname"
                         onChange={(e) => setInputName(e.target.value)}
                     />        
-                    <button className="bg-dark-blue py-2 px-4-5" type="button" onClick={() => handleNameButton()}>OK</button>            
+                    <button className="bg-dark-blue py-2 px-4-5" type="button" onClick={() => handleUpdateName()}>OK</button>            
                 </div>                        
                 <LobbySettings settings={props.settings} setSettings={props.setSettings} />
                 </section>
@@ -86,11 +90,13 @@ export default function Lobby(props: Props) {
     );
  
     function handleCopy() {
-        navigator.clipboard.writeText(`http://localhost:3000/game-m?id=${gameId}`);
+        navigator.clipboard.writeText(`http://localhost:3000/game-m?id=${props.gameId}`);
         alert("URL copied to clipboard");
     };
 
-    function handleNameButton() {    
+    async function handleUpdateName() {   
+        await updateName(props.userId, inputName);
+        await retrieveNames(props.gameId);   
+        setInputName("");     
     };    
-
 };

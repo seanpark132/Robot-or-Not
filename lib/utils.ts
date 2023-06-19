@@ -51,7 +51,7 @@ export function addUser(gameId: string, userId: string, defaultName: string) {
             headers: {
                 "Content-Type": "application/json"
             },          
-            body: JSON.stringify({gameId: gameId, userId: userId, defaultName})
+            body: JSON.stringify({gameId: gameId, userId: userId, defaultName: defaultName})
         })
     );
 }
@@ -65,7 +65,17 @@ export function retrieveNames(gameId: string) {
             },          
             body: JSON.stringify({gameId: gameId})
         })
-        .then(res => res.json())
-        .then(json => json.response)
+    );
+}
+
+export function updateName(userId: string, newNickname: string) {
+    return(
+        fetch('../api/updateName', {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },          
+            body: JSON.stringify({userId: userId, newNickName: newNickname})
+        })
     );
 }
