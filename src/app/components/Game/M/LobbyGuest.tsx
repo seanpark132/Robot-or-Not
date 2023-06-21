@@ -1,26 +1,22 @@
 "use client"
 
 import { useState, useEffect } from 'react';
-import LobbySettings from './LobbySettings';
-import { addUser, animals, distributeSettings, initGame, retrieveNames, updateName } from '../../../../../lib/utils';
+import { addUser, animals, retrieveNames, updateName } from '../../../../../lib/utils';
 import { pusherClient } from '../../../../../lib/pusher';
 
 interface Props { 
     gameId: string;   
     userId: string;
-    settings: Settings;
-    setSettings: (value: ((value: Settings) => Settings)) => void;
-    setGameActive: (value: boolean) => void;
-    setNumPlayers: (value: number) => void;
+    setSettings: (value: Settings) => void;
+    setGameActive: (value: boolean) => void;    
 };
 
-export default function LobbyMaster(props: Props) {   
+export default function LobbyGuest(props: Props) {   
     const [inputName, setInputName] = useState("");    
     const [nameArray, setNameArray] = useState<string[]>([]);   
     
     useEffect(() => {   
-        const initLobby = async (gameId: string, userId: string, name: string) => {
-            await initGame(gameId);
+        const dbFunctions = async (gameId: string, userId: string, name: string) => {            
             await addUser(gameId, userId, name);
             await retrieveNames(gameId);                   
         };
@@ -31,7 +27,7 @@ export default function LobbyMaster(props: Props) {
         const defaultName = randomAnimal + randomNum;
         setInputName(defaultName);          
       
-        initLobby(props.gameId, props.userId, defaultName); 
+        dbFunctions(props.gameId, props.userId, defaultName); 
 
     }, []);
 
@@ -41,11 +37,21 @@ export default function LobbyMaster(props: Props) {
             setNameArray(names);
         });
 
+        channel.bind("receiveSettings", (settings: Settings) => {
+            props.setSettings(settings);
+            props.setGameActive(true);
+        });
+
         return () => {
             channel.unsubscribe();
             channel.unbind("updateNames", (names: string[]) => {
                 setNameArray(names)
-            });           
+            });
+            channel.unbind("receiveSettings", (settings: Settings) => {
+                props.setSettings(settings);
+                props.setGameActive(true);
+            });
+
         };
 
     }, []);
@@ -60,8 +66,8 @@ export default function LobbyMaster(props: Props) {
                     )}   
                 </div>              
             </div>                
-            <div className='flex'>
-                <section>                                                 
+            <div className='flex'>   
+                <section>                                             
                     <label className="text-lg" htmlFor='link'>Share Link:</label>
                     <div className='flex mb-2'>
                         <input className="lobby-input" type="text" value={`http://localhost:3000/game-m?id=${props.gameId}`} name='link' readOnly/>                        
@@ -77,11 +83,10 @@ export default function LobbyMaster(props: Props) {
                             onChange={(e) => setInputName(e.target.value)}
                         />        
                         <button className="bg-dark-blue py-2 px-4-5" type="button" onClick={() => handleUpdateName()}>OK</button>            
-                    </div>                        
-                    <LobbySettings settings={props.settings} setSettings={props.setSettings} />    
-                </section>               
-            </div>            
-            <button className="btn-submit" type="button" onClick={() => handleStartGame()}>Start Game</button>            
+                    </div>    
+                </section>           
+            </div>     
+            <h2 className='mt-6'>Waiting for lobby master to start...</h2>      
         </div>        
     );
  
@@ -95,10 +100,4 @@ export default function LobbyMaster(props: Props) {
         await retrieveNames(props.gameId);   
         setInputName("");     
     };    
-
-    async function handleStartGame() {        
-        await distributeSettings(props.gameId, props.settings);
-        props.setNumPlayers(nameArray.length);
-        props.setGameActive(true);
-    };
 };

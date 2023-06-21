@@ -1,52 +1,77 @@
 "use client"
 
 import { useState, useEffect } from 'react';
-import { generateAIResponse, generateQuestions } from '../../../../../lib/utils';
+import { pusherClient } from '../../../../../lib/pusher';
+import { addGameData, distributeGameData, generateAIResponse, generateQuestions } from '../../../../../lib/utils';
 import Loading from './Loading';
 import Main from './Main';
 
-export default function Game() {
-    const [isLoading, setIsLoading] = useState(true);      
-    const [questionArray, setQuestionArray] = useState<string[]>([]);
-    const [responseArray, setResponseArray] = useState<string[]>([]);
-    const [question, setQuestion] = useState("");
-    const [aiResponse, setAiResponse] = useState("");
-    const [userResponse, setUserResponse] = useState("");
+interface Props {
+    gameId: string;
+    userId: string;
+    settings: Settings;
+    numPlayers: number;
+    isLobbyMaster: boolean;
+};
+
+export default function Game(props: Props) {
+    const [isLoading, setIsLoading] = useState(true); 
+    const [selfGameData, setSelfGameData] = useState<SingleGameData[]>([]); 
+
 
     useEffect(() => {
+        if (!props.isLobbyMaster) {
+            return;
+        };
+
         const generate = async () => {
-            const questions = await generateQuestions();
+            const numQuestions = props.numPlayers * props.settings.numRounds;
+            const questions = await generateQuestions(numQuestions);   
 
-            setQuestionArray(questions);
-            setQuestion(questions[0]);  
-           
-            const firstResponse = await generateAIResponse(questions[0])
-            setAiResponse(firstResponse);
-            setIsLoading(false); 
-
-            const questionsExceptFirst = questions.slice(1);
-
-            for (const question of questionsExceptFirst) {
-                const res = await generateAIResponse(question);
-                setResponseArray(prev => [...prev, res]);
+            async function generateResponsesInParallel(questions: string[]) {
+                const promises = questions.map(async (q) => {
+                    return generateAIResponse(q);
+                });
+                const responses = await Promise.all(promises);               
+                return responses;
             };
+
+            const responses = await generateResponsesInParallel(questions);
+            
+            await addGameData(questions, responses, props.gameId, props.settings.numRounds);
+            await distributeGameData(props.gameId);          
         };
                  
         generate();
-    }, []);       
+    }, [])    
+
+    useEffect(() => {  
+        const channel = pusherClient.subscribe(props.gameId);
+        channel.bind("receiveGameData", (gameData: SingleGameData[]) => {
+            const filteredGameData = gameData.filter((singleData: SingleGameData) => singleData.senderUserId === props.userId);            
+            setSelfGameData(filteredGameData);
+            setIsLoading(false);
+
+        });
+
+        return () => {
+            channel.unsubscribe();
+            channel.unbind("receiveGameData", (gameData: SingleGameData[]) => {
+                const filteredGameData = gameData.filter((singleData: SingleGameData) => singleData.senderUserId === props.userId);            
+                setSelfGameData(filteredGameData);
+                setIsLoading(false);
+                
+            });
+        };
+
+    }, []);
  
     return (
         <section>         
             {isLoading ? <Loading />: 
              <Main
-                questionArray={questionArray}
-                responseArray={responseArray}
-                question={question}
-                aiResponse={aiResponse}
-                userResponse={userResponse}
-                setQuestion={setQuestion}
-                setAiResponse={setAiResponse}                
-                setUserResponse={setUserResponse}
+                selfGameData={selfGameData}
+                setSelfGameData={setSelfGameData}
              />
             }                  
         </section>       

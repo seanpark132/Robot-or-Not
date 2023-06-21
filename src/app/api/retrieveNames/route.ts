@@ -5,15 +5,6 @@ import { pusherServer } from "../../../../lib/pusher";
 export async function POST(request: Request) {        
     const body = await request.json();
 
-    async function findUsers() {        
-        const users = await prisma.user.findMany({
-            where: {
-                gameId: body.gameId                
-            }
-        });       
-        return users;
-    };
-
     try {
         const users = await findUsers(); 
         const names = users.map(obj => obj.nickname);          
@@ -29,4 +20,14 @@ export async function POST(request: Request) {
         console.error("error in retrieving names") 
         return new NextResponse('DatabaseError', { status: 500 });
     };
+
+    async function findUsers() {        
+        const users = await prisma.user.findMany({
+            where: {
+                gameId: body.gameId                
+            }
+        });       
+        return users;
+    };
+
 };

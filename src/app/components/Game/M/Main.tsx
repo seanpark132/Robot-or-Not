@@ -8,14 +8,8 @@ import EndScreen from "./EndScreen";
 import { useState } from "react";
 
 interface Props {
-    questionArray: string[];
-    responseArray: string[];
-    question: string;
-    aiResponse: string;
-    userResponse: string;
-    setQuestion: (value: string) => void;
-    setAiResponse: (value: string) => void;
-    setUserResponse: (value: string) => void;
+    selfGameData: SingleGameData[];
+    setSelfGameData: (value: SingleGameData[]) => void;
 };
 
 export default function Main(props: Props) {
@@ -28,52 +22,41 @@ export default function Main(props: Props) {
         <div>              
             {gamePeriod === "userResponse" && 
             <Write               
-                question={props.question}
-                aiResponse={props.aiResponse}
-                userResponse={props.userResponse}
-                setUserResponse={props.setUserResponse}
+                selfGameData={props.selfGameData}
+                roundNumber={roundNumber}
+                setSelfGameData={props.setSelfGameData}
                 setGamePeriod={setGamePeriod}
             />
             }
-            {gamePeriod === "select" && 
+            {/* {gamePeriod === "select" && 
             <Select 
-                question={props.question}
-                aiResponse={props.aiResponse}
-                userResponse={props.userResponse}        
+                selfGameData={props.selfGameData}
                 selectedResponse={selectedResponse}      
                 setSelectedResponse={setSelectedResponse}       
                 setScore={setScore}     
                 setGamePeriod={setGamePeriod}
             />
-            }
-            {gamePeriod === "correct" &&
-            <Correct 
-                questionArray={props.questionArray}
-                responseArray={props.responseArray}
+            } */}
+            {/* {gamePeriod === "correct" &&
+            <Correct           
                 score={score}
                 roundNumber={roundNumber}
                 selectedResponse={selectedResponse}
                 setRoundNumber={setRoundNumber}
-                setQuestion={props.setQuestion}
-                setAiResponse={props.setAiResponse}
-                setUserResponse={props.setUserResponse}
+            
                 setGamePeriod={setGamePeriod}
             />
             }
             {gamePeriod === "incorrect" &&
             <Incorrect 
-                questionArray={props.questionArray}
-                responseArray={props.responseArray}
+            
                 score={score}
                 roundNumber={roundNumber}
                 selectedResponse={selectedResponse}
-                setRoundNumber={setRoundNumber}
-                setQuestion={props.setQuestion}
-                setAiResponse={props.setAiResponse}
-                setUserResponse={props.setUserResponse}
+                setRoundNumber={setRoundNumber}          
                 setGamePeriod={setGamePeriod}
             />
-            }        
+            }         */}
             {gamePeriod === "endScreen" &&
             <EndScreen />
             }

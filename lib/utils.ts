@@ -5,77 +5,102 @@ export const animals = [ 'Lion', 'Elephant', 'Monkey', 'Giraffe', 'Tiger', 'Kang
    'Zebra', 'Dolphin', 'Bear', 'Crab', 'Flamingo', 'Seal', 'Jellyfish', 'Gorilla', 'Owl', 'Parrot', 'Platypus', 'Hedgehog', 'Raccoon', 'Sloth', 'Chameleon', 'Armadillo', 'Squirrel', 'Lemur', 'Orangutan',
     'Toucan', 'Antelope', 'Falcon', 'Peacock', 'Gazelle' ];
 
-export function generateQuestions() { 
-    return (
-        fetch('../api/generateQuestion', {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
-        .then(res => res.json())
-        .then(json => json.response)
-    );  
-};
-
-export function generateAIResponse(question: string) {
-    return (
-        fetch('../api/generateResponse', {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ prompt: question })
-        })
-        .then(res => res.json())
-        .then(json => json.response)
-    );
-};
-
-export function initGame(gameId: string) {
-    return (
+export async function initGame(gameId: string) {
+    await
         fetch('../api/initGame', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },          
             body: JSON.stringify({gameId: gameId})
-        })
-    );
+        });    
 };
 
-export function addUser(gameId: string, userId: string, defaultName: string) {
-    return (
+export async function addUser(gameId: string, userId: string, defaultName: string) {
+    await
         fetch('../api/addUser', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },          
             body: JSON.stringify({gameId: gameId, userId: userId, defaultName: defaultName})
-        })
-    );
-}
+        });
+};
 
-export function retrieveNames(gameId: string) {
-    return (
+export async function retrieveNames(gameId: string) {
+    await
         fetch('../api/retrieveNames', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },          
             body: JSON.stringify({gameId: gameId})
-        })
-    );
-}
+        });    
+};
 
-export function updateName(userId: string, newNickname: string) {
-    return(
+export async function updateName(userId: string, newNickname: string) {
+    await 
         fetch('../api/updateName', {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json"
             },          
             body: JSON.stringify({userId: userId, newNickName: newNickname})
-        })
-    );
-}
+        });
+};
+
+export async function distributeSettings(gameId:string, settings: Settings) {
+    await
+        fetch('../api/distributeSettings', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },          
+            body: JSON.stringify({gameId: gameId, settings: settings})
+        });    
+};
+
+export async function generateQuestions(numQuestions: number) { 
+    const res = await fetch('../api/generateQuestions', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },       
+        body: JSON.stringify({ numQuestions: numQuestions})
+    });
+
+    const json = await res.json();
+    return json.response;
+};
+
+export async function generateAIResponse(question: string) {
+    const res = await fetch('../api/generateResponse', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ prompt: question })
+    })
+    const json = await res.json();
+    return json.response;
+};
+
+export async function addGameData(questions: string[], responses: string[], gameId: string, numRounds: number) {
+    await fetch('../api/addGameData', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({questions: questions, responses: responses, gameId: gameId, numRounds: numRounds })
+    })    
+};
+
+export async function distributeGameData(gameId: string) {
+    await fetch('../api/distributeGameData', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ gameId: gameId })
+    })    
+};

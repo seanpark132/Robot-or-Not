@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation'
 import { v4 as uuidv4 } from 'uuid';
 import LobbyMaster from '@/app/components/Game/M/LobbyMaster'
+import LobbyGuest from '@/app/components/Game/M/LobbyGuest';
 import Game from '@/app/components/Game/M/Game';
 import '../game.css'
  
@@ -20,6 +21,8 @@ export default function GameMPage() {
         numRounds: 5,       
         timerSeconds: 30 
     });      
+    const [numPlayers, setNumPlayers] = useState(1);
+    const [isLobbyMaster, setIsLobbyMaster] = useState(false);
     const searchParams = useSearchParams();    
     const sharedGameId = searchParams.get("id");
 
@@ -28,7 +31,8 @@ export default function GameMPage() {
             if (sharedGameId) {
                 setGameId(sharedGameId);                
             } else {                
-                setGameId(uuidv4());              
+                setGameId(uuidv4());  
+                setIsLobbyMaster(true);            
             };   
             setUserId(uuidv4());                    
         };
@@ -36,15 +40,29 @@ export default function GameMPage() {
 
     return (
         <main className='flex min-h-screen flex-col items-center justify-center p-8'>           
-            {gameActive ? <Game />:          
-                (gameId.length > 0 &&      
-                    (sharedGameId ? <h1>lol</h1>:
-                        <LobbyMaster    
+            {gameActive ? 
+                <Game 
+                    gameId={gameId} 
+                    userId={userId} 
+                    settings={settings} 
+                    numPlayers={numPlayers} 
+                    isLobbyMaster={isLobbyMaster} 
+                />        
+                :(gameId.length > 0 &&      
+                    (sharedGameId ? 
+                        <LobbyGuest 
+                            gameId={gameId} 
+                            userId={userId} 
+                            setSettings={setSettings} 
+                            setGameActive={setGameActive}
+                        />
+                        :<LobbyMaster    
                             gameId={gameId}     
                             userId={userId}        
                             settings={settings} 
                             setSettings={setSettings} 
-                            setGameActive={setGameActive}                                           
+                            setGameActive={setGameActive}    
+                            setNumPlayers={setNumPlayers}                                       
                         />
                     )
                 )

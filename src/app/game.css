@@ -9,13 +9,13 @@
     border-radius: 1.5rem;
     margin-bottom: 1rem;
     width: 100%;
-    max-width: 52rem;
+    max-width: 53.5rem;
 }
 
 .lobby-input {
     background-color: #F1D4E5;
     color: #0C134F;
-    width: clamp(10rem, 7rem + 35vw, 48rem);
+    width: clamp(10rem, 7rem + 35vw, 49rem);
     border: 1px solid #0C134F; 
     padding: 0.25rem 0.5rem;
 }

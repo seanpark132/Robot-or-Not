@@ -29,15 +29,16 @@ model User {
 }
 
 model GameData {
-  id           Int     @id @default(autoincrement())
-  question     String
-  aiResponse   String
-  userResponse String?
-  gameId       String
-  userId       String
-  game         Game    @relation(fields: [gameId], references: [id])
-  user         User    @relation(fields: [userId], references: [id])
+  id             Int     @id @default(autoincrement())
+  question       String  @db.VarChar(700)
+  aiResponse     String  @db.VarChar(700)
+  userResponse   String? @db.VarChar(255)
+  gameId         String
+  senderUserId   String
+  receiverUserId String
+  game           Game    @relation(fields: [gameId], references: [id])
+  user           User    @relation(fields: [receiverUserId], references: [id])
 
   @@index([gameId])
-  @@index([userId])
+  @@index([receiverUserId])
 }

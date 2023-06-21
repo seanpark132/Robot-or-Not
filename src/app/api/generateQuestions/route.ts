@@ -6,27 +6,28 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-export async function GET(request: Request) {  
+export async function POST(request: Request) {  
+
+  const body = await request.json();
 
   try {
     const questionCompletion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: 
         [{"role": "user", "content": `Generate a random question that people and ChatGPT would have unique responses to, limited to 30 words. Here are two examples:
-        What is a funny joke?   
+        If you could only eat one food for the rest of your life, what would it be? 
         If you could have dinner with any historical figure, who would it be?`}],
       temperature: 1.5,
-      n: 5,
-      max_tokens: 1100   
+      n: body.numQuestions        
     });
   
     const choices = questionCompletion.data.choices; 
-    const questions = destructureChoices(choices);  
+    const questions = destructureChoices(choices);     
 
     return NextResponse.json({response: questions});
     
   } catch(error) {
-    console.error("An error has occured when generating questions (OpenAI API)");
+    console.error("Error in generating questions (OpenAI API)");
     return new NextResponse('InternalError', { status: 500 });
   };  
 };

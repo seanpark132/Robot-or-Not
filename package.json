@@ -9,13 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@prisma/client": "^4.15.0",
+    "@prisma/client": "^4.16.0",
     "@types/node": "20.2.5",
     "@types/react": "18.2.8",
     "@types/react-dom": "18.2.4",
     "autoprefixer": "10.4.14",
     "eslint": "8.41.0",
     "eslint-config-next": "13.4.4",
+    "lodash": "^4.17.21",
     "next": "13.4.4",
     "openai": "^3.2.1",
     "postcss": "8.4.24",
@@ -30,8 +31,10 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.195",
     "@types/uuid": "^9.0.2",
-    "prisma": "^4.15.0",
+    "encoding": "^0.1.13",
+    "prisma": "^4.16.0",
     "ts-node": "^10.9.1"
   }
 }
