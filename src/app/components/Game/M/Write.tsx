@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import  _ from 'lodash';
-import { updateUserIsReady, updateUserResponse } from '../../../../../lib/utils';
+import { randomizeSendToUserIds, sendSelectData, updateUserIsReady, updateUserResponse } from '../../../../../lib/utils';
 import { pusherClient } from '../../../../../lib/pusher';
 import { checkAllReady } from "../../../../../lib/utils";
 
@@ -11,6 +11,7 @@ interface Props {
     userId: string;
     selfGameData: SingleGameData[];
     roundNumber: number;
+    setSelfGameData: (value: SingleGameData[]) => void;
     setGamePeriod: (value: string) => void;
 };
 
@@ -64,12 +65,20 @@ export default function Write(props: Props) {
         if (inputUserResponse.length < 1) {
             alert("Please enter a response with at least 1 word");
             return;
-        };                        
+        };             
+
+        setDidUserSubmit(true);
+
+        let deepClone = _.cloneDeep(props.selfGameData);
+        deepClone[props.roundNumber - 1].userResponse = inputUserResponse;
+        const selectData = deepClone[props.roundNumber - 1];
+        props.setSelfGameData(deepClone);
         
-        await updateUserResponse(currentRoundData.id, inputUserResponse);
+        await randomizeSendToUserIds(props.gameId);
+        await sendSelectData(props.gameId, props.userId, selectData);
+        // await updateUserResponse(currentRoundData.id, inputUserResponse);
         await updateUserIsReady(props.gameId, props.userId, true); 
         
-        setDidUserSubmit(true);
     };
 
 };

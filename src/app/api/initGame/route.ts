@@ -10,7 +10,8 @@ export async function POST(request: Request) {
                 id: body.gameId,
                 rounds: 5,
                 timer: true,
-                timerSeconds: 30               
+                timerSeconds: 30,
+                isSelectReady: false             
             }
         });                  
     };

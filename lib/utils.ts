@@ -6,8 +6,7 @@ export const animals = [ 'Lion', 'Elephant', 'Monkey', 'Giraffe', 'Tiger', 'Kang
     'Toucan', 'Antelope', 'Falcon', 'Peacock', 'Gazelle' ];
 
 export async function initGame(gameId: string) {
-    await
-        fetch('../api/initGame', {
+    await fetch('../api/initGame', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -16,9 +15,9 @@ export async function initGame(gameId: string) {
         });    
 };
 
+
 export async function addUser(gameId: string, userId: string, defaultName: string) {
-    await
-        fetch('../api/addUser', {
+    await fetch('../api/addUser', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -27,9 +26,9 @@ export async function addUser(gameId: string, userId: string, defaultName: strin
         });
 };
 
+
 export async function retrieveNames(gameId: string) {
-    await
-        fetch('../api/retrieveNames', {
+    await fetch('../api/retrieveNames', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -38,9 +37,9 @@ export async function retrieveNames(gameId: string) {
         });    
 };
 
+
 export async function updateName(userId: string, newNickname: string) {
-    await 
-        fetch('../api/updateName', {
+    await fetch('../api/updateName', {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json"
@@ -49,9 +48,9 @@ export async function updateName(userId: string, newNickname: string) {
         });
 };
 
+
 export async function distributeSettings(gameId:string, settings: Settings) {
-    await
-        fetch('../api/distributeSettings', {
+    await fetch('../api/distributeSettings', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -59,6 +58,7 @@ export async function distributeSettings(gameId:string, settings: Settings) {
             body: JSON.stringify({gameId: gameId, settings: settings})
         });    
 };
+
 
 export async function generateQuestions(numQuestions: number) { 
     const res = await fetch('../api/generateQuestions', {
@@ -73,6 +73,7 @@ export async function generateQuestions(numQuestions: number) {
     return json.response;
 };
 
+
 export async function generateAIResponse(question: string) {
     const res = await fetch('../api/generateResponse', {
         method: "POST",
@@ -85,6 +86,7 @@ export async function generateAIResponse(question: string) {
     return json.response;
 };
 
+
 export async function addGameData(questions: string[], responses: string[], gameId: string, numRounds: number) {
     await fetch('../api/addGameData', {
         method: "POST",
@@ -94,6 +96,7 @@ export async function addGameData(questions: string[], responses: string[], game
         body: JSON.stringify({questions: questions, responses: responses, gameId: gameId, numRounds: numRounds })
     })    
 };
+
 
 export async function distributeGameData(gameId: string) {
     await fetch('../api/distributeGameData', {
@@ -105,9 +108,9 @@ export async function distributeGameData(gameId: string) {
     })    
 };
 
+
 export async function updateUserResponse(gameDataId: number, userResponse: string) {
-    await 
-        fetch('../api/updateUserResponse', {
+    await fetch('../api/updateUserResponse', {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json"
@@ -116,9 +119,9 @@ export async function updateUserResponse(gameDataId: number, userResponse: strin
     });
 };
 
+
 export async function updateUserIsReady(gameId: string, userId: string, readyStatus: boolean) {
-    await 
-        fetch('../api/updateUserIsReady', {
+    await fetch('../api/updateUserIsReady', {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json"
@@ -126,6 +129,18 @@ export async function updateUserIsReady(gameId: string, userId: string, readySta
         body: JSON.stringify({gameId: gameId, userId: userId, readyStatus: readyStatus})
     });
 };
+
+
+export async function randomizeSendToUserIds(gameId: string) {
+    await fetch('../api/randomizeSendToUserIds', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ gameId: gameId })
+    });  
+};
+
 
 export async function checkAllReady(gameId: string) {
     const res = await fetch('../api/checkAllReady', {
@@ -139,3 +154,29 @@ export async function checkAllReady(gameId: string) {
     const json = await res.json();
     return json.response;    
 };
+
+
+export async function sendSelectData(gameId: string, userId: string, selectData: SingleGameData) {
+    await fetch('../api/sendSelectData', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ gameId: gameId, userId: userId, selectData: selectData })
+    });  
+};
+
+
+export async function retrieveSelectGameData(userId: string) {
+    const res = await fetch('../api/retrieveSelectGameData', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ receiverUserId: userId })
+    });
+        
+    const json = await res.json();
+    return json.response;    
+};
+

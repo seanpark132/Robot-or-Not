@@ -9,22 +9,24 @@ generator client {
 }
 
 model Game {
-  id           String     @id
-  rounds       Int
-  timer        Boolean
-  timerSeconds Int
-  users        User[]
-  data         GameData[]
+  id            String     @id
+  rounds        Int
+  timer         Boolean
+  timerSeconds  Int
+  isSelectReady Boolean
+  users         User[]
+  data          GameData[]
 }
 
 model User {
-  id       String     @id
-  nickname String
-  score    Int
-  gameId   String
-  isReady  Boolean
-  game     Game       @relation(fields: [gameId], references: [id])
-  data     GameData[]
+  id           String     @id
+  nickname     String
+  score        Int
+  gameId       String
+  isReady      Boolean
+  sendToUserId String?
+  game         Game       @relation(fields: [gameId], references: [id])
+  data         GameData[]
 
   @@index([gameId])
 }
@@ -37,6 +39,7 @@ model GameData {
   gameId         String
   senderUserId   String
   receiverUserId String
+  isPlayed       Boolean
   game           Game    @relation(fields: [gameId], references: [id])
   user           User    @relation(fields: [receiverUserId], references: [id])
 

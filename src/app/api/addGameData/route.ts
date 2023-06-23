@@ -44,7 +44,8 @@ export async function POST(request: Request) {
                 aiResponse: aiResponse,
                 gameId: body.gameId,
                 senderUserId: senderUserId,
-                receiverUserId: receiverUserId
+                receiverUserId: receiverUserId,
+                isPlayed: false
             }
         });              
     };
