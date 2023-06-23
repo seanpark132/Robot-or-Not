@@ -23,7 +23,7 @@ export async function POST(request: Request) {
   
     const choices = questionCompletion.data.choices; 
     const questions = destructureChoices(choices);     
-
+    console.log("generated questions")
     return NextResponse.json({response: questions});
     
   } catch(error) {

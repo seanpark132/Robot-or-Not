@@ -22,15 +22,16 @@ export async function POST(request: Request) {
             temperature: 1.5,  
             n: 1,
             max_tokens: 130       
-        });  
+        });
+
         const choices = responseCompletion.data.choices;
         const response = choices[0].message?.content;            
-        // const aiResponse = response?.replace(/"/g, '')   // Sometimes Chat Completion API wraps response in "" 
-
-        return NextResponse.json({response: response});  
+        const aiResponse = response?.replace(/"/g, '')   // Sometimes Chat Completion API wraps response in "" 
+        console.log("generated a response")
+        return NextResponse.json({response: aiResponse});  
     } catch(error) {
         console.error("An error has occured when generating a response (OpenAI API)")
-        return new NextResponse('InternalError', { status: 500 });
+        return NextResponse.json({ response:"Error occurred in generating a response.", status: 500 });
     }
 };
 

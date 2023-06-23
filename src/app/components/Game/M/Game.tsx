@@ -30,7 +30,7 @@ export default function Game(props: Props) {
 
             async function generateResponsesInParallel(questions: string[]) {
                 const promises = questions.map(async (q) => {
-                    return generateAIResponse(q);
+                    return await generateAIResponse(q);
                 });
                 const responses = await Promise.all(promises);               
                 return responses;
@@ -47,11 +47,12 @@ export default function Game(props: Props) {
 
     useEffect(() => {  
         const channel = pusherClient.subscribe(props.gameId);
-        channel.bind("receiveGameData", (gameData: SingleGameData[]) => {
-            const filteredGameData = gameData.filter((singleData: SingleGameData) => singleData.senderUserId === props.userId);            
-            setSelfGameData(filteredGameData);
-            setIsLoading(false);
-
+        channel.bind("receiveGameData", (gameData: {userId: string, data: SingleGameData[]}) => {
+            if (gameData.userId === props.userId) {             
+                setSelfGameData(gameData.data);
+                setIsLoading(false);
+            };                         
+        
         });
 
         return () => {
