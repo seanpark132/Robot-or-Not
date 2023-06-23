@@ -4,23 +4,23 @@ import { prisma } from "../../../../lib/prismaClient";
 export async function PATCH(request: Request) {        
     const body = await request.json();
 
-    async function updateName() {        
-        await prisma.user.update({
+    async function updateUserResponse() {        
+        await prisma.gameData.update({
             where: {
-                id: body.userId            
+                id: body.gameDataId      
             },
             data: {
-                nickname: body.newNickName
+                userResponse: body.userResponse
             }
         });         
     };
 
     try {
-        await updateName();       
+        await updateUserResponse();       
         return NextResponse.json({});
 
     } catch(error) {
-        console.error("error in updating names") 
+        console.error("error in updating userResponse") 
         return new NextResponse('DatabaseError', { status: 500 });
     };
 };

@@ -71,6 +71,8 @@ export default function Game(props: Props) {
         <section>         
             {isLoading ? <Loading />: 
              <Main
+                gameId={props.gameId}
+                userId={props.userId}                
                 selfGameData={selfGameData}
                 setSelfGameData={setSelfGameData}
              />

@@ -104,3 +104,38 @@ export async function distributeGameData(gameId: string) {
         body: JSON.stringify({ gameId: gameId })
     })    
 };
+
+export async function updateUserResponse(gameDataId: number, userResponse: string) {
+    await 
+        fetch('../api/updateUserResponse', {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json"
+        },          
+        body: JSON.stringify({gameDataId: gameDataId, userResponse: userResponse})
+    });
+};
+
+export async function updateUserIsReady(gameId: string, userId: string, readyStatus: boolean) {
+    await 
+        fetch('../api/updateUserIsReady', {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json"
+        },          
+        body: JSON.stringify({gameId: gameId, userId: userId, readyStatus: readyStatus})
+    });
+};
+
+export async function checkAllReady(gameId: string) {
+    const res = await fetch('../api/checkAllReady', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ gameId: gameId })
+    });
+        
+    const json = await res.json();
+    return json.response;    
+};

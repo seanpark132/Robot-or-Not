@@ -8,6 +8,8 @@ import EndScreen from "./EndScreen";
 import { useState } from "react";
 
 interface Props {
+    gameId: string;
+    userId: string;
     selfGameData: SingleGameData[];
     setSelfGameData: (value: SingleGameData[]) => void;
 };
@@ -17,14 +19,15 @@ export default function Main(props: Props) {
     const [score, setScore] = useState(0);
     const [roundNumber, setRoundNumber] = useState(1);
     const [selectedResponse, setSelectedResponse] = useState("");
-
+  
     return (
         <div>              
             {gamePeriod === "userResponse" && 
-            <Write               
+            <Write      
+                gameId={props.gameId}       
+                userId={props.userId}  
                 selfGameData={props.selfGameData}
-                roundNumber={roundNumber}
-                setSelfGameData={props.setSelfGameData}
+                roundNumber={roundNumber}              
                 setGamePeriod={setGamePeriod}
             />
             }

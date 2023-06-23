@@ -31,7 +31,7 @@ export async function POST(request: Request) {
         return NextResponse.json({response: aiResponse});  
     } catch(error) {
         console.error("An error has occured when generating a response (OpenAI API)")
-        return NextResponse.json({ response:"Error occurred in generating a response.", status: 500 });
+        return NextResponse.json({ response:"Error in generating a response. Free point!", status: 500 });
     }
 };
 

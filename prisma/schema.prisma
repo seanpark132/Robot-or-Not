@@ -22,6 +22,7 @@ model User {
   nickname String
   score    Int
   gameId   String
+  isReady  Boolean
   game     Game       @relation(fields: [gameId], references: [id])
   data     GameData[]
 
