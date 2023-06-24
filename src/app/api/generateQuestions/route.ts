@@ -14,7 +14,8 @@ export async function POST(request: Request) {
     const questionCompletion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: 
-        [{"role": "user", "content": `Generate a random question that people and ChatGPT would have unique responses to, limited to 30 words. Here are two examples:
+        [{"role": "user", "content": `Generate a random question that people and ChatGPT would have unique responses to, limited to 30 words. 
+        Do not generate a controversial question that ChatGPT would not be able to answer. Here are two examples:
         If you could only eat one food for the rest of your life, what would it be? 
         If you could have dinner with any historical figure, who would it be?`}],
       temperature: 1.5,

@@ -9,9 +9,8 @@ declare global {
         question: string;
         aiResponse: string;
         userResponse: string | null;
-        gameId: string;
-        senderUserId: string;
-        receiverUserId: string;
+        gameId: string;     
+        userId: string;   
     };
 };
 

@@ -18,8 +18,18 @@ body {
     rgb(var(--background-start-rgb));
 }
 
+nav {    
+  position: absolute;
+  top: 0;
+}
+
 textarea { 
   resize: none;
+}
+
+h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 
 h2, label {
@@ -27,7 +37,11 @@ h2, label {
   font-weight: 600;
 }
 
-@media (min-width: 40rem) {
+@media (min-width: 40rem) {   
+  h1 {
+    font-size: 1.75rem;
+  }
+
   h2, label {
     font-size: 1.5rem;
   }

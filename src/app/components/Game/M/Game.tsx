@@ -38,7 +38,7 @@ export default function Game(props: Props) {
 
             const responses = await generateResponsesInParallel(questions);
             
-            await addGameData(questions, responses, props.gameId, props.settings.numRounds);
+            await addGameData(questions, responses, props.gameId);
             await distributeGameData(props.gameId);          
         };
                  
@@ -48,7 +48,7 @@ export default function Game(props: Props) {
     useEffect(() => {  
         const channel = pusherClient.subscribe(props.gameId);
         channel.bind("receiveGameData", (gameData: {userId: string, data: SingleGameData[]}) => {
-            if (gameData.userId === props.userId) {             
+            if (gameData.userId === props.userId) {                             
                 setSelfGameData(gameData.data);
                 setIsLoading(false);
             };                         
@@ -57,12 +57,12 @@ export default function Game(props: Props) {
 
         return () => {
             channel.unsubscribe();
-            channel.unbind("receiveGameData", (gameData: SingleGameData[]) => {
-                const filteredGameData = gameData.filter((singleData: SingleGameData) => singleData.senderUserId === props.userId);            
-                setSelfGameData(filteredGameData);
-                setIsLoading(false);
-                
-            });
+            channel.unbind("receiveGameData", (gameData: {userId: string, data: SingleGameData[]}) => {
+                if (gameData.userId === props.userId) {                             
+                    setSelfGameData(gameData.data);
+                    setIsLoading(false);
+                }; 
+            });   
         };
 
     }, []);

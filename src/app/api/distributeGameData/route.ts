@@ -8,13 +8,14 @@ export async function POST(request: Request) {
 
     try {   
         const gameData: SingleGameData[] = await findGameData();  
-        const uniqueSenderIds = [...new Set(gameData.map( item => item.senderUserId))]   
+        const uniqueUserIds = [...new Set(gameData.map(item => item.userId))]   
 
-        uniqueSenderIds.map(id => {
-            const filteredById = gameData.filter(item => item.senderUserId === id);
+        uniqueUserIds.map(id => {
+            const filteredById = gameData.filter(item => item.userId === id);
+            const requiredData = filteredById.map(({gameId, ...required }) => required);
             const dataInfo = {
                 userId: id, 
-                data: filteredById
+                data: requiredData
             };          
 
             pusherServer.trigger(body.gameId, "receiveGameData", dataInfo )

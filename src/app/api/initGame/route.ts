@@ -3,6 +3,10 @@ import { prisma } from "../../../../lib/prismaClient";
 
 export async function POST(request: Request) {        
     const body = await request.json();
+    await prisma.gameData.deleteMany();   
+    await prisma.user.deleteMany();
+    await prisma.game.deleteMany();
+   
 
     async function initGame() {        
         await prisma.game.create({
@@ -11,7 +15,7 @@ export async function POST(request: Request) {
                 rounds: 5,
                 timer: true,
                 timerSeconds: 30,
-                isSelectReady: false             
+                isRandomized: false             
             }
         });                  
     };

@@ -39,7 +39,7 @@ export default function GameMPage() {
     }, [searchParams]);
 
     return (
-        <main className='flex min-h-screen flex-col items-center justify-center p-8'>           
+        <main className='flex min-h-screen flex-col items-center justify-center px-10 py-16'>           
             {gameActive ? 
                 <Game 
                     gameId={gameId} 

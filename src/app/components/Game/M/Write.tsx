@@ -3,8 +3,6 @@
 import { useState, useEffect } from 'react';
 import  _ from 'lodash';
 import { randomizeSendToUserIds, sendSelectData, updateUserIsReady, updateUserResponse } from '../../../../../lib/utils';
-import { pusherClient } from '../../../../../lib/pusher';
-import { checkAllReady } from "../../../../../lib/utils";
 
 interface Props {
     gameId: string;
@@ -12,35 +10,21 @@ interface Props {
     selfGameData: SingleGameData[];
     roundNumber: number;
     setSelfGameData: (value: SingleGameData[]) => void;
-    setGamePeriod: (value: string) => void;
 };
 
 export default function Write(props: Props) {
     const [inputUserResponse, setInputUserResponse] = useState("");
     const [didUserSubmit, setDidUserSubmit] = useState(false);
 
-    useEffect(() => {
-        const channel = pusherClient.subscribe(props.gameId);
-        channel.bind("checkAllReady", async () => {
-            const isAllReady = await checkAllReady(props.gameId);
-            if (isAllReady) {
-                props.setGamePeriod("select");
-            };     
-        });
-
-        return () => {
-            channel.unsubscribe();
-            channel.unbind("checkAllReady", async () => {
-                const isAllReady = await checkAllReady(props.gameId);
-                if (isAllReady) {
-                    props.setGamePeriod("select");
-                };     
-            });    
-        };
-
-    }, []);
-
     const currentRoundData = props.selfGameData[props.roundNumber-1];
+
+    useEffect(() => {
+        const reset = async () => {       
+            await updateUserIsReady(props.gameId, props.userId, false, "write"); 
+        };   
+        
+        reset();     
+    }, []);
         
     return(
         <div className="flex flex-col">
@@ -55,8 +39,8 @@ export default function Write(props: Props) {
                 value={inputUserResponse}
                 onChange={(e) => setInputUserResponse(e.target.value)}
             />  
-            <div className="mt-1 w-full h-5"><p className="text-sm float-right mr-1">Word Count: 0/30</p></div>
-            {didUserSubmit? <h2>Waiting for other users to submit their response...</h2>
+            {/* <div className="mt-1 w-full h-5"><p className="text-sm float-right mr-1">Word Count: 0/30</p></div> */}
+            {didUserSubmit? <h1 className='mt-8 py-2 px-4 self-center text-center'>Waiting for others...</h1>
             :<button className="btn-submit" onClick={() => handleSubmit()} >Submit</button>}
         </div>
     );
@@ -76,9 +60,8 @@ export default function Write(props: Props) {
         
         await randomizeSendToUserIds(props.gameId);
         await sendSelectData(props.gameId, props.userId, selectData);
-        // await updateUserResponse(currentRoundData.id, inputUserResponse);
-        await updateUserIsReady(props.gameId, props.userId, true); 
-        
+        await updateUserResponse(currentRoundData.id, inputUserResponse);
+        await updateUserIsReady(props.gameId, props.userId, true, "select");         
     };
 
 };

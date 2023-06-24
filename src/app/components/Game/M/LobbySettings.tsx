@@ -46,14 +46,14 @@ export default function LobbySettings(props: Props) {
                         {RoundsButton(15)}                                                          
                     </div>      
                 </div>      
-                <div className='flex mt-2'>
+                {/* <div className='flex mt-2'>
                     <p className='w-1/4'>Round Timer:</p>
                     <div className='flex w-2/3 justify-around'>
                         {TimerButton(30)}
                         {TimerButton(45)}
                         {TimerButton(60)}                        
                     </div>
-                </div>    
+                </div>     */}
             </div>   
         </> 
     );

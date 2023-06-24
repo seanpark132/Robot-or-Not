@@ -96,7 +96,11 @@ export default function LobbyMaster(props: Props) {
         setInputName("");     
     };    
 
-    async function handleStartGame() {        
+    async function handleStartGame() {     
+        if (nameArray.length < 2) {
+            alert("A minimum of 2 players are needed for multi-player.")
+            return;
+        };
         await distributeSettings(props.gameId, props.settings);
         props.setNumPlayers(nameArray.length);
         props.setGameActive(true);

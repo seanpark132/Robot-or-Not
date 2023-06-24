@@ -13,7 +13,7 @@ model Game {
   rounds        Int
   timer         Boolean
   timerSeconds  Int
-  isSelectReady Boolean
+  isRandomized  Boolean
   users         User[]
   data          GameData[]
 }
@@ -26,7 +26,6 @@ model User {
   isReady      Boolean
   sendToUserId String?
   game         Game       @relation(fields: [gameId], references: [id])
-  data         GameData[]
 
   @@index([gameId])
 }
@@ -36,13 +35,9 @@ model GameData {
   question       String  @db.VarChar(700)
   aiResponse     String  @db.VarChar(700)
   userResponse   String? @db.VarChar(255)
-  gameId         String
-  senderUserId   String
-  receiverUserId String
-  isPlayed       Boolean
+  gameId         String 
+  userId         String
   game           Game    @relation(fields: [gameId], references: [id])
-  user           User    @relation(fields: [receiverUserId], references: [id])
-
+ 
   @@index([gameId])
-  @@index([receiverUserId])
 }

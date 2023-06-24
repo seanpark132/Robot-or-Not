@@ -16,22 +16,22 @@ export async function POST(request: Request) {
             messages: 
                 [{
                     "role": "user", 
-                    "content": `Using 1 to 30 words with basic vocabulary that an ordinary human would use, generate a response to the question: ${question}. 
-                    Try not to include the question in the response`
+                    "content": `Generate a common response to the question: ${question}, using 1 to 30 words with basic vocabulary. `                    
                 }],
             temperature: 1.5,  
             n: 1,
-            max_tokens: 130       
+            max_tokens: 120         
         });
 
         const choices = responseCompletion.data.choices;
         const response = choices[0].message?.content;            
         const aiResponse = response?.replace(/"/g, '')   // Sometimes Chat Completion API wraps response in "" 
         console.log("generated a response")
-        return NextResponse.json({response: aiResponse});  
+        return NextResponse.json({response: aiResponse}); 
+         
     } catch(error) {
         console.error("An error has occured when generating a response (OpenAI API)")
-        return NextResponse.json({ response:"Error in generating a response. Free point!", status: 500 });
+        return NextResponse.json({ response:"Error in generating a response.", status: 500 });
     }
 };
 

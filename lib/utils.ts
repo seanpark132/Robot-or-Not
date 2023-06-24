@@ -87,13 +87,13 @@ export async function generateAIResponse(question: string) {
 };
 
 
-export async function addGameData(questions: string[], responses: string[], gameId: string, numRounds: number) {
+export async function addGameData(questions: string[], responses: string[], gameId: string) {
     await fetch('../api/addGameData', {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({questions: questions, responses: responses, gameId: gameId, numRounds: numRounds })
+        body: JSON.stringify({questions: questions, responses: responses, gameId: gameId })
     })    
 };
 
@@ -120,19 +120,30 @@ export async function updateUserResponse(gameDataId: number, userResponse: strin
 };
 
 
-export async function updateUserIsReady(gameId: string, userId: string, readyStatus: boolean) {
+export async function updateUserIsReady(gameId: string, userId: string, readyStatus: boolean, nextGamePeriod: string) {
     await fetch('../api/updateUserIsReady', {
-        method: "PATCH",
+        method: "POST",
         headers: {
             "Content-Type": "application/json"
         },          
-        body: JSON.stringify({gameId: gameId, userId: userId, readyStatus: readyStatus})
+        body: JSON.stringify({gameId: gameId, userId: userId, readyStatus: readyStatus, nextGamePeriod: nextGamePeriod})
     });
 };
 
 
 export async function randomizeSendToUserIds(gameId: string) {
     await fetch('../api/randomizeSendToUserIds', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ gameId: gameId })
+    });  
+};
+
+
+export async function randomizedToFalse(gameId: string) {
+    await fetch('../api/randomizedToFalse', {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -165,18 +176,3 @@ export async function sendSelectData(gameId: string, userId: string, selectData:
         body: JSON.stringify({ gameId: gameId, userId: userId, selectData: selectData })
     });  
 };
-
-
-export async function retrieveSelectGameData(userId: string) {
-    const res = await fetch('../api/retrieveSelectGameData', {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ receiverUserId: userId })
-    });
-        
-    const json = await res.json();
-    return json.response;    
-};
-

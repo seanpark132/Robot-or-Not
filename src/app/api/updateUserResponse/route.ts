@@ -18,7 +18,7 @@ export async function PATCH(request: Request) {
     try {
         await updateUserResponse();       
         return NextResponse.json({});
-
+        
     } catch(error) {
         console.error("error in updating userResponse") 
         return new NextResponse('DatabaseError', { status: 500 });
