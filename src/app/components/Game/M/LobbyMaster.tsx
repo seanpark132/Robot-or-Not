@@ -22,6 +22,7 @@ export default function LobbyMaster(props: Props) {
     
     useEffect(() => {  
         const channel = pusherClient.subscribe(props.gameId);
+        console.log("subscribed to channel")
         channel.bind("updateNames", (names: string[]) => {            
             setNameArray(names);
             console.log("updated name array")
@@ -81,7 +82,7 @@ export default function LobbyMaster(props: Props) {
                             name="nickname"
                             onChange={(e) => setInputName(e.target.value)}
                         />        
-                        <button className="bg-dark-blue py-2 px-4-5" type="button" onClick={() => handleUpdateName()}>OK</button>            
+                        <button className="bg-dark-blue py-2 px-4-5" type="button" onClick={async () => await handleUpdateName()}>OK</button>            
                     </div>                        
                     <LobbySettings settings={props.settings} setSettings={props.setSettings} />    
                 </section>               
