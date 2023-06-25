@@ -72,7 +72,7 @@ export default function LobbyGuest(props: Props) {
                 <section>                                             
                     <label className="text-lg" htmlFor='link'>Share Link:</label>
                     <div className='flex mb-2'>
-                        <input className="lobby-input" type="text" value={`https://robot-or-not.vercel.app/game-m?id=${props.gameId}`} name='link' readOnly/>                        
+                        <input className="lobby-input" type="text" value={`https://robot-or-not.vercel.app/game-m?id=${props.gameId}`} id='link' readOnly/>                        
                         <button className="bg-dark-blue p-2" type="button" onClick={() => handleCopy()}>Copy</button>
                     </div>                                 
                     <label className="text-lg" htmlFor='nickname'>Nickname:</label>
@@ -81,7 +81,7 @@ export default function LobbyGuest(props: Props) {
                             className="lobby-input" 
                             type="text"                                                 
                             value={inputName}                        
-                            name="nickname"
+                            id="nickname"
                             onChange={(e) => setInputName(e.target.value)}
                         />        
                         <button className="bg-dark-blue py-2 px-4-5" type="button" onClick={() => handleUpdateName()}>OK</button>            

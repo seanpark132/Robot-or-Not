@@ -10,21 +10,7 @@ export async function POST(request: Request) {
         const gameData: SingleGameData[] = await findGameData();  
         const uniqueUserIds = [...new Set(gameData.map(item => item.userId))]   
         
-        uniqueUserIds.map(async (id) => {
-            const filteredById = gameData.filter(item => item.userId === id);
-            const requiredData = filteredById.map(({gameId, ...required }) => required);
-            
-            const dataInfo = {
-                userId: id, 
-                data: requiredData
-            };          
-         
-            await pusherServer.trigger(body.gameId, "receiveGameData", dataInfo )
-            .catch((error: any) => {
-                console.log(error);
-            });         
-            
-        });     
+        await triggerGameDataSend(gameData, uniqueUserIds); 
         
         console.log("distributed gameData")
         return NextResponse.json({});
@@ -41,5 +27,22 @@ export async function POST(request: Request) {
             }
         });       
         return gameData;
+    };
+
+    async function triggerGameDataSend(data: SingleGameData[], uniqueIds: string[]) {
+        uniqueIds.map(async (id) => {
+            const filteredById = data.filter(gameData => gameData.userId === id);
+            const requiredData = filteredById.map(({gameId, ...required }) => required);
+            
+            const dataInfo = {
+                userId: id, 
+                data: requiredData
+            };          
+         
+            await pusherServer.trigger(body.gameId, "receiveGameData", dataInfo )
+            .catch((error: any) => {
+                console.log(error);
+            });            
+        });   
     };
 };
