@@ -16,7 +16,22 @@ interface Props {
 
 export default function LobbyMaster(props: Props) {   
     const [inputName, setInputName] = useState("");    
-    const [nameArray, setNameArray] = useState<string[]>([]);   
+    const [nameArray, setNameArray] = useState<string[]>([]); 
+    
+    useEffect(() => {  
+        const channel = pusherClient.subscribe(props.gameId);
+        channel.bind("updateNames", (names: string[]) => {
+            setNameArray(names);
+        });
+
+        return () => {
+            channel.unsubscribe();
+            channel.unbind("updateNames", (names: string[]) => {
+                setNameArray(names)
+            });           
+        };
+
+    }, []);
     
     useEffect(() => {   
         const initLobby = async (gameId: string, userId: string, name: string) => {
@@ -32,21 +47,6 @@ export default function LobbyMaster(props: Props) {
         setInputName(defaultName);          
       
         initLobby(props.gameId, props.userId, defaultName); 
-
-    }, []);
-
-    useEffect(() => {  
-        const channel = pusherClient.subscribe(props.gameId);
-        channel.bind("updateNames", (names: string[]) => {
-            setNameArray(names);
-        });
-
-        return () => {
-            channel.unsubscribe();
-            channel.unbind("updateNames", (names: string[]) => {
-                setNameArray(names)
-            });           
-        };
 
     }, []);
 
