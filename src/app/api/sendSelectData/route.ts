@@ -9,8 +9,8 @@ export async function POST(request: Request) {
         const user = await findUser();
         const receiverId = user?.sendToUserId;      
 
-        pusherServer.trigger(body.gameId, "receiveSelectData", {receiverId: receiverId, selectData: body.selectData})
-            .catch((error) => {
+        await pusherServer.trigger(body.gameId, "receiveSelectData", {receiverId: receiverId, selectData: body.selectData})
+            .catch((error: any) => {
                 console.log(error);
             });
         

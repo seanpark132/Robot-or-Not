@@ -1,8 +1,8 @@
 "use client"
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { addUser, animals, retrieveNames, updateName } from '../../../../../lib/utils';
-import { pusherClient } from '../../../../../lib/pusher';
+import { PusherContext } from '../../../../../lib/pusherContext';
 
 interface Props { 
     gameId: string;   
@@ -14,25 +14,10 @@ interface Props {
 export default function LobbyGuest(props: Props) {   
     const [inputName, setInputName] = useState("");    
     const [nameArray, setNameArray] = useState<string[]>([]);   
+    const pusher = useContext(PusherContext);
     
-    useEffect(() => {   
-        const dbFunctions = async (gameId: string, userId: string, name: string) => {            
-            await addUser(gameId, userId, name);
-            await retrieveNames(gameId);                   
-        };
-        
-        const randomNum = (Math.floor(Math.random() * 100) + 1).toString();
-        const randomIndex = (Math.floor(Math.random() * animals.length));
-        const randomAnimal = animals[randomIndex];
-        const defaultName = randomAnimal + randomNum;
-        setInputName(defaultName);          
-      
-        dbFunctions(props.gameId, props.userId, defaultName); 
-
-    }, []);
-
     useEffect(() => {  
-        const channel = pusherClient.subscribe(props.gameId);
+        const channel = pusher.subscribe(props.gameId);
         channel.bind("updateNames", (names: string[]) => {
             setNameArray(names);
         });
@@ -55,6 +40,23 @@ export default function LobbyGuest(props: Props) {
         };
 
     }, []);
+    
+    useEffect(() => {   
+        const addName = async (gameId: string, userId: string, name: string) => {            
+            await addUser(gameId, userId, name);
+            await retrieveNames(gameId);                   
+        };
+        
+        const randomNum = (Math.floor(Math.random() * 100) + 1).toString();
+        const randomIndex = (Math.floor(Math.random() * animals.length));
+        const randomAnimal = animals[randomIndex];
+        const defaultName = randomAnimal + randomNum;
+        setInputName(defaultName);          
+      
+        addName(props.gameId, props.userId, defaultName); 
+
+    }, []);
+
 
     return(
         <div className='flex flex-col items-center'>                  
@@ -70,7 +72,7 @@ export default function LobbyGuest(props: Props) {
                 <section>                                             
                     <label className="text-lg" htmlFor='link'>Share Link:</label>
                     <div className='flex mb-2'>
-                        <input className="lobby-input" type="text" value={`https://robot-or-not.vercel.app/game-m?id=${props.gameId}`} name='link' readOnly/>                        
+                        <input className="lobby-input" type="text" value={`https://robot-or-not.vercel.app/game-m?id=${props.gameId}`} id='link' readOnly/>                        
                         <button className="bg-dark-blue p-2" type="button" onClick={() => handleCopy()}>Copy</button>
                     </div>                                 
                     <label className="text-lg" htmlFor='nickname'>Nickname:</label>
@@ -79,7 +81,7 @@ export default function LobbyGuest(props: Props) {
                             className="lobby-input" 
                             type="text"                                                 
                             value={inputName}                        
-                            name="nickname"
+                            id="nickname"
                             onChange={(e) => setInputName(e.target.value)}
                         />        
                         <button className="bg-dark-blue py-2 px-4-5" type="button" onClick={() => handleUpdateName()}>OK</button>            
