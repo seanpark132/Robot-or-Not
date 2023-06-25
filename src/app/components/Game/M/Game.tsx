@@ -16,8 +16,27 @@ interface Props {
 
 export default function Game(props: Props) {
     const [isLoading, setIsLoading] = useState(true); 
-    const [selfGameData, setSelfGameData] = useState<SingleGameData[]>([]); 
+    const [selfGameData, setSelfGameData] = useState<SingleGameData[]>([]);  
 
+    useEffect(() => {  
+        const channel = pusherClient.subscribe(props.gameId);  
+        channel.bind("receiveGameData", (gameData: {userId: string, data: SingleGameData[]}) => {
+            if (gameData.userId === props.userId) {                             
+                setSelfGameData(gameData.data);
+                setIsLoading(false);
+            };                     
+        });
+
+        return () => {
+            channel.unsubscribe();
+            channel.unbind("receiveGameData", (gameData: {userId: string, data: SingleGameData[]}) => {
+                if (gameData.userId === props.userId) {                             
+                    setSelfGameData(gameData.data);
+                    setIsLoading(false);
+                }; 
+            });   
+        };
+    });
 
     useEffect(() => {
         if (!props.isLobbyMaster) {
@@ -43,36 +62,14 @@ export default function Game(props: Props) {
         };
                  
         generate();
-    }, [])    
-
-    useEffect(() => {  
-        const channel = pusherClient.subscribe(props.gameId);
-        channel.bind("receiveGameData", (gameData: {userId: string, data: SingleGameData[]}) => {
-            if (gameData.userId === props.userId) {                             
-                setSelfGameData(gameData.data);
-                setIsLoading(false);
-            };                         
-        
-        });
-
-        return () => {
-            channel.unsubscribe();
-            channel.unbind("receiveGameData", (gameData: {userId: string, data: SingleGameData[]}) => {
-                if (gameData.userId === props.userId) {                             
-                    setSelfGameData(gameData.data);
-                    setIsLoading(false);
-                }; 
-            });   
-        };
-
-    }, []);
+    }, [])     
  
     return (
         <section>         
             {isLoading ? <Loading />: 
              <Main
                 gameId={props.gameId}
-                userId={props.userId}                
+                userId={props.userId}                         
                 selfGameData={selfGameData}
                 setSelfGameData={setSelfGameData}
              />

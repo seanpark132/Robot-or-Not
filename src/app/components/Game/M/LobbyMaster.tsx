@@ -17,17 +17,22 @@ interface Props {
 export default function LobbyMaster(props: Props) {   
     const [inputName, setInputName] = useState("");    
     const [nameArray, setNameArray] = useState<string[]>([]); 
+
+    const PAGE_URL = window.location.href;
     
     useEffect(() => {  
         const channel = pusherClient.subscribe(props.gameId);
-        channel.bind("updateNames", (names: string[]) => {
+        channel.bind("updateNames", (names: string[]) => {            
             setNameArray(names);
+            console.log("updated name array")
         });
 
         return () => {
             channel.unsubscribe();
             channel.unbind("updateNames", (names: string[]) => {
+                console.log(names)
                 setNameArray(names)
+                console.log("updated name array")
             });           
         };
 
@@ -37,6 +42,7 @@ export default function LobbyMaster(props: Props) {
         const initLobby = async (gameId: string, userId: string, name: string) => {
             await initGame(gameId);
             await addUser(gameId, userId, name);
+            console.log("added user")
             await retrieveNames(gameId);                   
         };
         
@@ -47,7 +53,6 @@ export default function LobbyMaster(props: Props) {
         setInputName(defaultName);          
       
         initLobby(props.gameId, props.userId, defaultName); 
-
     }, []);
 
     return(
@@ -64,7 +69,7 @@ export default function LobbyMaster(props: Props) {
                 <section>                                                 
                     <label className="text-lg" htmlFor='link'>Share Link:</label>
                     <div className='flex mb-2'>
-                        <input className="lobby-input" type="text" value={`https://robot-or-not.vercel.app/game-m?id=${props.gameId}`} name='link' readOnly/>                        
+                        <input className="lobby-input" type="text" value={`${PAGE_URL}?id=${props.gameId}`} name='link' readOnly/>                        
                         <button className="bg-dark-blue p-2" type="button" onClick={() => handleCopy()}>Copy</button>
                     </div>                                 
                     <label className="text-lg" htmlFor='nickname'>Nickname:</label>
@@ -86,12 +91,13 @@ export default function LobbyMaster(props: Props) {
     );
  
     function handleCopy() {
-        navigator.clipboard.writeText(`https://robot-or-not.vercel.app/game-m?id=${props.gameId}`);
+        navigator.clipboard.writeText(`${PAGE_URL}?id=${props.gameId}`);
         alert("URL copied to clipboard");
     };
 
     async function handleUpdateName() {   
         await updateName(props.userId, inputName);
+        console.log("updated name to db")
         await retrieveNames(props.gameId);   
         setInputName("");     
     };    

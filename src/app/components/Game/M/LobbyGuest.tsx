@@ -15,22 +15,6 @@ export default function LobbyGuest(props: Props) {
     const [inputName, setInputName] = useState("");    
     const [nameArray, setNameArray] = useState<string[]>([]);   
     
-    useEffect(() => {   
-        const dbFunctions = async (gameId: string, userId: string, name: string) => {            
-            await addUser(gameId, userId, name);
-            await retrieveNames(gameId);                   
-        };
-        
-        const randomNum = (Math.floor(Math.random() * 100) + 1).toString();
-        const randomIndex = (Math.floor(Math.random() * animals.length));
-        const randomAnimal = animals[randomIndex];
-        const defaultName = randomAnimal + randomNum;
-        setInputName(defaultName);          
-      
-        dbFunctions(props.gameId, props.userId, defaultName); 
-
-    }, []);
-
     useEffect(() => {  
         const channel = pusherClient.subscribe(props.gameId);
         channel.bind("updateNames", (names: string[]) => {
@@ -55,6 +39,23 @@ export default function LobbyGuest(props: Props) {
         };
 
     }, []);
+    
+    useEffect(() => {   
+        const addName = async (gameId: string, userId: string, name: string) => {            
+            await addUser(gameId, userId, name);
+            await retrieveNames(gameId);                   
+        };
+        
+        const randomNum = (Math.floor(Math.random() * 100) + 1).toString();
+        const randomIndex = (Math.floor(Math.random() * animals.length));
+        const randomAnimal = animals[randomIndex];
+        const defaultName = randomAnimal + randomNum;
+        setInputName(defaultName);          
+      
+        addName(props.gameId, props.userId, defaultName); 
+
+    }, []);
+
 
     return(
         <div className='flex flex-col items-center'>                  
