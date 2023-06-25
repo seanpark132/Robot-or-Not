@@ -23,13 +23,15 @@ export default function LobbyMaster(props: Props) {
     useEffect(() => {  
         const channel = pusherClient.subscribe(props.gameId);
         console.log("subscribed to channel")
-        channel.bind("updateNames", (names: string[]) => {            
+        channel.bind("updateNames", (names: string[]) => {    
+            console.log(names)        
             setNameArray(names);
             console.log("updated name array")
         });
 
         return () => {
             channel.unsubscribe();
+            console.log("unsubbed")
             channel.unbind("updateNames", (names: string[]) => {
                 console.log(names)
                 setNameArray(names)
@@ -47,6 +49,7 @@ export default function LobbyMaster(props: Props) {
             await retrieveNames(gameId);                   
         };
         
+        console.log("second useEffect")
         const randomNum = (Math.floor(Math.random() * 100) + 1).toString();
         const randomIndex = (Math.floor(Math.random() * animals.length));
         const randomAnimal = animals[randomIndex];
@@ -68,9 +71,9 @@ export default function LobbyMaster(props: Props) {
             </div>                
             <div className='flex'>
                 <section>                                                 
-                    <label className="text-lg" htmlFor='link'>Share Link:</label>
+                    <label className="text-lg" htmlFor='shareLink'>Share Link:</label>
                     <div className='flex mb-2'>
-                        <input className="lobby-input" type="text" value={`${PAGE_URL}?id=${props.gameId}`} name='link' readOnly/>                        
+                        <input className="lobby-input" type="text" value={`${PAGE_URL}?id=${props.gameId}`} id='shareLink' readOnly/>                        
                         <button className="bg-dark-blue p-2" type="button" onClick={() => handleCopy()}>Copy</button>
                     </div>                                 
                     <label className="text-lg" htmlFor='nickname'>Nickname:</label>
@@ -79,7 +82,7 @@ export default function LobbyMaster(props: Props) {
                             className="lobby-input" 
                             type="text"                                                 
                             value={inputName}                        
-                            name="nickname"
+                            id="nickname"
                             onChange={(e) => setInputName(e.target.value)}
                         />        
                         <button className="bg-dark-blue py-2 px-4-5" type="button" onClick={async () => await handleUpdateName()}>OK</button>            
