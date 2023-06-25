@@ -10,7 +10,7 @@ export async function POST(request: Request) {
         
         if (body.readyStatus === true) {
             pusherServer.trigger(body.gameId, "checkAllReady", body.nextGamePeriod)
-            .catch((error) => {
+            .catch((error: any) => {
                 console.log(error);
             });
         };  

@@ -6,7 +6,7 @@ export async function POST(request: Request) {
 
     try {        
         pusherServer.trigger(body.gameId, "receiveSettings", body.settings)
-            .catch((error) => {
+            .catch((error: any) => {
                 console.log(error);
             });
         

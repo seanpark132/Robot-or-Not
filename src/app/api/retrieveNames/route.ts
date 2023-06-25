@@ -10,7 +10,7 @@ export async function POST(request: Request) {
         const names = users.map(obj => obj.nickname);          
 
         pusherServer.trigger(body.gameId, "updateNames", names)
-            .catch((error) => {
+            .catch((error: any) => {
                 console.log(error);
             });
         

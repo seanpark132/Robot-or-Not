@@ -10,7 +10,7 @@ export async function POST(request: Request) {
         const receiverId = user?.sendToUserId;      
 
         pusherServer.trigger(body.gameId, "receiveSelectData", {receiverId: receiverId, selectData: body.selectData})
-            .catch((error) => {
+            .catch((error: any) => {
                 console.log(error);
             });
         

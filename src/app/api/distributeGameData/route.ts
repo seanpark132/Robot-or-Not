@@ -19,7 +19,7 @@ export async function POST(request: Request) {
             };          
 
             pusherServer.trigger(body.gameId, "receiveGameData", dataInfo )
-            .catch((error) => {
+            .catch((error: any) => {
                 console.log(error);
             });
         });     
