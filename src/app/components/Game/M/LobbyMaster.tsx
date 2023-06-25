@@ -46,7 +46,8 @@ export default function LobbyMaster(props: Props) {
             await initGame(gameId);
             await addUser(gameId, userId, name);
             console.log("added user")
-            await retrieveNames(gameId);                   
+            await retrieveNames(gameId);           
+            console.log("completed retrieveNames")        
         };
         
         console.log("second useEffect")
@@ -102,7 +103,8 @@ export default function LobbyMaster(props: Props) {
     async function handleUpdateName() {   
         await updateName(props.userId, inputName);
         console.log("updated name to db")
-        await retrieveNames(props.gameId);   
+        await retrieveNames(props.gameId);  
+        console.log("completed retrieveNames")      
         setInputName("");     
     };    
 
