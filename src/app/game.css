@@ -6,7 +6,6 @@
 .lobby-nickname-container {
     padding: 1.5rem;
     border: 1px solid;
-    border-radius: 1.5rem;
     margin-bottom: 1rem;
     width: 100%;
     max-width: 53.5rem;
@@ -47,6 +46,7 @@
     margin-top: 2rem;    
     background-color: #0C134F;
     font-size: 1.5rem;
+    font-weight: 700;
     padding: 0.5rem 1rem;
     border: transparent;
     border-radius: 0.5rem;
@@ -54,7 +54,7 @@
 }
 
 .btn-submit:hover {
-    background-color: #5C469C;    
+    background-color: #DD58D6;    
 }
 
 .btn-select-unselected {

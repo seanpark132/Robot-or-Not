@@ -14,7 +14,8 @@ module.exports = {
       },
       colors: {
         'dark-blue': '#0C134F',
-        'light-pink': '#F1D4E5'    
+        'light-pink': '#F1D4E5',
+        'bright-pink': "#DD58D6"    
       }
     },
   },

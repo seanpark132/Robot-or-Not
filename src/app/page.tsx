@@ -3,11 +3,15 @@ import Link from "next/link";
 export default function Home() {
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center text-center p-8">  
-      <Link className="text-4xl font-semibold"href="/game-m">
-        Play Multi-player
-      </Link>  
-      <h1 className=" text-gray-500 text-4xl font-semibold mt-16">Solo-player mode in development</h1>    
+    <main className="flex justify-center p-8 min-h-screen">  
+      <div className="flex flex-col items-center justify-center text-center w-fit">
+        <Link href="/game-m" className="p-6 border-transparent bg-dark-blue rounded-xl w-full hover:bg-bright-pink">
+            <p className="text-4xl font-bold">Play Multi-player</p>       
+          </Link>  
+        <Link href="" className="p-6 mt-16 border-transparent bg-dark-blue rounded-xl w-full">
+          <p className="text-4xl font-semibold text-gray-500">Solo player in development</p>       
+        </Link>  
+      </div>
       {/* <Link className="text-5xl"href="/game-s">
         Play Solo-player
       </Link>       */}    
