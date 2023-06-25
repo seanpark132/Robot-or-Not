@@ -30,19 +30,21 @@ export async function POST(request: Request) {
     };
 
     async function triggerGameDataSend(data: SingleGameData[], uniqueIds: string[]) {
-        uniqueIds.map(async (id) => {
-            const filteredById = data.filter(gameData => gameData.userId === id);
-            const requiredData = filteredById.map(({gameId, ...required }) => required);
+        await Promise.all(
+            uniqueIds.map(async (id) => {
+                const filteredById = data.filter(gameData => gameData.userId === id);
+                const requiredData = filteredById.map(({gameId, ...required }) => required);
+                
+                const dataInfo = {
+                    userId: id, 
+                    data: requiredData
+                };          
             
-            const dataInfo = {
-                userId: id, 
-                data: requiredData
-            };          
-         
-            await pusherServer.trigger(body.gameId, "receiveGameData", dataInfo )
-            .catch((error: any) => {
-                console.log(error);
-            });            
-        });   
+                await pusherServer.trigger(body.gameId, "receiveGameData", dataInfo )
+                .catch((error: any) => {
+                    console.log(error);
+                });            
+            })
+        );
     };
 };
