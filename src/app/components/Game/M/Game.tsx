@@ -22,7 +22,9 @@ export default function Game(props: Props) {
     useEffect(() => {  
         const channel = pusher.subscribe(props.gameId);  
         channel.bind("receiveGameData", (gameData: {userId: string, data: SingleGameData[]}) => {
-            if (gameData.userId === props.userId) {                             
+            if (gameData.userId === props.userId) {      
+                console.log("received game data:")
+                console.log(gameData)                       
                 setSelfGameData(gameData.data);
                 setIsLoading(false);
             };                     
@@ -31,7 +33,9 @@ export default function Game(props: Props) {
         return () => {
             channel.unsubscribe();
             channel.unbind("receiveGameData", (gameData: {userId: string, data: SingleGameData[]}) => {
-                if (gameData.userId === props.userId) {                             
+                if (gameData.userId === props.userId) {      
+                    console.log("received game data:")
+                    console.log(gameData)                          
                     setSelfGameData(gameData.data);
                     setIsLoading(false);
                 }; 
@@ -59,7 +63,8 @@ export default function Game(props: Props) {
             const responses = await generateResponsesInParallel(questions);
             
             await addGameData(questions, responses, props.gameId);
-            await distributeGameData(props.gameId);          
+            await distributeGameData(props.gameId);
+            console.log("client finished distributing game data")          
         };
                  
         generate();

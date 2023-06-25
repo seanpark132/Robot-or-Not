@@ -22,20 +22,14 @@ export default function LobbyMaster(props: Props) {
     
     useEffect(() => {        
         const channel = pusher.subscribe(props.gameId);
-        console.log("subscribed to channel")
-        channel.bind("updateNames", (names: string[]) => {    
-            console.log(names)        
-            setNameArray(names);
-            console.log("updated name array")
+        channel.bind("updateNames", (names: string[]) => {                      
+            setNameArray(names);            
         });
 
         return () => {
-            channel.unsubscribe();
-            console.log("unsubbed")
-            channel.unbind("updateNames", (names: string[]) => {
-                console.log(names)
-                setNameArray(names)
-                console.log("updated name array")
+            channel.unsubscribe();            
+            channel.unbind("updateNames", (names: string[]) => {               
+                setNameArray(names)                
             });           
         };
 
@@ -44,13 +38,10 @@ export default function LobbyMaster(props: Props) {
     useEffect(() => {   
         const initLobby = async (gameId: string, userId: string, name: string) => {
             await initGame(gameId);
-            await addUser(gameId, userId, name);
-            console.log("added user")
-            await retrieveNames(gameId);           
-            console.log("completed retrieveNames")        
+            await addUser(gameId, userId, name);            
+            await retrieveNames(gameId);                            
         };
-        
-        console.log("second useEffect")
+                
         const randomNum = (Math.floor(Math.random() * 100) + 1).toString();
         const randomIndex = (Math.floor(Math.random() * animals.length));
         const randomAnimal = animals[randomIndex];
@@ -101,10 +92,8 @@ export default function LobbyMaster(props: Props) {
     };
 
     async function handleUpdateName() {   
-        await updateName(props.userId, inputName);
-        console.log("updated name to db")
-        await retrieveNames(props.gameId);  
-        console.log("completed retrieveNames")      
+        await updateName(props.userId, inputName);        
+        await retrieveNames(props.gameId);               
         setInputName("");     
     };    
 
