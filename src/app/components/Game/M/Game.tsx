@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useEffect } from 'react';
-import { pusherClient } from '../../../../../lib/pusher';
+import { useState, useEffect, useContext } from 'react';
+import { PusherContext } from '../../../../../lib/pusherContext';
 import { addGameData, distributeGameData, generateAIResponse, generateQuestions } from '../../../../../lib/utils';
 import Loading from './Loading';
 import Main from './Main';
@@ -17,9 +17,10 @@ interface Props {
 export default function Game(props: Props) {
     const [isLoading, setIsLoading] = useState(true); 
     const [selfGameData, setSelfGameData] = useState<SingleGameData[]>([]);  
+    const pusher = useContext(PusherContext);
 
     useEffect(() => {  
-        const channel = pusherClient.subscribe(props.gameId);  
+        const channel = pusher.subscribe(props.gameId);  
         channel.bind("receiveGameData", (gameData: {userId: string, data: SingleGameData[]}) => {
             if (gameData.userId === props.userId) {                             
                 setSelfGameData(gameData.data);

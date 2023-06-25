@@ -4,9 +4,9 @@ import Write from "./Write";
 import Select from "./Select";
 import Score from "./Score";
 import EndScreen from "./EndScreen";
-import { useState, useEffect } from "react";
-import { pusherClient } from "../../../../../lib/pusher";
+import { useState, useEffect, useContext } from "react";
 import { checkAllReady } from "../../../../../lib/utils";
+import { PusherContext } from '../../../../../lib/pusherContext';
 
 interface Props {
     gameId: string;
@@ -26,9 +26,10 @@ export default function Main(props: Props) {
     const [humanResponse, setHumanResponse] = useState("");    
 
     const MAX_ROUNDS = props.selfGameData.length;
+    const pusher = useContext(PusherContext);
 
     useEffect(() => {
-        const channel = pusherClient.subscribe(props.gameId);
+        const channel = pusher.subscribe(props.gameId);
         channel.bind("receiveSelectData", (data: {receiverId: string, selectData: SingleGameData}) => { 
             if (data.receiverId === props.userId) {
                 setSelectQuestion(data.selectData.question);

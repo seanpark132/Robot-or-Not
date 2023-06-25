@@ -1,8 +1,8 @@
 "use client"
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { addUser, animals, retrieveNames, updateName } from '../../../../../lib/utils';
-import { pusherClient } from '../../../../../lib/pusher';
+import { PusherContext } from '../../../../../lib/pusherContext';
 
 interface Props { 
     gameId: string;   
@@ -14,9 +14,10 @@ interface Props {
 export default function LobbyGuest(props: Props) {   
     const [inputName, setInputName] = useState("");    
     const [nameArray, setNameArray] = useState<string[]>([]);   
+    const pusher = useContext(PusherContext);
     
     useEffect(() => {  
-        const channel = pusherClient.subscribe(props.gameId);
+        const channel = pusher.subscribe(props.gameId);
         channel.bind("updateNames", (names: string[]) => {
             setNameArray(names);
         });
