@@ -9,7 +9,7 @@ export async function POST(request: Request) {
         const users = await findUsers(); 
         const names = users.map(obj => obj.nickname);          
 
-        pusherServer.trigger(body.gameId, "updateNames", names)
+        await pusherServer.trigger(body.gameId, "updateNames", names)
             .catch((error: any) => {
                 console.log(error);
             });
