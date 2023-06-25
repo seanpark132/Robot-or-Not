@@ -40,7 +40,7 @@ export async function retrieveNames(gameId: string) {
 
 export async function updateName(userId: string, newNickname: string) {
     await fetch('../api/updateName', {
-            method: "PATCH",
+            method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },          
