@@ -9,8 +9,8 @@ export async function POST(request: Request) {
         await updateUserIsReady(); 
         
         if (body.readyStatus === true) {
-            pusherServer.trigger(body.gameId, "checkAllReady", body.nextGamePeriod)
-            .catch((error) => {
+            await pusherServer.trigger(body.gameId, "checkAllReady", body.nextGamePeriod)
+            .catch((error: any) => {
                 console.log(error);
             });
         };  

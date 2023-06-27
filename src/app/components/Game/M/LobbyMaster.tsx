@@ -1,9 +1,9 @@
 "use client"
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { PusherContext } from '../../../../../lib/pusherContext';
 import LobbySettings from './LobbySettings';
 import { addUser, animals, distributeSettings, initGame, retrieveNames, updateName } from '../../../../../lib/utils';
-import { pusherClient } from '../../../../../lib/pusher';
 
 interface Props { 
     gameId: string;   
@@ -17,17 +17,19 @@ interface Props {
 export default function LobbyMaster(props: Props) {   
     const [inputName, setInputName] = useState("");    
     const [nameArray, setNameArray] = useState<string[]>([]); 
+    const pusher = useContext(PusherContext);
+    const PAGE_URL = window.location.href;
     
-    useEffect(() => {  
-        const channel = pusherClient.subscribe(props.gameId);
-        channel.bind("updateNames", (names: string[]) => {
-            setNameArray(names);
+    useEffect(() => {        
+        const channel = pusher.subscribe(props.gameId);
+        channel.bind("updateNames", (names: string[]) => {                      
+            setNameArray(names);            
         });
 
         return () => {
-            channel.unsubscribe();
-            channel.unbind("updateNames", (names: string[]) => {
-                setNameArray(names)
+            channel.unsubscribe();            
+            channel.unbind("updateNames", (names: string[]) => {               
+                setNameArray(names)                
             });           
         };
 
@@ -36,10 +38,10 @@ export default function LobbyMaster(props: Props) {
     useEffect(() => {   
         const initLobby = async (gameId: string, userId: string, name: string) => {
             await initGame(gameId);
-            await addUser(gameId, userId, name);
-            await retrieveNames(gameId);                   
+            await addUser(gameId, userId, name);            
+            await retrieveNames(gameId);                            
         };
-        
+                
         const randomNum = (Math.floor(Math.random() * 100) + 1).toString();
         const randomIndex = (Math.floor(Math.random() * animals.length));
         const randomAnimal = animals[randomIndex];
@@ -47,7 +49,6 @@ export default function LobbyMaster(props: Props) {
         setInputName(defaultName);          
       
         initLobby(props.gameId, props.userId, defaultName); 
-
     }, []);
 
     return(
@@ -62,9 +63,9 @@ export default function LobbyMaster(props: Props) {
             </div>                
             <div className='flex'>
                 <section>                                                 
-                    <label className="text-lg" htmlFor='link'>Share Link:</label>
+                    <label className="text-lg" htmlFor='shareLink'>Share Link:</label>
                     <div className='flex mb-2'>
-                        <input className="lobby-input" type="text" value={`https://robot-or-not.vercel.app/game-m?id=${props.gameId}`} name='link' readOnly/>                        
+                        <input className="lobby-input" type="text" value={`${PAGE_URL}?id=${props.gameId}`} id='shareLink' readOnly/>                        
                         <button className="bg-dark-blue p-2" type="button" onClick={() => handleCopy()}>Copy</button>
                     </div>                                 
                     <label className="text-lg" htmlFor='nickname'>Nickname:</label>
@@ -73,10 +74,10 @@ export default function LobbyMaster(props: Props) {
                             className="lobby-input" 
                             type="text"                                                 
                             value={inputName}                        
-                            name="nickname"
+                            id="nickname"
                             onChange={(e) => setInputName(e.target.value)}
                         />        
-                        <button className="bg-dark-blue py-2 px-4-5" type="button" onClick={() => handleUpdateName()}>OK</button>            
+                        <button className="bg-dark-blue py-2 px-4-5" type="button" onClick={async () => await handleUpdateName()}>OK</button>            
                     </div>                        
                     <LobbySettings settings={props.settings} setSettings={props.setSettings} />    
                 </section>               
@@ -86,13 +87,13 @@ export default function LobbyMaster(props: Props) {
     );
  
     function handleCopy() {
-        navigator.clipboard.writeText(`https://robot-or-not.vercel.app/game-m?id=${props.gameId}`);
+        navigator.clipboard.writeText(`${PAGE_URL}?id=${props.gameId}`);
         alert("URL copied to clipboard");
     };
 
     async function handleUpdateName() {   
-        await updateName(props.userId, inputName);
-        await retrieveNames(props.gameId);   
+        await updateName(props.userId, inputName);        
+        await retrieveNames(props.gameId);               
         setInputName("");     
     };    
 

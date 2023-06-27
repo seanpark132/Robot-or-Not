@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useEffect } from 'react';
-import { pusherClient } from '../../../../../lib/pusher';
+import { useState, useEffect, useContext } from 'react';
+import { PusherContext } from '../../../../../lib/pusherContext';
 import { addGameData, distributeGameData, generateAIResponse, generateQuestions } from '../../../../../lib/utils';
 import Loading from './Loading';
 import Main from './Main';
@@ -16,8 +16,32 @@ interface Props {
 
 export default function Game(props: Props) {
     const [isLoading, setIsLoading] = useState(true); 
-    const [selfGameData, setSelfGameData] = useState<SingleGameData[]>([]); 
+    const [selfGameData, setSelfGameData] = useState<SingleGameData[]>([]);  
+    const pusher = useContext(PusherContext);
 
+    useEffect(() => {  
+        const channel = pusher.subscribe(props.gameId);  
+        channel.bind("receiveGameData", (gameData: {userId: string, data: SingleGameData[]}) => {
+            if (gameData.userId === props.userId) {      
+                console.log("received game data:")
+                console.log(gameData)                       
+                setSelfGameData(gameData.data);
+                setIsLoading(false);
+            };                     
+        });
+
+        return () => {
+            channel.unsubscribe();
+            channel.unbind("receiveGameData", (gameData: {userId: string, data: SingleGameData[]}) => {
+                if (gameData.userId === props.userId) {      
+                    console.log("received game data:")
+                    console.log(gameData)                          
+                    setSelfGameData(gameData.data);
+                    setIsLoading(false);
+                }; 
+            });   
+        };
+    });
 
     useEffect(() => {
         if (!props.isLobbyMaster) {
@@ -39,40 +63,19 @@ export default function Game(props: Props) {
             const responses = await generateResponsesInParallel(questions);
             
             await addGameData(questions, responses, props.gameId);
-            await distributeGameData(props.gameId);          
+            await distributeGameData(props.gameId);
+            console.log("client finished distributing game data")          
         };
                  
         generate();
-    }, [])    
-
-    useEffect(() => {  
-        const channel = pusherClient.subscribe(props.gameId);
-        channel.bind("receiveGameData", (gameData: {userId: string, data: SingleGameData[]}) => {
-            if (gameData.userId === props.userId) {                             
-                setSelfGameData(gameData.data);
-                setIsLoading(false);
-            };                         
-        
-        });
-
-        return () => {
-            channel.unsubscribe();
-            channel.unbind("receiveGameData", (gameData: {userId: string, data: SingleGameData[]}) => {
-                if (gameData.userId === props.userId) {                             
-                    setSelfGameData(gameData.data);
-                    setIsLoading(false);
-                }; 
-            });   
-        };
-
-    }, []);
+    }, [])     
  
     return (
         <section>         
             {isLoading ? <Loading />: 
              <Main
                 gameId={props.gameId}
-                userId={props.userId}                
+                userId={props.userId}                         
                 selfGameData={selfGameData}
                 setSelfGameData={setSelfGameData}
              />
