@@ -11,4 +11,3 @@ The tech stack used to develop this project include: JavaScript/TypeScript, Next
 4. After every player writes their response and submits, every player will be shown a question and 2 responses (1 AI-generated, 1 human) from another random player.
 5. Each player needs to guess and select the response they think was made by a person.
 6. Correctly selecting the human response grants a player 1 point.
-
