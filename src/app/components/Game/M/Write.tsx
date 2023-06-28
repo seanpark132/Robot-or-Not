@@ -35,7 +35,7 @@ export default function Write(props: Props) {
             <label htmlFor="humanResponse">Your Response:</label>
             <textarea 
                 className="input-human-response" 
-                name="humanResponse"
+                id="humanResponse"
                 value={inputUserResponse}
                 onChange={(e) => setInputUserResponse(e.target.value)}
             />  

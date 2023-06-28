@@ -7,7 +7,6 @@ import LobbyMaster from '@/app/components/Game/M/LobbyMaster'
 import LobbyGuest from '@/app/components/Game/M/LobbyGuest';
 import Game from '@/app/components/Game/M/Game';
 import '../game.css'
-import Pusher from "pusher-js"
  
 interface Settings {    
     numRounds: number,
