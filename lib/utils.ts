@@ -74,13 +74,13 @@ export async function generateQuestions(numQuestions: number) {
 };
 
 
-export async function generateAIResponse(question: string) {
-    const res = await fetch('../api/generateResponse', {
+export async function generateAIResponses(questions: string[]) {
+    const res = await fetch('../api/generateAIResponses', {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ prompt: question })
+        body: JSON.stringify({ questions: questions})
     })
     const json = await res.json();
     return json.response;

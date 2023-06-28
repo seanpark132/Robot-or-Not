@@ -11,12 +11,10 @@ export async function POST(request: Request) {
         const numRounds = body.questions.length / userIds.length;
         const assignedUserIds = userIds.flatMap((userId) => Array(numRounds).fill(userId));  // if userIds = [a, b, c] and numRounds = 5, generate [a,a,a,a,a, b,b,b,b,b, c,c,c,c,c]
         
-        const promises = assignedUserIds.map(async (id, i) => {
-            return await addGameData(body.questions[i], body.responses[i], id)
-        });
+        await Promise.all(assignedUserIds.map(async (id, i) => {
+            await addGameData(body.questions[i], body.responses[i], id)
+        }));
         
-        await Promise.all(promises);
-
         return NextResponse.json({status: 200});
 
     } catch(error) {

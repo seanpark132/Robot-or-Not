@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useContext } from 'react';
 import { PusherContext } from '../../../../../lib/pusherContext';
-import { addGameData, distributeGameData, generateAIResponse, generateQuestions } from '../../../../../lib/utils';
+import { addGameData, distributeGameData, generateAIResponses, generateQuestions } from '../../../../../lib/utils';
 import Loading from './Loading';
 import Main from './Main';
 
@@ -47,16 +47,7 @@ export default function Game(props: Props) {
         const generate = async () => {
             const numQuestions = props.numPlayers * props.settings.numRounds;
             const questions = await generateQuestions(numQuestions);   
-
-            async function generateResponsesInParallel(questions: string[]) {
-                const promises = questions.map(async (q) => {
-                    return await generateAIResponse(q);
-                });
-                const responses = await Promise.all(promises);               
-                return responses;
-            };
-
-            const responses = await generateResponsesInParallel(questions);
+            const responses = await generateAIResponses(questions);
             
             await addGameData(questions, responses, props.gameId);
             await distributeGameData(props.gameId);                   

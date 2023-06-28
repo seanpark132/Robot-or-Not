@@ -14,12 +14,13 @@ export async function POST(request: Request) {
     const questionCompletion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: 
-        [{"role": "user", "content": `Generate a random question that people and ChatGPT would have unique responses to, limited to 30 words. 
+        [{"role": "user", "content": `Generate a random question that people and ChatGPT would have unique responses to, limited to 20 words. 
         Do not generate a controversial question that ChatGPT would not be able to answer. Here are two examples:
         If you could only eat one food for the rest of your life, what would it be? 
         If you could have dinner with any historical figure, who would it be?`}],
-      temperature: 1.5,
-      n: body.numQuestions        
+      temperature: 1.3,
+      n: body.numQuestions,
+      max_tokens: 80           
     });
   
     const choices = questionCompletion.data.choices; 

@@ -31,7 +31,7 @@ export async function POST(request: Request) {
 
     async function triggerGameDataSend(data: SingleGameData[], uniqueIds: string[]) {
         await Promise.all(
-            uniqueIds.map(async (id) => {
+            uniqueIds.map(async (id:string) => {
                 const filteredById = data.filter(gameData => gameData.userId === id);
                 const requiredData = filteredById.map(({gameId, ...required }) => required);
                 
