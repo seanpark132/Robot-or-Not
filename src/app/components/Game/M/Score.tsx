@@ -1,4 +1,12 @@
+'use client'
+
+import { useState, useEffect } from 'react';
+import { updateUserIsReady } from '../../../../../lib/utils';
+
+
 interface Props {    
+    isError: boolean;
+    setIsError: (value: boolean) => void;
     gameId: string,
     userId: string,
     score: number;
@@ -8,9 +16,6 @@ interface Props {
     humanResponse: string; 
     setRoundNumber: (value: ((value:number) => number)) => void;  
 };
-
-import { useState, useEffect } from 'react';
-import { updateUserIsReady } from '../../../../../lib/utils';
 
 export default function Score(props: Props) {
     const [didUserSubmit, setDidUserSubmit] = useState(false);   

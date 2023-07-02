@@ -14,11 +14,11 @@ export async function POST(request: Request) {
                 console.log(error);
             });
         
-        return NextResponse.json({});
+        return new NextResponse('Sent SelectData', { status: 200 });
 
     } catch(error) {
-        console.error("error in sending selectData") 
-        return new NextResponse('InternalError', { status: 500 });
+        console.error("Error in sending selectData") 
+        return new NextResponse('Internal Server Error', { status: 500 });
     };
 
     async function findUser() {        

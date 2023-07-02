@@ -9,6 +9,8 @@ import { checkAllReady } from "../../../../../lib/utils";
 import { PusherContext } from '../../../../../lib/pusherContext';
 
 interface Props {
+    isError: boolean;
+    setIsError: (value: boolean) => void;
     gameId: string;
     userId: string;
     selfGameData: SingleGameData[];
@@ -85,7 +87,9 @@ export default function Main(props: Props) {
     return (
         <div>              
             {gamePeriod === "write" && 
-            <Write      
+            <Write     
+                isError={props.isError}
+                setIsError={props.setIsError} 
                 gameId={props.gameId}       
                 userId={props.userId}  
                 selfGameData={props.selfGameData}
@@ -94,7 +98,9 @@ export default function Main(props: Props) {
             />
             }
             {gamePeriod === "select" && 
-            <Select      
+            <Select    
+                isError={props.isError}
+                setIsError={props.setIsError} 
                 gameId={props.gameId}       
                 userId={props.userId}   
                 selectQuestion={selectQuestion}
@@ -108,7 +114,9 @@ export default function Main(props: Props) {
             />
             }
             {gamePeriod === "score" && 
-            <Score      
+            <Score    
+                isError={props.isError}
+                setIsError={props.setIsError}
                 gameId={props.gameId}       
                 userId={props.userId}  
                 score={score}

@@ -9,7 +9,7 @@ export async function POST(request: Request) {
         const game = await findGame();   
                    
         if (game!.isRandomized === true) {
-            return NextResponse.json({});
+            return new NextResponse('Already randomized', { status: 200 });
         };
                
         await updateIsRandomized();
@@ -33,11 +33,11 @@ export async function POST(request: Request) {
             
             await updateSendToUserId(userIds[i], randomId); 
         };
-        console.log("randomized send to userIds")                     
-        return NextResponse.json({});
+                           
+        return new NextResponse('Randomized SendToUserIds', { status: 200 });
 
     } catch(error) {
-        console.error("error in randomizing sendToUserIds") 
+        console.error("Error in randomizing sendToUserIds") 
         return new NextResponse('DatabaseError', { status: 500 });
     };
 

@@ -8,26 +8,35 @@ const openai = new OpenAIApi(configuration);
 
 export async function POST(request: Request) {
     try {
-        const body = await request.json();
+        const body = await request.json();   
 
-        const allResponses = await Promise.all(
-            body.questions.map(async (question: string) => {
-                try {
-                    const response = await generateResponse(question);
+        const generateAll = await Promise.allSettled(
+            body.questions.map((question: string) => {
+                try {                    
+                    const response = generateResponse(question);
                     return response;
                 } catch(error) {
                     console.error(error);
                     return "Error in generating a response";
                 }
             })
-        );
+        );     
+        
+        const allResponses = generateAll.map((obj: any) => {
+            if (obj.value) {
+                return obj.value;
+            } else {
+                return obj.reason;
+            }
+        });
+       
 
         return NextResponse.json({ response: allResponses });
     } catch (error) {
-        console.error(error);
-        return NextResponse.json("Internal server error in generating responses.");
+        console.error(error); 
+        return new NextResponse("Internal server error", { status: 500 });
     }
-}
+};
 
 async function generateResponse(question: string) {
     return new Promise((resolve, reject) => {
@@ -44,7 +53,7 @@ async function generateResponse(question: string) {
                     content: `Generate a common response to the question using basic vocabulary: ${question}. Please limit the response to 20 words.`,
                 },
             ],
-            temperature: 1.3,
+            temperature: 1.5,
             n: 1,
             max_tokens: 80,
         })

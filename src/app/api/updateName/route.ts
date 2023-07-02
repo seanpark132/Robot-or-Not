@@ -17,7 +17,7 @@ export async function POST(request: Request) {
 
     try {
         await updateName();       
-        return NextResponse.json({});
+        return new NextResponse('Updated name', { status: 200 });
 
     } catch(error) {
         console.error("error in updating names") 

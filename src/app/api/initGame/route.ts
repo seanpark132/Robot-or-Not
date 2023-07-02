@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "../../../../lib/prismaClient";
 
 export async function POST(request: Request) {        
-    const body = await request.json();
+    const body = await request.json();  
 
     async function initGame() {        
         await prisma.game.create({
@@ -16,12 +16,12 @@ export async function POST(request: Request) {
         });                  
     };
 
-    try {
+    try {      
         await initGame();
-        return NextResponse.json({})  
+        return new NextResponse("Initialized game", {status: 200});
 
     } catch(error) {
         console.error("error"); 
-        return new NextResponse('DatabaseError', { status: 500 });
+        return new NextResponse('Database Error', { status: 500 });
     };
 };

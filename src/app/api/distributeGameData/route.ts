@@ -11,13 +11,12 @@ export async function POST(request: Request) {
         const uniqueUserIds = [...new Set(gameData.map(item => item.userId))]   
         
         await triggerGameDataSend(gameData, uniqueUserIds); 
-        
-        console.log("distributed gameData")
-        return NextResponse.json({});
+      
+        return new NextResponse('Distributed GameData', { status: 200 });
 
     } catch(error) {
-        console.error("error in distributing gameData") 
-        return new NextResponse('InternalError', { status: 500 });
+        console.error("Error in distributing gameData") 
+        return new NextResponse('Internal Server Error', { status: 500 });
     };
 
     async function findGameData() {        
@@ -31,7 +30,7 @@ export async function POST(request: Request) {
 
     async function triggerGameDataSend(data: SingleGameData[], uniqueIds: string[]) {
         await Promise.all(
-            uniqueIds.map(async (id:string) => {
+            uniqueIds.map((id:string) => {
                 const filteredById = data.filter(gameData => gameData.userId === id);
                 const requiredData = filteredById.map(({gameId, ...required }) => required);
                 
@@ -40,7 +39,7 @@ export async function POST(request: Request) {
                     data: requiredData
                 };          
             
-                await pusherServer.trigger(body.gameId, "receiveGameData", dataInfo )
+                pusherServer.trigger(body.gameId, "receiveGameData", dataInfo )
                 .catch((error: any) => {
                     console.log(error);
                 });            

@@ -5,6 +5,8 @@ import { addUser, animals, retrieveNames, updateName } from '../../../../../lib/
 import { PusherContext } from '../../../../../lib/pusherContext';
 
 interface Props { 
+    isError: boolean;
+    setIsError: (value: boolean) => void;
     gameId: string;   
     userId: string;
     setSettings: (value: Settings) => void;
@@ -12,6 +14,7 @@ interface Props {
 };
 
 export default function LobbyGuest(props: Props) {   
+   
     const [inputName, setInputName] = useState("");    
     const [nameArray, setNameArray] = useState<string[]>([]);   
     const pusher = useContext(PusherContext);

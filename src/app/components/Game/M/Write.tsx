@@ -5,6 +5,8 @@ import  _ from 'lodash';
 import { randomizeSendToUserIds, sendSelectData, updateUserIsReady, updateUserResponse } from '../../../../../lib/utils';
 
 interface Props {
+    isError: boolean;
+    setIsError: (value: boolean) => void;
     gameId: string;
     userId: string;
     selfGameData: SingleGameData[];

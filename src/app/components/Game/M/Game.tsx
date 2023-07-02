@@ -7,6 +7,8 @@ import Loading from './Loading';
 import Main from './Main';
 
 interface Props {
+    isError: boolean;
+    setIsError: (value: boolean) => void;
     gameId: string;
     userId: string;
     settings: Settings;
@@ -17,6 +19,7 @@ interface Props {
 export default function Game(props: Props) {
     const [isLoading, setIsLoading] = useState(true); 
     const [selfGameData, setSelfGameData] = useState<SingleGameData[]>([]);  
+ 
     const pusher = useContext(PusherContext);
 
     useEffect(() => {  
@@ -45,25 +48,31 @@ export default function Game(props: Props) {
         };
 
         const generate = async () => {
-            const numQuestions = props.numPlayers * props.settings.numRounds;
-            const questions = await generateQuestions(numQuestions);   
-            const responses = await generateAIResponses(questions);
-            
-            await addGameData(questions, responses, props.gameId);
-            await distributeGameData(props.gameId);                   
+            try {
+                const numQuestions = props.numPlayers * props.settings.numRounds;
+                const questions = await generateQuestions(numQuestions);   
+                const responses = await generateAIResponses(questions);
+         
+                await addGameData(questions, responses, props.gameId);
+                await distributeGameData(props.gameId);
+            } catch(e) {
+                props.setIsError(true);
+            };                 
         };
                  
         generate();
     }, [])     
- 
+   
     return (
         <section>         
             {isLoading ? <Loading />: 
              <Main
+                isError={props.isError}
+                setIsError={props.setIsError}                            
                 gameId={props.gameId}
                 userId={props.userId}                         
                 selfGameData={selfGameData}
-                setSelfGameData={setSelfGameData}
+                setSelfGameData={setSelfGameData}                
              />
             }                  
         </section>       
