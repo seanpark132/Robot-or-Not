@@ -11,6 +11,7 @@ export async function POST(request: Request) {
         const uniqueUserIds = [...new Set(gameData.map(item => item.userId))]   
         
         await triggerGameDataSend(gameData, uniqueUserIds); 
+        console.log("Distributed GameData")
       
         return new NextResponse('Distributed GameData', { status: 200 });
 
@@ -30,7 +31,7 @@ export async function POST(request: Request) {
 
     async function triggerGameDataSend(data: SingleGameData[], uniqueIds: string[]) {
         await Promise.all(
-            uniqueIds.map((id:string) => {
+            uniqueIds.map(async (id:string) => {
                 const filteredById = data.filter(gameData => gameData.userId === id);
                 const requiredData = filteredById.map(({gameId, ...required }) => required);
                 
@@ -39,7 +40,7 @@ export async function POST(request: Request) {
                     data: requiredData
                 };          
             
-                pusherServer.trigger(body.gameId, "receiveGameData", dataInfo )
+                await pusherServer.trigger(body.gameId, "receiveGameData", dataInfo )
                 .catch((error: any) => {
                     console.log(error);
                 });            

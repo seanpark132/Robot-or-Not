@@ -55,6 +55,7 @@ export default function Game(props: Props) {
          
                 await addGameData(questions, responses, props.gameId);
                 await distributeGameData(props.gameId);
+                console.log("Distributed GameData")
             } catch(e) {
                 props.setIsError(true);
             };                 
