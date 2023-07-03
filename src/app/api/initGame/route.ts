@@ -17,6 +17,11 @@ export async function POST(request: Request) {
     };
 
     try {      
+        
+        await prisma.gameData.deleteMany();
+        await prisma.user.deleteMany();
+        await prisma.game.deleteMany();
+
         await initGame();
         return new NextResponse("Initialized game", {status: 200});
 

@@ -10,8 +10,7 @@ export async function POST(request: Request) {
         const gameData: SingleGameData[] = await findGameData();  
         const uniqueUserIds = [...new Set(gameData.map(item => item.userId))]   
         
-        await triggerGameDataSend(gameData, uniqueUserIds); 
-        console.log("Distributed GameData")
+        await triggerGameDataSend(gameData, uniqueUserIds);       
       
         return new NextResponse('Distributed GameData', { status: 200 });
 

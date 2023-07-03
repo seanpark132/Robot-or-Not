@@ -7,12 +7,13 @@ export async function POST(request: Request) {
 
     try {        
         const user = await findUser();
-        const receiverId = user?.sendToUserId;      
+        const receiverId = user?.sendToUserId;     
+        const senderNickname = user?.nickname; 
 
-        await pusherServer.trigger(body.gameId, "receiveSelectData", {receiverId: receiverId, selectData: body.selectData})
+        await pusherServer.trigger(body.gameId, "receiveSelectData", { receiverId: receiverId, nickname: senderNickname, selectData: body.selectData })
             .catch((error: any) => {
                 console.log(error);
-            });
+        });
         
         return new NextResponse('Sent SelectData', { status: 200 });
 

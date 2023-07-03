@@ -54,8 +54,7 @@ export default function Game(props: Props) {
                 const responses = await generateAIResponses(questions);
          
                 await addGameData(questions, responses, props.gameId);
-                await distributeGameData(props.gameId);
-                console.log("Distributed GameData")
+                await distributeGameData(props.gameId);              
             } catch(e) {
                 props.setIsError(true);
             };                 
@@ -73,6 +72,7 @@ export default function Game(props: Props) {
                 gameId={props.gameId}
                 userId={props.userId}                         
                 selfGameData={selfGameData}
+                maxRounds={props.settings.numRounds}
                 setSelfGameData={setSelfGameData}                
              />
             }                  

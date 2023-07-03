@@ -18,14 +18,14 @@ export default function Write(props: Props) {
     const [inputUserResponse, setInputUserResponse] = useState("");
     const [didUserSubmit, setDidUserSubmit] = useState(false);
 
-    const currentRoundData = props.selfGameData[props.roundNumber-1];
+    const currentRoundData = props.selfGameData[props.roundNumber - 1];
 
     useEffect(() => {
-        const reset = async () => {       
+        const resetIsReady = async () => {       
             await updateUserIsReady(props.gameId, props.userId, false, "write"); 
         };   
         
-        reset();     
+        resetIsReady();     
     }, []);
         
     return(
@@ -44,8 +44,7 @@ export default function Write(props: Props) {
                         setInputUserResponse(e.target.value);
                     };
                 }}
-            />  
-            {/* <div className="mt-1 w-full h-5"><p className="text-sm float-right mr-1">Word Count: 0/30</p></div> */}
+            />       
             {didUserSubmit? <h1 className='mt-8 py-2 px-4 self-center text-center'>Waiting for others...</h1>
             :<button className="btn-submit" onClick={() => handleSubmit()} >Submit</button>}
         </div>
@@ -62,7 +61,6 @@ export default function Write(props: Props) {
         let deepClone = _.cloneDeep(props.selfGameData);
         deepClone[props.roundNumber - 1].userResponse = inputUserResponse;
         const selectData = deepClone[props.roundNumber - 1];
-        props.setSelfGameData(deepClone);
         
         await randomizeSendToUserIds(props.gameId);
         await sendSelectData(props.gameId, props.userId, selectData);
