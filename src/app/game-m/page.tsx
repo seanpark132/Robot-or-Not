@@ -14,7 +14,7 @@ interface Settings {
     timerSeconds: number
 };
 
-export default function GameMPage() {
+export default function GameMPage() {    
     const [gameActive, setGameActive] = useState(false);   
     const [gameId, setGameId] = useState("");
     const [userId, setUserId] = useState("");
@@ -24,6 +24,8 @@ export default function GameMPage() {
     });      
     const [numPlayers, setNumPlayers] = useState(1);
     const [isLobbyMaster, setIsLobbyMaster] = useState(false);
+    const [isError, setIsError] = useState(false);
+
     const searchParams = useSearchParams();    
     const sharedGameId = searchParams.get("id");
 
@@ -39,10 +41,20 @@ export default function GameMPage() {
         };
     }, [searchParams]);
 
+    if (isError) {
+        return(
+            <main className='flex min-h-screen flex-col items-center justify-center px-10 py-16'>     
+                <h1 className='text-5xl'>Something went wrong!</h1>      
+            </main>
+        )
+    };
+
     return (
         <main className='flex min-h-screen flex-col items-center justify-center px-10 py-16'>           
             {gameActive ? 
                 <Game 
+                    isError={isError}
+                    setIsError={setIsError}
                     gameId={gameId} 
                     userId={userId} 
                     settings={settings} 
@@ -52,12 +64,16 @@ export default function GameMPage() {
                 :(gameId.length > 0 &&      
                     (sharedGameId ? 
                         <LobbyGuest 
+                            isError={isError}
+                            setIsError={setIsError}
                             gameId={gameId} 
                             userId={userId} 
                             setSettings={setSettings} 
                             setGameActive={setGameActive}
                         />
                         :<LobbyMaster    
+                            isError={isError}
+                            setIsError={setIsError}
                             gameId={gameId}     
                             userId={userId}        
                             settings={settings} 

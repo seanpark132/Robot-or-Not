@@ -18,10 +18,10 @@ export async function POST(request: Request) {
 
     try {
         await addUser();
-        return NextResponse.json({});
+        return new NextResponse('Added User', { status: 200 });
 
     } catch(error) {
         console.error("error");
-        return new NextResponse('DatabaseError', { status: 500 });
+        return new NextResponse('Database Error', { status: 500 });
     };
 };

@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { randomizedToFalse, updateUserIsReady } from '../../../../../lib/utils';
 
 interface Props {  
+    isError: boolean;
+    setIsError: (value: boolean) => void;
     gameId: string;
     userId: string;
     selectQuestion: string;

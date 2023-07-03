@@ -5,29 +5,40 @@ import  _ from 'lodash';
 import { randomizeSendToUserIds, sendSelectData, updateUserIsReady, updateUserResponse } from '../../../../../lib/utils';
 
 interface Props {
+    isError: boolean;
+    setIsError: (value: boolean) => void;
     gameId: string;
     userId: string;
     selfGameData: SingleGameData[];
-    roundNumber: number;
-    setSelfGameData: (value: SingleGameData[]) => void;
+    roundNumber: number;    
 };
 
 export default function Write(props: Props) {
     const [inputUserResponse, setInputUserResponse] = useState("");
     const [didUserSubmit, setDidUserSubmit] = useState(false);
-
-    const currentRoundData = props.selfGameData[props.roundNumber-1];
-
+    const [currentRoundData, setCurrentRoundData] = useState<SingleGameData>({
+        id: 0,
+        question: "",
+        aiResponse: "",
+        userResponse: "",
+        gameId: "",
+        userId: "" 
+    });  
+    
     useEffect(() => {
-        const reset = async () => {       
+        setCurrentRoundData(props.selfGameData[props.roundNumber - 1]) 
+
+        const resetIsReady = async () => {           
             await updateUserIsReady(props.gameId, props.userId, false, "write"); 
         };   
         
-        reset();     
+        resetIsReady();     
     }, []);
         
-    return(
-        <div className="flex flex-col">
+    return(  
+        <>
+        { currentRoundData.id !== 0 &&     
+        <div className="flex flex-col">        
             <h2>Question:</h2>
             <p>{currentRoundData.question}</p>
             <h2 className="mt-6">Robot Response:</h2>
@@ -35,14 +46,19 @@ export default function Write(props: Props) {
             <label htmlFor="humanResponse">Your Response:</label>
             <textarea 
                 className="input-human-response" 
-                name="humanResponse"
+                id="humanResponse"
                 value={inputUserResponse}
-                onChange={(e) => setInputUserResponse(e.target.value)}
-            />  
-            {/* <div className="mt-1 w-full h-5"><p className="text-sm float-right mr-1">Word Count: 0/30</p></div> */}
+                onChange={(e) => {
+                    if (!didUserSubmit) {
+                        setInputUserResponse(e.target.value);
+                    };
+                }}
+            />       
             {didUserSubmit? <h1 className='mt-8 py-2 px-4 self-center text-center'>Waiting for others...</h1>
-            :<button className="btn-submit" onClick={() => handleSubmit()} >Submit</button>}
-        </div>
+            :<button className="btn-submit" onClick={() => handleSubmit()} >Submit</button>}          
+        </div>             
+        }
+        </>
     );
 
     async function handleSubmit() {
@@ -56,8 +72,7 @@ export default function Write(props: Props) {
         let deepClone = _.cloneDeep(props.selfGameData);
         deepClone[props.roundNumber - 1].userResponse = inputUserResponse;
         const selectData = deepClone[props.roundNumber - 1];
-        props.setSelfGameData(deepClone);
-        
+                
         await randomizeSendToUserIds(props.gameId);
         await sendSelectData(props.gameId, props.userId, selectData);
         await updateUserResponse(currentRoundData.id, inputUserResponse);

@@ -10,10 +10,10 @@ export async function POST(request: Request) {
                 console.log(error);
             });
         
-        return NextResponse.json({});
+            return new NextResponse('Settings distributed', { status: 200 });
 
     } catch(error) {
-        console.error("error in distributing settings") 
-        return new NextResponse('InternalError', { status: 500 });
+        console.error("Error in distributing settings") 
+        return new NextResponse('Internal Server Error', { status: 500 });
     };
 };

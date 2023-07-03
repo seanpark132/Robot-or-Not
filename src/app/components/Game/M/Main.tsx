@@ -9,9 +9,12 @@ import { checkAllReady } from "../../../../../lib/utils";
 import { PusherContext } from '../../../../../lib/pusherContext';
 
 interface Props {
+    isError: boolean;
+    setIsError: (value: boolean) => void;
     gameId: string;
     userId: string;
     selfGameData: SingleGameData[];
+    maxRounds: number;
     setSelfGameData: (value: SingleGameData[]) => void;
 };
 
@@ -24,17 +27,18 @@ export default function Main(props: Props) {
     const [selectResponse2, setSelectResponse2] = useState("");
     const [selectedResponse, setSelectedResponse] = useState("");
     const [humanResponse, setHumanResponse] = useState("");    
-
-    const MAX_ROUNDS = props.selfGameData.length;
+    const [senderNickname, setSenderNickName] = useState("");
+    
     const pusher = useContext(PusherContext);
 
     useEffect(() => {
         const channel = pusher.subscribe(props.gameId);
-        channel.bind("receiveSelectData", (data: {receiverId: string, selectData: SingleGameData}) => { 
+        channel.bind("receiveSelectData", (data: {receiverId: string, nickname: string, selectData: SingleGameData}) => { 
             if (data.receiverId === props.userId) {
                 setSelectQuestion(data.selectData.question);
                 setHumanResponse(data.selectData.userResponse!);
-                const zeroOrOne = Math.floor(Math.random() * 2)
+                setSenderNickName(data.nickname);
+                const zeroOrOne = Math.floor(Math.random() * 2);
 
                 if (zeroOrOne === 0) {
                     setSelectResponse1(data.selectData.aiResponse);
@@ -56,10 +60,11 @@ export default function Main(props: Props) {
         return () => {
             channel.unsubscribe();
 
-            channel.unbind("receiveSelectData", (data: {receiverId: string, selectData: SingleGameData}) => { 
+            channel.unbind("receiveSelectData", (data: {receiverId: string, nickname: string, selectData: SingleGameData}) => { 
                 if (data.receiverId === props.userId) {
                     setSelectQuestion(data.selectData.question);
                     setHumanResponse(data.selectData.userResponse!);
+                    setSenderNickName(data.nickname);
                     const zeroOrOne = Math.floor(Math.random() * 2)
     
                     if (zeroOrOne === 0) {
@@ -85,16 +90,19 @@ export default function Main(props: Props) {
     return (
         <div>              
             {gamePeriod === "write" && 
-            <Write      
+            <Write     
+                isError={props.isError}
+                setIsError={props.setIsError} 
                 gameId={props.gameId}       
                 userId={props.userId}  
                 selfGameData={props.selfGameData}
-                roundNumber={roundNumber}
-                setSelfGameData={props.setSelfGameData}     
+                roundNumber={roundNumber}                   
             />
             }
             {gamePeriod === "select" && 
-            <Select      
+            <Select    
+                isError={props.isError}
+                setIsError={props.setIsError} 
                 gameId={props.gameId}       
                 userId={props.userId}   
                 selectQuestion={selectQuestion}
@@ -108,14 +116,17 @@ export default function Main(props: Props) {
             />
             }
             {gamePeriod === "score" && 
-            <Score      
+            <Score    
+                isError={props.isError}
+                setIsError={props.setIsError}
                 gameId={props.gameId}       
                 userId={props.userId}  
                 score={score}
                 roundNumber={roundNumber}
-                MAX_ROUNDS={MAX_ROUNDS}                
+                maxRounds={props.maxRounds}           
                 selectedResponse={selectedResponse}
                 humanResponse={humanResponse}
+                senderNickname={senderNickname}
                 setRoundNumber={setRoundNumber}                
             />
             }         

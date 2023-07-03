@@ -6,6 +6,8 @@ import LobbySettings from './LobbySettings';
 import { addUser, animals, distributeSettings, initGame, retrieveNames, updateName } from '../../../../../lib/utils';
 
 interface Props { 
+    isError: boolean;
+    setIsError: (value: boolean) => void;
     gameId: string;   
     userId: string;
     settings: Settings;
@@ -19,7 +21,7 @@ export default function LobbyMaster(props: Props) {
     const [nameArray, setNameArray] = useState<string[]>([]); 
     const pusher = useContext(PusherContext);
     const PAGE_URL = window.location.href;
-    
+       
     useEffect(() => {        
         const channel = pusher.subscribe(props.gameId);
         channel.bind("updateNames", (names: string[]) => {                      
@@ -37,9 +39,13 @@ export default function LobbyMaster(props: Props) {
     
     useEffect(() => {   
         const initLobby = async (gameId: string, userId: string, name: string) => {
-            await initGame(gameId);
-            await addUser(gameId, userId, name);            
-            await retrieveNames(gameId);                            
+            try {
+                await initGame(gameId);
+                await addUser(gameId, userId, name);            
+                await retrieveNames(gameId);  
+            } catch(e) {
+                props.setIsError(true);          
+            };                                  
         };
                 
         const randomNum = (Math.floor(Math.random() * 100) + 1).toString();
@@ -106,4 +112,5 @@ export default function LobbyMaster(props: Props) {
         props.setNumPlayers(nameArray.length);
         props.setGameActive(true);
     };
+
 };

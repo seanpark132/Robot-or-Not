@@ -15,7 +15,7 @@ export async function POST(request: Request) {
             });
         };  
 
-        return NextResponse.json({});
+        return new NextResponse('Updated user ready status', { status: 200 });
 
     } catch(error) {
         console.error("error in updating userIsReady") 

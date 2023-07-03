@@ -10,11 +10,11 @@ export async function POST(request: Request) {
         
         const isAllReady = isReadyArray.every((bool) => bool === true);
         
-        return NextResponse.json({response: isAllReady});
+        return NextResponse.json({ response: isAllReady });
 
     } catch(error) {
-        console.error("error checking all ready") 
-        return new NextResponse('DatabaseError', { status: 500 });
+        console.error("Error checking all ready") 
+        return new NextResponse('Database Error', { status: 500 });
     };
 
     async function findUsers() {        
