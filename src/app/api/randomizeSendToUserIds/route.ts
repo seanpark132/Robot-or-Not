@@ -17,8 +17,9 @@ export async function POST(request: Request) {
             while (isIdSame) {
                 const randomIndex = Math.floor(Math.random() * remainingIds.length);        
                 randomId = remainingIds[randomIndex];
+                console.log(randomIndex);
 
-                if (randomId !== userIds[i]) {
+                if (randomId !== userIds[i] || remainingIds.length === 1) {
                     remainingIds.splice(randomIndex, 1);
                     isIdSame = false;                    
                 };
