@@ -61,6 +61,7 @@ export default function Write(props: Props) {
         let deepClone = _.cloneDeep(props.selfGameData);
         deepClone[props.roundNumber - 1].userResponse = inputUserResponse;
         const selectData = deepClone[props.roundNumber - 1];
+        props.setSelfGameData(deepClone);
         
         await randomizeSendToUserIds(props.gameId);
         await sendSelectData(props.gameId, props.userId, selectData);
