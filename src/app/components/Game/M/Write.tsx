@@ -26,6 +26,8 @@ export default function Write(props: Props) {
     });  
     
     useEffect(() => {
+        console.log(props.selfGameData);
+        console.log(props.selfGameData[props.roundNumber - 1])
         setCurrentRoundData(props.selfGameData[props.roundNumber - 1]) 
 
         const resetIsReady = async () => {           
