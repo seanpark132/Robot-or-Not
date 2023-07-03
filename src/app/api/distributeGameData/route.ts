@@ -36,7 +36,7 @@ export async function POST(request: Request) {
                 const dataInfo = {
                     userId: id, 
                     data: filteredById
-                };          
+                };
             
                 await pusherServer.trigger(body.gameId, "receiveGameData", dataInfo )
                 .catch((error: any) => {

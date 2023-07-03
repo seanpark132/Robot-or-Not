@@ -14,8 +14,7 @@ interface Props {
     gameId: string;
     userId: string;
     selfGameData: SingleGameData[];
-    maxRounds: number;
-    setSelfGameData: (value: SingleGameData[]) => void;
+    maxRounds: number;    
 };
 
 export default function Main(props: Props) {

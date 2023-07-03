@@ -72,8 +72,7 @@ export default function Game(props: Props) {
                 gameId={props.gameId}
                 userId={props.userId}                         
                 selfGameData={selfGameData}
-                maxRounds={props.settings.numRounds}
-                setSelfGameData={setSelfGameData}                
+                maxRounds={props.settings.numRounds}                            
              />
             }                  
         </section>       
