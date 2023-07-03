@@ -25,7 +25,8 @@ export default function Game(props: Props) {
     useEffect(() => {  
         const channel = pusher.subscribe(props.gameId);  
         channel.bind("receiveGameData", (gameData: {userId: string, data: SingleGameData[]}) => {
-            if (gameData.userId === props.userId) {                             
+            if (gameData.userId === props.userId) {    
+                console.log(gameData);                         
                 setSelfGameData(gameData.data);
                 setIsLoading(false);
             };                     
