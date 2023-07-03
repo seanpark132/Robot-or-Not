@@ -31,12 +31,11 @@ export async function POST(request: Request) {
     async function triggerGameDataSend(data: SingleGameData[], uniqueIds: string[]) {
         await Promise.all(
             uniqueIds.map(async (id:string) => {
-                const filteredById = data.filter(gameData => gameData.userId === id);
-                const requiredData = filteredById.map(({gameId, ...required }) => required);
+                const filteredById = data.filter(gameData => gameData.userId === id);            
                 
                 const dataInfo = {
                     userId: id, 
-                    data: requiredData
+                    data: filteredById
                 };          
             
                 await pusherServer.trigger(body.gameId, "receiveGameData", dataInfo )
