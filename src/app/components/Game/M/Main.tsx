@@ -96,8 +96,7 @@ export default function Main(props: Props) {
                 gameId={props.gameId}       
                 userId={props.userId}  
                 selfGameData={props.selfGameData}
-                roundNumber={roundNumber}
-                setSelfGameData={props.setSelfGameData}     
+                roundNumber={roundNumber}                   
             />
             }
             {gamePeriod === "select" && 
