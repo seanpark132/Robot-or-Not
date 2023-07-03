@@ -50,10 +50,10 @@ async function generateResponse(question: string) {
             messages: [
                 {
                     role: "user",
-                    content: `Generate a common response to the question using basic vocabulary: ${question}. Please limit the response to 20 words.`,
+                    content: `Generate 1 normal response to the following question using simple words: "${question}". Please limit the response to a maximum of 150 characters.`,
                 },
             ],
-            temperature: 1.5,
+            temperature: 1.45,
             n: 1,
             max_tokens: 80,
         })
