@@ -11,9 +11,9 @@ export async function POST(request: Request) {
         const body = await request.json();   
 
         const generateAll = await Promise.allSettled(
-            body.questions.map((question: string) => {
+            body.questions.map(async (question: string) => {
                 try {                    
-                    const response = generateResponse(question);
+                    const response = await generateResponse(question);
                     return response;
                 } catch(error) {
                     console.error(error);
