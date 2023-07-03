@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from 'react';
-import { randomizedToFalse, updateUserIsReady } from '../../../../../lib/utils';
+import { updateUserIsReady } from '../../../../../lib/utils';
 
 interface Props {  
     isError: boolean;
@@ -91,8 +91,7 @@ export default function Select(props: Props) {
         if (props.selectedResponse === props.humanResponse) {
             props.setScore(prev => prev + 1);
         };
-        
-        await randomizedToFalse(props.gameId);
+                
         await updateUserIsReady(props.gameId, props.userId, true, "score");            
     };
 };

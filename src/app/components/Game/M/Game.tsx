@@ -72,7 +72,8 @@ export default function Game(props: Props) {
                 gameId={props.gameId}
                 userId={props.userId}                         
                 selfGameData={selfGameData}
-                maxRounds={props.settings.numRounds}                            
+                maxRounds={props.settings.numRounds}    
+                isLobbyMaster={props.isLobbyMaster}                        
              />
             }                  
         </section>       

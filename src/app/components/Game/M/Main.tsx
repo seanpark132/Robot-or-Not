@@ -15,6 +15,7 @@ interface Props {
     userId: string;
     selfGameData: SingleGameData[];
     maxRounds: number;    
+    isLobbyMaster: boolean;
 };
 
 export default function Main(props: Props) {
@@ -95,7 +96,8 @@ export default function Main(props: Props) {
                 gameId={props.gameId}       
                 userId={props.userId}  
                 selfGameData={props.selfGameData}
-                roundNumber={roundNumber}                   
+                roundNumber={roundNumber}       
+                isLobbyMaster={props.isLobbyMaster}                 
             />
             }
             {gamePeriod === "select" && 

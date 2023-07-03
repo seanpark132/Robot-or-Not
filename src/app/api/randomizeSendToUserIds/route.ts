@@ -4,16 +4,7 @@ import { prisma } from "../../../../lib/prismaClient";
 export async function POST(request: Request) {        
     const body = await request.json();
 
-    try {       
-        // To prevent multiple clients from randomizing user ids (only needs to be done once / round)
-        const game = await findGame();   
-                   
-        if (game!.isRandomized === true) {
-            return new NextResponse('Already randomized', { status: 200 });
-        };
-               
-        await updateIsRandomized();
-        
+    try {               
         const users = await findUsers();
         const userIds = users.map(user => user.id);
         let remainingIds = [...userIds];
@@ -24,7 +15,8 @@ export async function POST(request: Request) {
 
             while (isIdSame) {
                 const randomIndex = Math.floor(Math.random() * remainingIds.length);        
-                randomId = remainingIds[randomIndex]
+                randomId = remainingIds[randomIndex];
+
                 if (randomId !== userIds[i]) {
                     remainingIds.splice(randomIndex, 1);
                     isIdSame = false;                    

@@ -11,6 +11,7 @@ interface Props {
     userId: string;
     selfGameData: SingleGameData[];
     roundNumber: number;    
+    isLobbyMaster: boolean;     
 };
 
 export default function Write(props: Props) {
@@ -72,8 +73,10 @@ export default function Write(props: Props) {
         let deepClone = _.cloneDeep(props.selfGameData);
         deepClone[props.roundNumber - 1].userResponse = inputUserResponse;
         const selectData = deepClone[props.roundNumber - 1];
-                
-        await randomizeSendToUserIds(props.gameId);
+
+        if (props.isLobbyMaster) {
+            await randomizeSendToUserIds(props.gameId);
+        }; 
         await sendSelectData(props.gameId, props.userId, selectData);
         await updateUserResponse(currentRoundData.id, inputUserResponse);
         await updateUserIsReady(props.gameId, props.userId, true, "select");         
