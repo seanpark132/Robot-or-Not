@@ -34,8 +34,7 @@ export async function POST(request: Request) {
         await Promise.all(
             uniqueIds.map(async (id:string) => {
                 const filteredById = data.filter(gameData => gameData.userId === id);            
-                
-                console.log(filteredById);
+                             
                 const dataInfo = {
                     userId: id, 
                     data: filteredById
