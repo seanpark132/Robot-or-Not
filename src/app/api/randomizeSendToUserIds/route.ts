@@ -12,6 +12,7 @@ export async function POST(request: Request) {
         for (let i = 0; i < userIds.length; i++ ) {
             let isIdSame = true;
             let randomId = "";
+            console.log(userIds.length);
 
             while (isIdSame) {
                 const randomIndex = Math.floor(Math.random() * remainingIds.length);        
