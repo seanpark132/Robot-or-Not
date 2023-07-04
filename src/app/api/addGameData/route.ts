@@ -8,7 +8,9 @@ export async function POST(request: Request) {
         const users = await findUsers(); 
         const userIds = users.map(user => user.id);  
         const numRounds = body.questions.length / userIds.length;
-        const assignedUserIds = userIds.flatMap((userId) => Array(numRounds).fill(userId));  // if userIds = [a, b, c] and numRounds = 5, generate [a,a,a,a,a, b,b,b,b,b, c,c,c,c,c]
+
+        // if userIds = [a, b, c] and numRounds = 5, generate [a,a,a,a,a, b,b,b,b,b, c,c,c,c,c]
+        const assignedUserIds = userIds.flatMap((userId) => Array(numRounds).fill(userId));  
         
         await Promise.all(assignedUserIds.map(async (id, i) => {
             await addGameData(body.questions[i], body.responses[i], id)

@@ -3,11 +3,10 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation'
 import { v4 as uuidv4 } from 'uuid';
-import LobbyMaster from '@/app/components/Game/M/LobbyMaster'
-import LobbyGuest from '@/app/components/Game/M/LobbyGuest';
-import Game from '@/app/components/Game/M/Game';
+import LobbyMaster from '@/app/components/Game/LobbyMaster'
+import LobbyGuest from '@/app/components/Game/LobbyGuest';
+import Generate from '@/app/components/Game/Generate';
 import '../game.css'
-import Pusher from "pusher-js"
  
 interface Settings {    
     numRounds: number,
@@ -52,7 +51,7 @@ export default function GameMPage() {
     return (
         <main className='flex min-h-screen flex-col items-center justify-center px-10 py-16'>           
             {gameActive ? 
-                <Game 
+                <Generate 
                     isError={isError}
                     setIsError={setIsError}
                     gameId={gameId} 

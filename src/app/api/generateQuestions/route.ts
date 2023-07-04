@@ -34,17 +34,6 @@ export async function POST(request: Request) {
   };  
 };
 
-// interface Message {
-//   role: string;
-//   content: string;
-// };
-
-// interface Choice {
-//   message: Message;
-//   finish_reason: string;
-//   index: number
-// };
-
 function destructureChoices(choices: any) {
   let questions = []
   for (let i = 0; i < choices.length; i++) {

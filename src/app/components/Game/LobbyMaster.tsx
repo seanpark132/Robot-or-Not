@@ -1,9 +1,9 @@
 "use client"
 
 import { useState, useEffect, useContext } from 'react';
-import { PusherContext } from '../../../../../lib/pusherContext';
+import { PusherContext } from '../../../../lib/pusherContext';
 import LobbySettings from './LobbySettings';
-import { addUser, animals, distributeSettings, initGame, retrieveNames, updateName } from '../../../../../lib/utils';
+import { addUser, animals, distributeSettings, initGame, retrieveNames, updateName } from '../../../../lib/utils';
 
 interface Props { 
     isError: boolean;

@@ -1,8 +1,8 @@
 "use client"
 
 import { useState, useEffect, useContext } from 'react';
-import { PusherContext } from '../../../../../lib/pusherContext';
-import { addGameData, distributeGameData, generateAIResponses, generateQuestions } from '../../../../../lib/utils';
+import { PusherContext } from '../../../../lib/pusherContext';
+import { addGameData, distributeGameData, generateAIResponses, generateQuestions } from '../../../../lib/utils';
 import Loading from './Loading';
 import Main from './Main';
 
@@ -16,7 +16,7 @@ interface Props {
     isLobbyMaster: boolean;
 };
 
-export default function Game(props: Props) {
+export default function Generate(props: Props) {
     const [isLoading, setIsLoading] = useState(true); 
     const [selfGameData, setSelfGameData] = useState<SingleGameData[]>([]);  
  

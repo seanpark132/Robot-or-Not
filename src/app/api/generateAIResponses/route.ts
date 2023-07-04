@@ -10,6 +10,7 @@ export async function POST(request: Request) {
     try {
         const body = await request.json();   
 
+        // allSettled ensures errors within are handled by inner try catch block (1 error will not cause error in client - aiResponse will be "Error in generating a response")
         const generateAll = await Promise.allSettled(
             body.questions.map(async (question: string) => {
                 try {                    
@@ -53,7 +54,7 @@ async function generateResponse(question: string) {
                     content: `Generate 1 normal response to the following question using simple words: "${question}". Please limit the response to a maximum of 150 characters.`,
                 },
             ],
-            temperature: 1.45,
+            temperature: 1.5,
             n: 1,
             max_tokens: 80,
         })

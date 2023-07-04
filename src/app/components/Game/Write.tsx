@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import  _ from 'lodash';
-import { randomizeSendToUserIds, randomizedToFalse, sendSelectData, updateUserIsReady, updateUserResponse } from '../../../../../lib/utils';
+import { randomizeSendToUserIds, randomizedToFalse, sendSelectData, updateUserIsReady, updateUserResponse } from '../../../../lib/utils';
 
 interface Props {
     isError: boolean;

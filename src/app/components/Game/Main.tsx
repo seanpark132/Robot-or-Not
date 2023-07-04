@@ -5,8 +5,8 @@ import Select from "./Select";
 import Score from "./Score";
 import EndScreen from "./EndScreen";
 import { useState, useEffect, useContext } from "react";
-import { checkAllReady } from "../../../../../lib/utils";
-import { PusherContext } from '../../../../../lib/pusherContext';
+import { checkAllReady } from "../../../../lib/utils";
+import { PusherContext } from '../../../../lib/pusherContext';
 
 interface Props {
     isError: boolean;
@@ -51,8 +51,11 @@ export default function Main(props: Props) {
         });
 
         channel.bind("checkAllReady", async (nextGamePeriod: string) => {
+     
             const isAllReady = await checkAllReady(props.gameId);
+      
             if (isAllReady) {
+                console.log(nextGamePeriod)
                 setGamePeriod(nextGamePeriod);
             };     
         });
