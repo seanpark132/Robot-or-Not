@@ -1,12 +1,12 @@
 import { Configuration, OpenAIApi } from "openai";
 import { NextResponse } from "next/server";
 
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-const openai = new OpenAIApi(configuration);
-
 export async function POST(request: Request) {
+    const configuration = new Configuration({
+        apiKey: process.env.OPENAI_API_KEY,
+    });
+    const openai = new OpenAIApi(configuration);
+
     try {
         const body = await request.json();   
 
@@ -29,45 +29,44 @@ export async function POST(request: Request) {
             } else {
                 return obj.reason;
             }
-        });
-       
+        });       
 
-        return NextResponse.json({ response: allResponses });
+        return NextResponse.json({ response: allResponses });        
     } catch (error) {
         console.error(error); 
         return new NextResponse("Internal server error", { status: 500 });
-    }
-};
+    };
 
-async function generateResponse(question: string) {
-    return new Promise((resolve, reject) => {
-        const timeout = setTimeout(() => {
-            clearTimeout(timeout);
-            reject("Error in generating a response");
-        }, 9000);
-
-        openai.createChatCompletion({
-            model: "gpt-3.5-turbo",
-            messages: [
-                {
-                    role: "user",
-                    content: `Generate 1 normal response to the following question using simple words: "${question}". Please limit the response to a maximum of 150 characters.`,
-                },
-            ],
-            temperature: 1.5,
-            n: 1,
-            max_tokens: 80,
-        })
-        .then((responseCompletion) => {
-            clearTimeout(timeout);
-            const choices = responseCompletion.data.choices;
-            const response = choices[0].message?.content;
-            const aiResponse = response?.replace(/"/g, "");
-            resolve(aiResponse);
-        })
-        .catch((error) => {
-            clearTimeout(timeout);            
-            reject("Error in generating a response");
+    async function generateResponse(question: string) {
+        return new Promise((resolve, reject) => {
+            const timeout = setTimeout(() => {
+                clearTimeout(timeout);
+                reject("Error in generating a response");
+            }, 9000);
+    
+            openai.createChatCompletion({
+                model: "gpt-3.5-turbo",
+                messages: [
+                    {
+                        role: "user",
+                        content: `Generate 1 normal response to the following question using simple words: "${question}". Please limit the response to a maximum of 150 characters.`,
+                    },
+                ],
+                temperature: 1.5,
+                n: 1,
+                max_tokens: 80,
+            })
+            .then((responseCompletion) => {
+                clearTimeout(timeout);
+                const choices = responseCompletion.data.choices;
+                const response = choices[0].message?.content;
+                const aiResponse = response?.replace(/"/g, "");
+                resolve(aiResponse);
+            })
+            .catch((error) => {
+                clearTimeout(timeout);            
+                reject("Error in generating a response");
+            });
         });
-    });
-}
+    };
+};

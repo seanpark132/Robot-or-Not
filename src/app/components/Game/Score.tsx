@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import { updateUserIsReady } from '../../../../lib/utils';
+import { updateUserIsReady } from '@root/lib/utils';
 
 
 interface Props {    

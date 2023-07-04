@@ -1,8 +1,8 @@
 "use client"
 
 import { useState, useEffect, useContext } from 'react';
-import { PusherContext } from '../../../../lib/pusherContext';
-import { addGameData, distributeGameData, generateAIResponses, generateQuestions } from '../../../../lib/utils';
+import { PusherContext } from '@root/lib/pusherContext';
+import { addGameData, distributeGameData, generateAIResponses, generateQuestions } from '@root/lib/utils';
 import Loading from './Loading';
 import Main from './Main';
 

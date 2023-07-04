@@ -5,8 +5,8 @@ import Select from "./Select";
 import Score from "./Score";
 import EndScreen from "./EndScreen";
 import { useState, useEffect, useContext } from "react";
-import { checkAllReady } from "../../../../lib/utils";
-import { PusherContext } from '../../../../lib/pusherContext';
+import { checkAllReady } from "@root/lib/utils";
+import { PusherContext } from '@root/lib/pusherContext';
 
 interface Props {
     isError: boolean;
