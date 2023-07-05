@@ -5,7 +5,6 @@ import Select from "./Select";
 import Score from "./Score";
 import EndScreen from "./EndScreen";
 import { useState, useEffect, useContext } from "react";
-import { checkAllReady } from "@root/lib/utils";
 import { PusherContext } from '@root/lib/pusherContext';
 
 interface Props {
@@ -14,7 +13,7 @@ interface Props {
     gameId: string;
     userId: string;
     selfGameData: SingleGameData[];
-    maxRounds: number;    
+    numRounds: number;    
     isLobbyMaster: boolean;
 };
 
@@ -50,14 +49,8 @@ export default function Main(props: Props) {
             };
         });
 
-        channel.bind("checkAllReady", async (nextGamePeriod: string) => {
-     
-            const isAllReady = await checkAllReady(props.gameId);
-      
-            if (isAllReady) {
-                console.log(nextGamePeriod)
-                setGamePeriod(nextGamePeriod);
-            };     
+        channel.bind("allReady", async (nextGamePeriod: string) => {     
+            setGamePeriod(nextGamePeriod);            
         });
 
         return () => {
@@ -80,11 +73,8 @@ export default function Main(props: Props) {
                 };
             });
     
-            channel.unbind("checkAllReady", async (nextGamePeriod: string) => {
-                const isAllReady = await checkAllReady(props.gameId);
-                if (isAllReady) {
-                    setGamePeriod(nextGamePeriod);
-                };     
+            channel.unbind("allReady", async (nextGamePeriod: string) => {     
+                setGamePeriod(nextGamePeriod);            
             });
         };
 
@@ -127,7 +117,7 @@ export default function Main(props: Props) {
                 userId={props.userId}  
                 score={score}
                 roundNumber={roundNumber}
-                maxRounds={props.maxRounds}           
+                numRounds={props.numRounds}           
                 selectedResponse={selectedResponse}
                 humanResponse={humanResponse}
                 senderNickname={senderNickname}

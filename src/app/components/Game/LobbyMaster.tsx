@@ -3,17 +3,16 @@
 import { useState, useEffect, useContext } from 'react';
 import { PusherContext } from '@root/lib/pusherContext';
 import LobbySettings from './LobbySettings';
-import { addUser, animals, distributeSettings, initGame, retrieveNames, updateName } from '@root/lib/utils';
+import { addUser, animals, sendNumRounds, initGame, retrieveNames, updateName, updateNumPlayers } from '@root/lib/utils';
 
 interface Props { 
     isError: boolean;
     setIsError: (value: boolean) => void;
     gameId: string;   
     userId: string;
-    settings: Settings;
-    setSettings: (value: ((value: Settings) => Settings)) => void;
+    numRounds: number;
+    setNumRounds: (value: number) => void;
     setGameActive: (value: boolean) => void;
-    setNumPlayers: (value: number) => void;
 };
 
 export default function LobbyMaster(props: Props) {   
@@ -85,7 +84,7 @@ export default function LobbyMaster(props: Props) {
                         />        
                         <button className="bg-dark-blue py-2 px-4-5" type="button" onClick={async () => await handleUpdateName()}>OK</button>            
                     </div>                        
-                    <LobbySettings settings={props.settings} setSettings={props.setSettings} />    
+                    <LobbySettings numRounds={props.numRounds} setNumRounds={props.setNumRounds} />    
                 </section>               
             </div>            
             <button className="btn-submit" type="button" onClick={() => handleStartGame()}>Start Game</button>            
@@ -108,8 +107,8 @@ export default function LobbyMaster(props: Props) {
             alert("A minimum of 2 players are needed for multi-player.")
             return;
         };
-        await distributeSettings(props.gameId, props.settings);
-        props.setNumPlayers(nameArray.length);
+        await updateNumPlayers(props.gameId, nameArray.length);
+        await sendNumRounds(props.gameId, props.numRounds);    
         props.setGameActive(true);
     };
 

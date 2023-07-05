@@ -11,7 +11,21 @@ export async function initGame(gameId: string) {
             headers: {
                 "Content-Type": "application/json"
             },          
-            body: JSON.stringify({gameId: gameId})
+            body: JSON.stringify({ gameId: gameId })
+    });   
+
+    if (!res.ok) {
+        throw new Error("error");
+    };
+};
+
+export async function updateNumPlayers(gameId: string, numPlayers: number) {
+    const res = await fetch('../api/updateNumPlayers', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },          
+            body: JSON.stringify({ gameId: gameId, numPlayers: numPlayers})
     });   
 
     if (!res.ok) {
@@ -65,13 +79,13 @@ export async function updateName(userId: string, newNickname: string) {
 };
 
 
-export async function distributeSettings(gameId:string, settings: Settings) {
-    const res = await fetch('../api/distributeSettings', {
+export async function sendNumRounds(gameId:string, numRounds: number) {
+    const res = await fetch('../api/sendNumRounds', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },          
-            body: JSON.stringify({gameId: gameId, settings: settings})
+            body: JSON.stringify({gameId: gameId, numRounds: numRounds})
     });  
     
     if (!res.ok) {
@@ -80,13 +94,13 @@ export async function distributeSettings(gameId:string, settings: Settings) {
 };
 
 
-export async function generateQuestions(numQuestions: number) { 
+export async function generateQuestions(gameId: string) { 
     const res = await fetch('../api/generateQuestions', {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },       
-        body: JSON.stringify({ numQuestions: numQuestions})
+        body: JSON.stringify({ gameId: gameId })
     });
     
     if (!res.ok) {
@@ -156,22 +170,6 @@ export async function updateUserResponse(gameDataId: number, userResponse: strin
     };
 };
 
-
-export async function updateUserIsReady(gameId: string, userId: string, readyStatus: boolean, nextGamePeriod: string) {
-    const res = await fetch('../api/updateUserIsReady', {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },          
-        body: JSON.stringify({gameId: gameId, userId: userId, readyStatus: readyStatus, nextGamePeriod: nextGamePeriod})
-    });
-
-    if (!res.ok) {
-        throw new Error("error");
-    };
-};
-
-
 export async function randomizeSendToUserIds(gameId: string) {
     const res = await fetch('../api/randomizeSendToUserIds', {
         method: "POST",
@@ -202,21 +200,18 @@ export async function randomizedToFalse(gameId: string) {
 };
 
 
-export async function checkAllReady(gameId: string) {
-    const res = await fetch('../api/checkAllReady', {
+export async function readyCheck(gameId: string, nextGamePeriod: string) {
+    const res = await fetch('../api/readyCheck', {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ gameId: gameId })
+        body: JSON.stringify({ gameId: gameId, nextGamePeriod: nextGamePeriod })
     });
 
     if (!res.ok) {
         throw new Error("error");
-    };
-        
-    const json = await res.json();
-    return json.response;    
+    };  
 };
 
 

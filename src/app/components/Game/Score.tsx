@@ -1,8 +1,7 @@
 'use client'
 
+import { readyCheck } from '@root/lib/utils';
 import { useState, useEffect } from 'react';
-import { updateUserIsReady } from '@root/lib/utils';
-
 
 interface Props {    
     isError: boolean;
@@ -11,7 +10,7 @@ interface Props {
     userId: string,
     score: number;
     roundNumber: number;
-    maxRounds: number;
+    numRounds: number;
     selectedResponse: string;   
     humanResponse: string; 
     senderNickname: string;
@@ -29,8 +28,6 @@ export default function Score(props: Props) {
             } else {
                 setIsCorrect(false);
             };         
-
-            await updateUserIsReady(props.gameId, props.userId, false, "score");  
         };    
 
         reset();
@@ -70,12 +67,12 @@ export default function Score(props: Props) {
 
     async function handleNextRound() {        
         setDidUserSubmit(true);   
-        if (props.roundNumber === props.maxRounds) {
-            await updateUserIsReady(props.gameId, props.userId, true, "endScreen"); 
+        if (props.roundNumber === props.numRounds) {
+            await readyCheck(props.gameId, "endScreen"); 
             return;
         }; 
                
         props.setRoundNumber(prev => prev + 1);  
-        await updateUserIsReady(props.gameId, props.userId, true, "write"); 
+        await readyCheck(props.gameId, "write"); 
     };
 };

@@ -8,20 +8,11 @@ import LobbyGuest from '@/app/components/Game/LobbyGuest';
 import Generate from '@/app/components/Game/Generate';
 import '../game.css'
  
-interface Settings {    
-    numRounds: number,
-    timerSeconds: number
-};
-
 export default function GameMPage() {    
     const [gameActive, setGameActive] = useState(false);   
     const [gameId, setGameId] = useState("");
     const [userId, setUserId] = useState("");
-    const [settings, setSettings] = useState<Settings>({        
-        numRounds: 5,       
-        timerSeconds: 30 
-    });      
-    const [numPlayers, setNumPlayers] = useState(1);
+    const [numRounds, setNumRounds] = useState(5);      
     const [isLobbyMaster, setIsLobbyMaster] = useState(false);
     const [isError, setIsError] = useState(false);
 
@@ -56,8 +47,7 @@ export default function GameMPage() {
                     setIsError={setIsError}
                     gameId={gameId} 
                     userId={userId} 
-                    settings={settings} 
-                    numPlayers={numPlayers} 
+                    numRounds={numRounds}                  
                     isLobbyMaster={isLobbyMaster} 
                 />        
                 :(gameId.length > 0 &&      
@@ -67,7 +57,7 @@ export default function GameMPage() {
                             setIsError={setIsError}
                             gameId={gameId} 
                             userId={userId} 
-                            setSettings={setSettings} 
+                            setNumRounds={setNumRounds} 
                             setGameActive={setGameActive}
                         />
                         :<LobbyMaster    
@@ -75,10 +65,9 @@ export default function GameMPage() {
                             setIsError={setIsError}
                             gameId={gameId}     
                             userId={userId}        
-                            settings={settings} 
-                            setSettings={setSettings} 
-                            setGameActive={setGameActive}    
-                            setNumPlayers={setNumPlayers}                                       
+                            numRounds={numRounds} 
+                            setNumRounds={setNumRounds} 
+                            setGameActive={setGameActive}                                                                 
                         />
                     )
                 )

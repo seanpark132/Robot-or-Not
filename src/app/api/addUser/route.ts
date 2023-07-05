@@ -19,8 +19,7 @@ export async function POST(request: Request) {
                 id: body.userId,
                 nickname: body.defaultName,
                 score: 0,
-                gameId: body.gameId,           
-                isReady: false
+                gameId: body.gameId            
             }
         });                  
     };

@@ -11,8 +11,7 @@ interface Props {
     setIsError: (value: boolean) => void;
     gameId: string;
     userId: string;
-    settings: Settings;
-    numPlayers: number;
+    numRounds: number;    
     isLobbyMaster: boolean;
 };
 
@@ -48,9 +47,8 @@ export default function Generate(props: Props) {
         };
 
         const generate = async () => {
-            try {
-                const numQuestions = props.numPlayers * props.settings.numRounds;
-                const questions = await generateQuestions(numQuestions);   
+            try {              
+                const questions = await generateQuestions(props.gameId);   
                 const responses = await generateAIResponses(questions);
          
                 await addGameData(questions, responses, props.gameId);
@@ -72,7 +70,7 @@ export default function Generate(props: Props) {
                 gameId={props.gameId}
                 userId={props.userId}                         
                 selfGameData={selfGameData}
-                maxRounds={props.settings.numRounds}    
+                numRounds={props.numRounds}    
                 isLobbyMaster={props.isLobbyMaster}                        
              />
             }                  

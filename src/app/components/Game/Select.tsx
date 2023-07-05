@@ -1,7 +1,7 @@
 "use client"
 
+import { readyCheck } from '@root/lib/utils';
 import { useEffect, useState } from 'react';
-import { updateUserIsReady } from '@root/lib/utils';
 
 interface Props {  
     isError: boolean;
@@ -25,8 +25,7 @@ export default function Select(props: Props) {
    
     useEffect(() => {
         const reset = async () => {
-            props.setSelectedResponse("");
-            await updateUserIsReady(props.gameId, props.userId, false, "select");            
+            props.setSelectedResponse("");       
         };   
         
         reset();        
@@ -92,6 +91,6 @@ export default function Select(props: Props) {
             props.setScore(prev => prev + 1);
         };
                 
-        await updateUserIsReady(props.gameId, props.userId, true, "score");            
+        await readyCheck(props.gameId, "score");            
     };
 };

@@ -9,12 +9,11 @@ interface Props {
     setIsError: (value: boolean) => void;
     gameId: string;   
     userId: string;
-    setSettings: (value: Settings) => void;
+    setNumRounds: (value: number) => void;
     setGameActive: (value: boolean) => void;    
 };
 
-export default function LobbyGuest(props: Props) {   
-   
+export default function LobbyGuest(props: Props) {  
     const [inputName, setInputName] = useState("");    
     const [nameArray, setNameArray] = useState<string[]>([]);   
     const pusher = useContext(PusherContext);
@@ -25,8 +24,8 @@ export default function LobbyGuest(props: Props) {
             setNameArray(names);
         });
 
-        channel.bind("receiveSettings", (settings: Settings) => {
-            props.setSettings(settings);
+        channel.bind("receiveNumRounds", (numRounds: number) => {
+            props.setNumRounds(numRounds);
             props.setGameActive(true);
         });
 
@@ -35,8 +34,8 @@ export default function LobbyGuest(props: Props) {
             channel.unbind("updateNames", (names: string[]) => {
                 setNameArray(names)
             });
-            channel.unbind("receiveSettings", (settings: Settings) => {
-                props.setSettings(settings);
+            channel.unbind("receiveNumRounds", (numRounds: number) => {
+                props.setNumRounds(numRounds);
                 props.setGameActive(true);
             });
 
@@ -56,8 +55,7 @@ export default function LobbyGuest(props: Props) {
         const defaultName = randomAnimal + randomNum;
         setInputName(defaultName);          
       
-        addName(props.gameId, props.userId, defaultName); 
-
+        addName(props.gameId, props.userId, defaultName);
     }, []);
 
 
