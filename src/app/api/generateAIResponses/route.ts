@@ -49,7 +49,7 @@ export async function POST(request: Request) {
                 messages: [
                     {
                         role: "user",
-                        content: `Generate 1 normal response to the following question using simple words: "${question}". Please limit the response to a maximum of 150 characters.`,
+                        content: `Generate 1 normal response to the following question using simple words: "${question}". Please limit the response to a maximum of 100 characters.`,
                     },
                 ],
                 temperature: 1.5,

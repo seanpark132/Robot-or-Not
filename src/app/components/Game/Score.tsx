@@ -36,12 +36,12 @@ export default function Score(props: Props) {
     const Correct = () => {
         return (
             <div className="flex flex-col items-center text-center">
-                <em><p className="text-6xl text-green-400 font-extrabold">Correct!</p></em>
-                <h2 className="font-normal mt-6 break-normal">{props.selectedResponse}</h2>
-                <h2 className="my-4 text-green-400">was {props.senderNickname}&apos;s response!</h2>
-                <h2>Current score: {props.score}</h2>
+                <em><p className="text-6xl text-green-400 font-extrabold ani-scale">Correct!</p></em>
+                <h2 className="mt-6 break-normal text-green-400 fade-in-1">{props.selectedResponse}</h2>
+                <h2 className="my-4 text-green-400 fade-in-1">was {props.senderNickname}&apos;s response!</h2>
+                <h2 className='fade-in-2'>Current score: {props.score}</h2>
                 {didUserSubmit ? <h1 className='mt-8 py-2 px-4 self-center text-center'>Waiting for others...</h1>
-                :<button className="btn-submit" onClick={() => handleNextRound()} >Next Round</button>}                         
+                :<button className="btn-submit fade-in-2" onClick={() => handleNextRound()} >Next Round</button>}                         
             </div>
         )
     };
@@ -49,12 +49,12 @@ export default function Score(props: Props) {
     const Incorrect = () => {
         return (
             <div className="flex flex-col items-center text-center">
-                <em><p className="text-6xl text-red-500 font-extrabold">Incorrect!</p></em>
-                <h2 className="font-normal mt-6 break-normal">{props.selectedResponse}</h2>
-                <h2 className="my-4 text-red-500">was a Robot&apos;s response!</h2>
-                <h2>Current score: {props.score}</h2>
+                <em><p className="text-6xl text-red-500 font-extrabold ani-scale">Incorrect!</p></em>
+                <h2 className="mt-6 break-normal text-red-500 fade-in-1">{props.selectedResponse}</h2>
+                <h2 className="my-4 text-red-500 fade-in-1">was a Robot&apos;s response!</h2>
+                <h2 className='fade-in-2'>Current score: {props.score}</h2>
                 {didUserSubmit ? <h1 className='mt-8 py-2 px-4 self-center text-center'>Waiting for others...</h1>
-                :<button className="btn-submit" onClick={() => handleNextRound()} >Next Round</button>}                      
+                :<button className="btn-submit fade-in-2" onClick={() => handleNextRound()} >Next Round</button>}                      
             </div>
         )
     };
@@ -65,14 +65,18 @@ export default function Score(props: Props) {
         </>    
     );
 
-    async function handleNextRound() {        
+    async function handleNextRound() {              
         setDidUserSubmit(true);   
-        if (props.roundNumber === props.numRounds) {
-            await readyCheck(props.gameId, "endScreen"); 
-            return;
+        try {
+            if (props.roundNumber === props.numRounds) {
+                await readyCheck(props.gameId, "endScreen"); 
+                return;
+            }; 
+                   
+            props.setRoundNumber(prev => prev + 1);  
+            await readyCheck(props.gameId, "write"); 
+        } catch(error) {
+            props.setIsError(true);
         }; 
-               
-        props.setRoundNumber(prev => prev + 1);  
-        await readyCheck(props.gameId, "write"); 
     };
 };

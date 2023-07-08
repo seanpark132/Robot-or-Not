@@ -26,7 +26,7 @@ export default function Generate(props: Props) {
         channel.bind("receiveGameData", (gameData: {userId: string, data: SingleGameData[]}) => {
             if (gameData.userId === props.userId) {                                     
                 setSelfGameData(gameData.data);
-                setIsLoading(false);
+                setIsLoading(false);    
             };                     
         });
 
@@ -34,8 +34,8 @@ export default function Generate(props: Props) {
             channel.unsubscribe();
             channel.unbind("receiveGameData", (gameData: {userId: string, data: SingleGameData[]}) => {
                 if (gameData.userId === props.userId) {                                     
-                    setSelfGameData(gameData.data);
-                    setIsLoading(false);
+                    setSelfGameData(gameData.data);                    
+                    setIsLoading(false);     
                 }; 
             });   
         };

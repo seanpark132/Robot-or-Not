@@ -104,6 +104,7 @@ export default function Main(props: Props) {
                 selectResponse2={selectResponse2}
                 selectedResponse={selectedResponse}
                 humanResponse={humanResponse}      
+                senderNickname={senderNickname}
                 setSelectedResponse={setSelectedResponse}       
                 setScore={setScore}     
                 setGamePeriod={setGamePeriod}

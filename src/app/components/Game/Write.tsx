@@ -42,13 +42,13 @@ export default function Write(props: Props) {
         <>
         { currentRoundData.id !== 0 &&     
         <div className="flex flex-col">        
-            <h2>Question:</h2>
-            <p>{currentRoundData.question}</p>
-            <h2 className="mt-6">Robot Response:</h2>
-            <p className="mb-6">{currentRoundData.aiResponse}</p>  
-            <label htmlFor="humanResponse">Your Response:</label>
+            <h2 className='fade-in'>Question:</h2>
+            <p className='fade-in'>{currentRoundData.question}</p>
+            <h2 className="mt-6 fade-in-1">Robot Response:</h2>
+            <p className="mb-6 fade-in-1">{currentRoundData.aiResponse}</p>  
+            <label htmlFor="humanResponse" className="fade-in-2">Your Response:</label>
             <textarea 
-                className="input-human-response" 
+                className="input-human-response fade-in-2" 
                 id="humanResponse"
                 value={inputUserResponse}
                 onChange={(e) => {
@@ -58,7 +58,7 @@ export default function Write(props: Props) {
                 }}
             />       
             {didUserSubmit? <h1 className='mt-8 py-2 px-4 self-center text-center'>Waiting for others...</h1>
-            :<button className="btn-submit" onClick={() => handleSubmit()} >Submit</button>}          
+            :<button className="btn-submit fade-in-2" onClick={() => handleSubmit()} >Submit</button>}          
         </div>             
         }
         </>
