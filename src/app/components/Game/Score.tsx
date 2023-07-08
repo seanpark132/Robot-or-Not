@@ -2,6 +2,8 @@
 
 import { readyCheck } from '@root/lib/utils';
 import { useState, useEffect } from 'react';
+import Correct from './Correct';
+import Incorrect from './Incorrect';
 
 interface Props {    
     setIsError: (value: boolean) => void;
@@ -31,36 +33,27 @@ export default function Score(props: Props) {
 
         reset();
     }, [])
-    
-    const Correct = () => {
-        return (
-            <div className="flex flex-col items-center text-center">
-                <em><p className="text-6xl text-green-400 font-extrabold ani-scale">Correct!</p></em>
-                <h2 className="mt-6 break-normal text-green-400 fade-in-1">{props.selectedResponse}</h2>
-                <h2 className="my-4 text-green-400 fade-in-1">was {props.senderNickname}&apos;s response!</h2>
-                <h2 className='fade-in-2'>Current score: {props.score}</h2>
-                {didUserSubmit ? <h1 className='mt-8 py-2 px-4 self-center text-center'>Waiting for others...</h1>
-                :<button className="btn-submit fade-in-2" onClick={() => handleNextRound()} >Next Round</button>}                         
-            </div>
-        )
-    };
 
-    const Incorrect = () => {
-        return (
-            <div className="flex flex-col items-center text-center">
-                <em><p className="text-6xl text-red-500 font-extrabold ani-scale">Incorrect!</p></em>
-                <h2 className="mt-6 break-normal text-red-500 fade-in-1">{props.selectedResponse}</h2>
-                <h2 className="my-4 text-red-500 fade-in-1">was a Robot&apos;s response!</h2>
-                <h2 className='fade-in-2'>Current score: {props.score}</h2>
-                {didUserSubmit ? <h1 className='mt-8 py-2 px-4 self-center text-center'>Waiting for others...</h1>
-                :<button className="btn-submit fade-in-2" onClick={() => handleNextRound()} >Next Round</button>}                      
-            </div>
-        )
-    };
-    
     return (
         <>
-        {isCorrect ? <Correct /> : <Incorrect /> }
+            {isCorrect ? 
+            <Correct 
+                score={props.score}
+                selectedResponse={props.selectedResponse}
+                humanResponse={props.humanResponse}
+                senderNickname={props.senderNickname}
+                didUserSubmit={didUserSubmit}
+                handleNextRound={handleNextRound}
+            /> 
+            :<Incorrect
+                score={props.score}
+                selectedResponse={props.selectedResponse}
+                humanResponse={props.humanResponse}
+                senderNickname={props.senderNickname}
+                didUserSubmit={didUserSubmit}
+                handleNextRound={handleNextRound}
+            /> 
+            }
         </>    
     );
 
