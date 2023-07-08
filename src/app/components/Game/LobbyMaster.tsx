@@ -6,7 +6,6 @@ import LobbySettings from './LobbySettings';
 import { addUser, animals, sendNumRounds, initGame, retrieveNames, updateName, updateNumPlayers } from '@root/lib/utils';
 
 interface Props { 
-    isError: boolean;
     setIsError: (value: boolean) => void;
     gameId: string;   
     userId: string;
@@ -97,9 +96,14 @@ export default function LobbyMaster(props: Props) {
     };
 
     async function handleUpdateName() {   
-        await updateName(props.userId, inputName);        
-        await retrieveNames(props.gameId);               
-        setInputName("");     
+        try {
+            await updateName(props.userId, inputName);        
+            await retrieveNames(props.gameId);               
+            setInputName("");  
+        } catch(error) {
+            props.setIsError(true);
+        };
+    
     };    
 
     async function handleStartGame() {     
@@ -107,9 +111,14 @@ export default function LobbyMaster(props: Props) {
             alert("A minimum of 2 players are needed for multi-player.")
             return;
         };
-        await updateNumPlayers(props.gameId, nameArray.length);
-        await sendNumRounds(props.gameId, props.numRounds);    
-        props.setGameActive(true);
+
+        try {
+            await updateNumPlayers(props.gameId, nameArray.length);
+            await sendNumRounds(props.gameId, props.numRounds);    
+            props.setGameActive(true);
+        } catch(error) {
+            props.setIsError(true);
+        }; 
     };
 
 };

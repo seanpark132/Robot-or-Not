@@ -4,7 +4,6 @@ import { readyCheck } from '@root/lib/utils';
 import { useEffect, useState } from 'react';
 
 interface Props {  
-    isError: boolean;
     setIsError: (value: boolean) => void;
     gameId: string;
     userId: string;
@@ -25,7 +24,7 @@ export default function Select(props: Props) {
     const [didUserSubmit, setDidUserSubmit] = useState(false);   
    
     useEffect(() => {
-        const reset = async () => {
+        const reset = () => {
             props.setSelectedResponse("");       
         };   
         
@@ -91,7 +90,12 @@ export default function Select(props: Props) {
         if (props.selectedResponse === props.humanResponse) {
             props.setScore(prev => prev + 1);
         };
-                
-        await readyCheck(props.gameId, "score");            
+
+        try {
+            await readyCheck(props.gameId, "score");      
+        } catch(error) {
+            props.setIsError(true);
+        };                        
     };
+    
 };

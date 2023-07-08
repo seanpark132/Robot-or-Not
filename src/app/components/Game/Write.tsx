@@ -5,7 +5,6 @@ import  _ from 'lodash';
 import { randomizeSendToUserIds, randomizedToFalse, readyCheck, sendSelectData, updateUserResponse } from '@root/lib/utils';
 
 interface Props {
-    isError: boolean;
     setIsError: (value: boolean) => void;
     gameId: string;
     userId: string;
@@ -29,10 +28,14 @@ export default function Write(props: Props) {
     useEffect(() => {
         setCurrentRoundData(props.selfGameData[props.roundNumber - 1]);
 
-        const reset = async () => {                 
-            if (props.isLobbyMaster) {
-                await randomizedToFalse(props.gameId);
-            };
+        const reset = async () => {    
+            try {                      
+                if (props.isLobbyMaster) {
+                    await randomizedToFalse(props.gameId);
+                };
+            } catch(error) {
+                props.setIsError(true);
+            };  
         };   
         
         reset();     
@@ -76,10 +79,14 @@ export default function Write(props: Props) {
         deepClone[props.roundNumber - 1].userResponse = inputUserResponse;
         const selectData = deepClone[props.roundNumber - 1];
 
-        await randomizeSendToUserIds(props.gameId);        
-        await sendSelectData(props.gameId, props.userId, selectData);
-        await updateUserResponse(currentRoundData.id, inputUserResponse);
-        await readyCheck(props.gameId, "select");         
+        try {
+            await randomizeSendToUserIds(props.gameId);        
+            await sendSelectData(props.gameId, props.userId, selectData);
+            await updateUserResponse(currentRoundData.id, inputUserResponse);
+            await readyCheck(props.gameId, "select");         
+        } catch(error) {
+            props.setIsError(true);
+        };    
     };
-
+    
 };

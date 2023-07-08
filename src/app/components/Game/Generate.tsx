@@ -7,7 +7,6 @@ import Loading from './Loading';
 import Main from './Main';
 
 interface Props {
-    isError: boolean;
     setIsError: (value: boolean) => void;
     gameId: string;
     userId: string;
@@ -64,8 +63,7 @@ export default function Generate(props: Props) {
     return (
         <section>         
             {isLoading ? <Loading />: 
-             <Main
-                isError={props.isError}
+             <Main   
                 setIsError={props.setIsError}                            
                 gameId={props.gameId}
                 userId={props.userId}                         

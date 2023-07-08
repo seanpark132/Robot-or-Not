@@ -42,8 +42,7 @@ export default function GameMPage() {
     return (
         <main className='flex min-h-screen flex-col items-center justify-center px-10 py-16'>           
             {gameActive ? 
-                <Generate 
-                    isError={isError}
+                <Generate   
                     setIsError={setIsError}
                     gameId={gameId} 
                     userId={userId} 
@@ -52,16 +51,14 @@ export default function GameMPage() {
                 />        
                 :(gameId.length > 0 &&      
                     (sharedGameId ? 
-                        <LobbyGuest 
-                            isError={isError}
+                        <LobbyGuest    
                             setIsError={setIsError}
                             gameId={gameId} 
                             userId={userId} 
                             setNumRounds={setNumRounds} 
                             setGameActive={setGameActive}
                         />
-                        :<LobbyMaster    
-                            isError={isError}
+                        :<LobbyMaster           
                             setIsError={setIsError}
                             gameId={gameId}     
                             userId={userId}        

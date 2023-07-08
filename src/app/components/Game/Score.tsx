@@ -4,7 +4,6 @@ import { readyCheck } from '@root/lib/utils';
 import { useState, useEffect } from 'react';
 
 interface Props {    
-    isError: boolean;
     setIsError: (value: boolean) => void;
     gameId: string,
     userId: string,

@@ -8,7 +8,6 @@ import { useState, useEffect, useContext } from "react";
 import { PusherContext } from '@root/lib/pusherContext';
 
 interface Props {
-    isError: boolean;
     setIsError: (value: boolean) => void;
     gameId: string;
     userId: string;
@@ -83,8 +82,7 @@ export default function Main(props: Props) {
     return (
         <div>              
             {gamePeriod === "write" && 
-            <Write     
-                isError={props.isError}
+            <Write      
                 setIsError={props.setIsError} 
                 gameId={props.gameId}       
                 userId={props.userId}  
@@ -94,8 +92,7 @@ export default function Main(props: Props) {
             />
             }
             {gamePeriod === "select" && 
-            <Select    
-                isError={props.isError}
+            <Select       
                 setIsError={props.setIsError} 
                 gameId={props.gameId}       
                 userId={props.userId}   
@@ -111,8 +108,7 @@ export default function Main(props: Props) {
             />
             }
             {gamePeriod === "score" && 
-            <Score    
-                isError={props.isError}
+            <Score   
                 setIsError={props.setIsError}
                 gameId={props.gameId}       
                 userId={props.userId}  

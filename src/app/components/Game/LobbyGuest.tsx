@@ -5,7 +5,6 @@ import { addUser, animals, retrieveNames, updateName } from '@root/lib/utils';
 import { PusherContext } from '@root/lib/pusherContext';
 
 interface Props { 
-    isError: boolean;
     setIsError: (value: boolean) => void;
     gameId: string;   
     userId: string;
@@ -44,9 +43,13 @@ export default function LobbyGuest(props: Props) {
     }, []);
     
     useEffect(() => {   
-        const addName = async (gameId: string, userId: string, name: string) => {            
-            await addUser(gameId, userId, name);
-            await retrieveNames(gameId);                   
+        const addName = async (gameId: string, userId: string, name: string) => {  
+            try {
+                await addUser(gameId, userId, name);
+                await retrieveNames(gameId);
+            } catch(error) {
+                props.setIsError(true);
+            };             
         };
         
         const randomNum = (Math.floor(Math.random() * 100) + 1).toString();
@@ -99,8 +102,13 @@ export default function LobbyGuest(props: Props) {
     };
 
     async function handleUpdateName() {   
-        await updateName(props.userId, inputName);
-        await retrieveNames(props.gameId);   
+        try {
+            await updateName(props.userId, inputName);
+            await retrieveNames(props.gameId);   
+        } catch(error) {
+            props.setIsError(true);
+        };
+        
         setInputName("");     
     };    
 };
