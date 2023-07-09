@@ -12,7 +12,7 @@ interface UserData {
     nickname: string;
     score: number;
     gameId: string;
-    sendToUserId: string;
+    sendToUserId: string | null;
 }
 
 export default function EndScreen(props: Props) {
