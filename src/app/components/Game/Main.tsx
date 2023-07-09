@@ -5,14 +5,15 @@ import Select from "./Select";
 import Score from "./Score";
 import EndScreen from "./EndScreen";
 import { useState, useEffect, useContext } from "react";
-import { checkAllReady } from "../../../../../lib/utils";
-import { PusherContext } from '../../../../../lib/pusherContext';
+import { PusherContext } from '@root/lib/pusherContext';
 
 interface Props {
+    setIsError: (value: boolean) => void;
     gameId: string;
     userId: string;
     selfGameData: SingleGameData[];
-    setSelfGameData: (value: SingleGameData[]) => void;
+    numRounds: number;    
+    isLobbyMaster: boolean;
 };
 
 export default function Main(props: Props) {
@@ -24,17 +25,18 @@ export default function Main(props: Props) {
     const [selectResponse2, setSelectResponse2] = useState("");
     const [selectedResponse, setSelectedResponse] = useState("");
     const [humanResponse, setHumanResponse] = useState("");    
-
-    const MAX_ROUNDS = props.selfGameData.length;
+    const [senderNickname, setSenderNickName] = useState("");
+    
     const pusher = useContext(PusherContext);
 
     useEffect(() => {
         const channel = pusher.subscribe(props.gameId);
-        channel.bind("receiveSelectData", (data: {receiverId: string, selectData: SingleGameData}) => { 
+        channel.bind("receiveSelectData", (data: {receiverId: string, nickname: string, selectData: SingleGameData}) => { 
             if (data.receiverId === props.userId) {
                 setSelectQuestion(data.selectData.question);
                 setHumanResponse(data.selectData.userResponse!);
-                const zeroOrOne = Math.floor(Math.random() * 2)
+                setSenderNickName(data.nickname);
+                const zeroOrOne = Math.floor(Math.random() * 2);
 
                 if (zeroOrOne === 0) {
                     setSelectResponse1(data.selectData.aiResponse);
@@ -46,20 +48,18 @@ export default function Main(props: Props) {
             };
         });
 
-        channel.bind("checkAllReady", async (nextGamePeriod: string) => {
-            const isAllReady = await checkAllReady(props.gameId);
-            if (isAllReady) {
-                setGamePeriod(nextGamePeriod);
-            };     
+        channel.bind("allReady", async (nextGamePeriod: string) => {     
+            setGamePeriod(nextGamePeriod);            
         });
 
         return () => {
             channel.unsubscribe();
 
-            channel.unbind("receiveSelectData", (data: {receiverId: string, selectData: SingleGameData}) => { 
+            channel.unbind("receiveSelectData", (data: {receiverId: string, nickname: string, selectData: SingleGameData}) => { 
                 if (data.receiverId === props.userId) {
                     setSelectQuestion(data.selectData.question);
                     setHumanResponse(data.selectData.userResponse!);
+                    setSenderNickName(data.nickname);
                     const zeroOrOne = Math.floor(Math.random() * 2)
     
                     if (zeroOrOne === 0) {
@@ -72,11 +72,8 @@ export default function Main(props: Props) {
                 };
             });
     
-            channel.unbind("checkAllReady", async (nextGamePeriod: string) => {
-                const isAllReady = await checkAllReady(props.gameId);
-                if (isAllReady) {
-                    setGamePeriod(nextGamePeriod);
-                };     
+            channel.unbind("allReady", async (nextGamePeriod: string) => {     
+                setGamePeriod(nextGamePeriod);            
             });
         };
 
@@ -86,15 +83,17 @@ export default function Main(props: Props) {
         <div>              
             {gamePeriod === "write" && 
             <Write      
+                setIsError={props.setIsError} 
                 gameId={props.gameId}       
                 userId={props.userId}  
                 selfGameData={props.selfGameData}
-                roundNumber={roundNumber}
-                setSelfGameData={props.setSelfGameData}     
+                roundNumber={roundNumber}       
+                isLobbyMaster={props.isLobbyMaster}                 
             />
             }
             {gamePeriod === "select" && 
-            <Select      
+            <Select       
+                setIsError={props.setIsError} 
                 gameId={props.gameId}       
                 userId={props.userId}   
                 selectQuestion={selectQuestion}
@@ -102,20 +101,23 @@ export default function Main(props: Props) {
                 selectResponse2={selectResponse2}
                 selectedResponse={selectedResponse}
                 humanResponse={humanResponse}      
+                senderNickname={senderNickname}
                 setSelectedResponse={setSelectedResponse}       
                 setScore={setScore}     
                 setGamePeriod={setGamePeriod}
             />
             }
             {gamePeriod === "score" && 
-            <Score      
+            <Score   
+                setIsError={props.setIsError}
                 gameId={props.gameId}       
                 userId={props.userId}  
                 score={score}
                 roundNumber={roundNumber}
-                MAX_ROUNDS={MAX_ROUNDS}                
+                numRounds={props.numRounds}           
                 selectedResponse={selectedResponse}
                 humanResponse={humanResponse}
+                senderNickname={senderNickname}
                 setRoundNumber={setRoundNumber}                
             />
             }         

@@ -1,9 +1,10 @@
 "use client"
 
+import { readyCheck } from '@root/lib/utils';
 import { useEffect, useState } from 'react';
-import { randomizedToFalse, updateUserIsReady } from '../../../../../lib/utils';
 
 interface Props {  
+    setIsError: (value: boolean) => void;
     gameId: string;
     userId: string;
     selectQuestion: string;
@@ -11,20 +12,20 @@ interface Props {
     selectResponse2: string;
     selectedResponse: string;
     humanResponse: string;
+    senderNickname: string;
     setSelectedResponse: (value: string) => void;
     setScore: (value: ((value:number) => number)) => void;
     setGamePeriod: (value: string) => void;    
 };
 
 export default function Select(props: Props) {
-    const [btnStyle1, setBtnStyle1] = useState("btn-select-unselected");
-    const [btnStyle2, setBtnStyle2] = useState("btn-select-unselected");   
+    const [btnStyle1, setBtnStyle1] = useState("btn-select-unselected left-to-right");
+    const [btnStyle2, setBtnStyle2] = useState("btn-select-unselected right-to-left");   
     const [didUserSubmit, setDidUserSubmit] = useState(false);   
    
     useEffect(() => {
-        const reset = async () => {
-            props.setSelectedResponse("");
-            await updateUserIsReady(props.gameId, props.userId, false, "select");            
+        const reset = () => {
+            props.setSelectedResponse("");       
         };   
         
         reset();        
@@ -33,10 +34,10 @@ export default function Select(props: Props) {
     return(         
         <>                 
             {props.selectQuestion.length === 0 ? <h2>Loading...</h2>: 
-                <div className='flex flex-col'>                   
-                    <h2>Question:</h2>                 
-                    <p>{props.selectQuestion}</p>
-                    <h2 className='mt-8' >Click the response you think is made by a human:</h2>
+                <div className='flex flex-col overflow-hidden'>                   
+                    <h2 className='fade-in'>Question:</h2>                 
+                    <p className="fade-in">{props.selectQuestion}</p>
+                    <h2 className='mt-8 fade-in-1'>Which response is {props.senderNickname}&apos;s?</h2>
                     <button 
                         className={btnStyle1} 
                         onClick={() => {
@@ -72,7 +73,7 @@ export default function Select(props: Props) {
                         </div>                               
                     </button>
                     {didUserSubmit ? <h1 className='mt-8 py-2 px-4 self-center text-center'>Waiting for others...</h1>
-                    :<button className='btn-submit' onClick={() => handleSubmit()} >Submit</button>}   
+                    :<button className='btn-submit fade-in-4' onClick={() => handleSubmit()} >Submit</button>}   
                 </div>
             }             
         </>          
@@ -89,8 +90,12 @@ export default function Select(props: Props) {
         if (props.selectedResponse === props.humanResponse) {
             props.setScore(prev => prev + 1);
         };
-        
-        await randomizedToFalse(props.gameId);
-        await updateUserIsReady(props.gameId, props.userId, true, "score");            
+
+        try {
+            await readyCheck(props.gameId, "score");      
+        } catch(error) {
+            props.setIsError(true);
+        };                        
     };
+    
 };

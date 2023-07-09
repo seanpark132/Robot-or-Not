@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { prisma } from "../../../../lib/prismaClient";
-import { pusherServer } from "../../../../lib/pusher";
+import { prisma } from "@root/lib/prismaClient";
+import { pusherServer } from "@root/lib/pusher";
 
 export async function POST(request: Request) {        
     const body = await request.json();
@@ -14,10 +14,10 @@ export async function POST(request: Request) {
                 console.log(error);
             });
         
-        return NextResponse.json({});
+        return new NextResponse('Updated lobby names', { status: 200 });
 
     } catch(error) {
-        console.error("error in retrieving names") 
+        console.error("Error in retrieving names") 
         return new NextResponse('DatabaseError', { status: 500 });
     };
 

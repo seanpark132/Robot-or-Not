@@ -6,173 +6,225 @@ export const animals = [ 'Lion', 'Elephant', 'Monkey', 'Giraffe', 'Tiger', 'Kang
     'Toucan', 'Antelope', 'Falcon', 'Peacock', 'Gazelle' ];
 
 export async function initGame(gameId: string) {
-    await fetch('../api/initGame', {
+    const res = await fetch('../api/initGame', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },          
-            body: JSON.stringify({gameId: gameId})
-        });    
+            body: JSON.stringify({ gameId: gameId })
+    });   
+
+    if (!res.ok) {
+        throw new Error("error");
+    };
+};
+
+export async function updateNumPlayers(gameId: string, numPlayers: number) {
+    const res = await fetch('../api/updateNumPlayers', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },          
+            body: JSON.stringify({ gameId: gameId, numPlayers: numPlayers})
+    });   
+
+    if (!res.ok) {
+        throw new Error("error");
+    };
 };
 
 
 export async function addUser(gameId: string, userId: string, defaultName: string) {
-    await fetch('../api/addUser', {
+    const res = await fetch('../api/addUser', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },          
             body: JSON.stringify({gameId: gameId, userId: userId, defaultName: defaultName})
-        });
+    });
+
+    if (!res.ok) {
+        throw new Error("error");
+    };
 };
 
 
 export async function retrieveNames(gameId: string) {
-    await fetch('../api/retrieveNames', {
+    const res = await fetch('../api/retrieveNames', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },          
             body: JSON.stringify({gameId: gameId})
-        });    
+    });    
+
+    if (!res.ok) {
+        throw new Error("error");
+    };
 };
 
 
 export async function updateName(userId: string, newNickname: string) {
-    await fetch('../api/updateName', {
+    const res = await fetch('../api/updateName', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },          
             body: JSON.stringify({userId: userId, newNickName: newNickname})
-        });
+    });
+
+    if (!res.ok) {
+        throw new Error("error");
+    };
 };
 
 
-export async function distributeSettings(gameId:string, settings: Settings) {
-    await fetch('../api/distributeSettings', {
+export async function sendNumRounds(gameId:string, numRounds: number) {
+    const res = await fetch('../api/sendNumRounds', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },          
-            body: JSON.stringify({gameId: gameId, settings: settings})
-        });    
+            body: JSON.stringify({gameId: gameId, numRounds: numRounds})
+    });  
+    
+    if (!res.ok) {
+        throw new Error("error");
+    };
 };
 
 
-export async function generateQuestions(numQuestions: number) { 
+export async function generateQuestions(gameId: string) { 
     const res = await fetch('../api/generateQuestions', {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },       
-        body: JSON.stringify({ numQuestions: numQuestions})
+        body: JSON.stringify({ gameId: gameId })
     });
+    
+    if (!res.ok) {
+        throw new Error("error");
+    };
 
     const json = await res.json();
     return json.response;
 };
 
 
-export async function generateAIResponse(question: string) {
-    const res = await fetch('../api/generateResponse', {
+export async function generateAIResponses(questions: string[]) {
+    const res = await fetch('../api/generateAIResponses', {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ prompt: question })
-    })
+        body: JSON.stringify({ questions: questions})
+    });
+   
     const json = await res.json();
     return json.response;
 };
 
 
 export async function addGameData(questions: string[], responses: string[], gameId: string) {
-    await fetch('../api/addGameData', {
+    const res = await fetch('../api/addGameData', {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({questions: questions, responses: responses, gameId: gameId })
-    })    
+    });
+    
+    if (!res.ok) {
+        throw new Error("error");
+    };
 };
 
 
 export async function distributeGameData(gameId: string) {
-    await fetch('../api/distributeGameData', {
+    const res = await fetch('../api/distributeGameData', {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({ gameId: gameId })
-    })    
+    }); 
+
+    if (!res.ok) {
+        throw new Error("error");
+    };
 };
 
 
 export async function updateUserResponse(gameDataId: number, userResponse: string) {
-    await fetch('../api/updateUserResponse', {
+    const res = await fetch('../api/updateUserResponse', {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json"
         },          
         body: JSON.stringify({gameDataId: gameDataId, userResponse: userResponse})
     });
+
+    if (!res.ok) {
+        throw new Error("error");
+    };
 };
-
-
-export async function updateUserIsReady(gameId: string, userId: string, readyStatus: boolean, nextGamePeriod: string) {
-    await fetch('../api/updateUserIsReady', {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },          
-        body: JSON.stringify({gameId: gameId, userId: userId, readyStatus: readyStatus, nextGamePeriod: nextGamePeriod})
-    });
-};
-
 
 export async function randomizeSendToUserIds(gameId: string) {
-    await fetch('../api/randomizeSendToUserIds', {
+    const res = await fetch('../api/randomizeSendToUserIds', {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({ gameId: gameId })
     });  
+
+    if (!res.ok) {
+        throw new Error("error");
+    };
 };
 
 
 export async function randomizedToFalse(gameId: string) {
-    await fetch('../api/randomizedToFalse', {
+    const res = await fetch('../api/randomizedToFalse', {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({ gameId: gameId })
     });  
+
+    if (!res.ok) {
+        throw new Error("error");
+    };
 };
 
 
-export async function checkAllReady(gameId: string) {
-    const res = await fetch('../api/checkAllReady', {
+export async function readyCheck(gameId: string, nextGamePeriod: string) {
+    const res = await fetch('../api/readyCheck', {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ gameId: gameId })
+        body: JSON.stringify({ gameId: gameId, nextGamePeriod: nextGamePeriod })
     });
-        
-    const json = await res.json();
-    return json.response;    
+
+    if (!res.ok) {
+        throw new Error("error");
+    };  
 };
 
 
 export async function sendSelectData(gameId: string, userId: string, selectData: SingleGameData) {
-    await fetch('../api/sendSelectData', {
+    const res = await fetch('../api/sendSelectData', {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({ gameId: gameId, userId: userId, selectData: selectData })
-    });  
+    }); 
+    
+    if (!res.ok) {
+        throw new Error("error");
+    };
 };

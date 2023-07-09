@@ -5,21 +5,21 @@ export async function POST(request: Request) {
     const body = await request.json();
 
     try {
-        await updateName();       
-        return new NextResponse('Updated name', { status: 200 });
+        await updateNumPlayers(body.gameId, body.numPlayers);       
+        return new NextResponse('Updated numPlayers', { status: 200 });
 
     } catch(error) {
-        console.error("error in updating names") 
+        console.error("error in updating numPlayers") 
         return new NextResponse('DatabaseError', { status: 500 });
     };
 
-    async function updateName() {        
-        await prisma.user.update({
+    async function updateNumPlayers(gameId: string, numPlayers: number) {        
+        await prisma.game.update({
             where: {
-                id: body.userId            
+                id: gameId        
             },
             data: {
-                nickname: body.newNickName
+                numPlayers: numPlayers
             }
         });         
     };

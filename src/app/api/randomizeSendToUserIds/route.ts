@@ -1,43 +1,32 @@
 import { NextResponse } from "next/server";
-import { prisma } from "../../../../lib/prismaClient";
+import { prisma } from "@root/lib/prismaClient";
 
 export async function POST(request: Request) {        
     const body = await request.json();
 
-    try {       
+    try {               
         // To prevent multiple clients from randomizing user ids (only needs to be done once / round)
         const game = await findGame();   
                    
         if (game!.isRandomized === true) {
-            return NextResponse.json({});
+            return new NextResponse('Already randomized', { status: 200 });
         };
-               
+                
         await updateIsRandomized();
-        
+
         const users = await findUsers();
         const userIds = users.map(user => user.id);
-        let remainingIds = [...userIds];
-        
-        for (let i = 0; i < userIds.length; i++ ) {
-            let isIdSame = true;
-            let randomId = "";
-
-            while (isIdSame) {
-                const randomIndex = Math.floor(Math.random() * remainingIds.length);        
-                randomId = remainingIds[randomIndex]
-                if (randomId !== userIds[i]) {
-                    remainingIds.splice(randomIndex, 1);
-                    isIdSame = false;                    
-                };
-            };
-            
-            await updateSendToUserId(userIds[i], randomId); 
+    
+        const shuffledIds = shuffleArrayWithNewPositions(userIds);
+   
+        for (let i = 0; i < userIds.length; i++ ) {            
+            await updateSendToUserId(userIds[i], shuffledIds[i] ); 
         };
-        console.log("randomized send to userIds")                     
-        return NextResponse.json({});
+                           
+        return new NextResponse('Randomized SendToUserIds', { status: 200 });
 
     } catch(error) {
-        console.error("error in randomizing sendToUserIds") 
+        console.error("Error in randomizing sendToUserIds") 
         return new NextResponse('DatabaseError', { status: 500 });
     };
 
@@ -60,7 +49,7 @@ export async function POST(request: Request) {
             }
         });
     };
-    
+
     async function findUsers() {        
         const users = await prisma.user.findMany({
             where: {
@@ -68,6 +57,19 @@ export async function POST(request: Request) {
             }
         });       
         return users;
+    };
+
+    function shuffleArrayWithNewPositions(array: string[]) {
+        const arrayCopy = [...array];
+
+        for (let i = array.length - 1; i >= 1 ; i-- ) {
+            let j = Math.floor(Math.random() * i);
+            let tmp = arrayCopy[i];
+            arrayCopy[i] = arrayCopy[j];
+            arrayCopy[j] = tmp;
+        };
+
+        return arrayCopy;
     };
 
     async function updateSendToUserId(selfId: string, sendToId: string) {

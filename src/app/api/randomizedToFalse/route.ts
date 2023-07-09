@@ -1,22 +1,21 @@
 import { NextResponse } from "next/server";
-import { prisma } from "../../../../lib/prismaClient";
+import { prisma } from "@root/lib/prismaClient";
 
 export async function POST(request: Request) {        
     const body = await request.json();
 
     try {           
-        const game = await findGame();    
-        console.log(game);
+        // To prevent multiple clients from setting isRandomized to false (only needs to be done once / round)
+        const game = await findGame();            
         if (game!.isRandomized === false) {
-            return NextResponse.json({});
+            return new NextResponse('isRandomized is already false', { status: 200 });
         };
                
         await updateIsRandomized();       
-       
-        console.log("set isRandomized to false")                     
-        return NextResponse.json({});
+                         
+        return new NextResponse('Set isRandomized to false', { status: 200 });
     } catch(error) {
-        console.error("error in setting isRandomized to false") 
+        console.error("Error in setting isRandomized to false") 
         return new NextResponse('DatabaseError', { status: 500 });
     };
 

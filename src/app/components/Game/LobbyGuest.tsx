@@ -1,17 +1,18 @@
 "use client"
 
 import { useState, useEffect, useContext } from 'react';
-import { addUser, animals, retrieveNames, updateName } from '../../../../../lib/utils';
-import { PusherContext } from '../../../../../lib/pusherContext';
+import { addUser, animals, retrieveNames, updateName } from '@root/lib/utils';
+import { PusherContext } from '@root/lib/pusherContext';
 
 interface Props { 
+    setIsError: (value: boolean) => void;
     gameId: string;   
     userId: string;
-    setSettings: (value: Settings) => void;
+    setNumRounds: (value: number) => void;
     setGameActive: (value: boolean) => void;    
 };
 
-export default function LobbyGuest(props: Props) {   
+export default function LobbyGuest(props: Props) {  
     const [inputName, setInputName] = useState("");    
     const [nameArray, setNameArray] = useState<string[]>([]);   
     const pusher = useContext(PusherContext);
@@ -22,8 +23,8 @@ export default function LobbyGuest(props: Props) {
             setNameArray(names);
         });
 
-        channel.bind("receiveSettings", (settings: Settings) => {
-            props.setSettings(settings);
+        channel.bind("receiveNumRounds", (numRounds: number) => {
+            props.setNumRounds(numRounds);
             props.setGameActive(true);
         });
 
@@ -32,8 +33,8 @@ export default function LobbyGuest(props: Props) {
             channel.unbind("updateNames", (names: string[]) => {
                 setNameArray(names)
             });
-            channel.unbind("receiveSettings", (settings: Settings) => {
-                props.setSettings(settings);
+            channel.unbind("receiveNumRounds", (numRounds: number) => {
+                props.setNumRounds(numRounds);
                 props.setGameActive(true);
             });
 
@@ -42,9 +43,13 @@ export default function LobbyGuest(props: Props) {
     }, []);
     
     useEffect(() => {   
-        const addName = async (gameId: string, userId: string, name: string) => {            
-            await addUser(gameId, userId, name);
-            await retrieveNames(gameId);                   
+        const addName = async (gameId: string, userId: string, name: string) => {  
+            try {
+                await addUser(gameId, userId, name);
+                await retrieveNames(gameId);
+            } catch(error) {
+                props.setIsError(true);
+            };             
         };
         
         const randomNum = (Math.floor(Math.random() * 100) + 1).toString();
@@ -53,8 +58,7 @@ export default function LobbyGuest(props: Props) {
         const defaultName = randomAnimal + randomNum;
         setInputName(defaultName);          
       
-        addName(props.gameId, props.userId, defaultName); 
-
+        addName(props.gameId, props.userId, defaultName);
     }, []);
 
 
@@ -98,8 +102,13 @@ export default function LobbyGuest(props: Props) {
     };
 
     async function handleUpdateName() {   
-        await updateName(props.userId, inputName);
-        await retrieveNames(props.gameId);   
+        try {
+            await updateName(props.userId, inputName);
+            await retrieveNames(props.gameId);   
+        } catch(error) {
+            props.setIsError(true);
+        };
+        
         setInputName("");     
     };    
 };

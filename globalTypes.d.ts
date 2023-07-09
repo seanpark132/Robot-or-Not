@@ -1,8 +1,4 @@
 declare global {
-    interface Settings {    
-        numRounds: number,
-        timerSeconds: number
-    };
     
     interface SingleGameData {
         id: number;

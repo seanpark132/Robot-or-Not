@@ -11,8 +11,8 @@ generator client {
 model Game {
   id            String     @id
   rounds        Int
-  timer         Boolean
-  timerSeconds  Int
+  numPlayers    Int
+  numReady      Int
   isRandomized  Boolean
   users         User[]
   data          GameData[]
@@ -23,7 +23,6 @@ model User {
   nickname     String
   score        Int
   gameId       String
-  isReady      Boolean
   sendToUserId String?
   game         Game       @relation(fields: [gameId], references: [id])
 

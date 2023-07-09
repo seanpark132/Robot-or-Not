@@ -1,24 +1,25 @@
 import { NextResponse } from "next/server";
-import { prisma } from "../../../../lib/prismaClient";
-import { pusherServer } from "../../../../lib/pusher";
+import { prisma } from "@root/lib/prismaClient";
+import { pusherServer } from "@root/lib/pusher";
 
 export async function POST(request: Request) {        
     const body = await request.json();
 
     try {        
         const user = await findUser();
-        const receiverId = user?.sendToUserId;      
+        const receiverId = user?.sendToUserId;     
+        const senderNickname = user?.nickname; 
 
-        await pusherServer.trigger(body.gameId, "receiveSelectData", {receiverId: receiverId, selectData: body.selectData})
+        await pusherServer.trigger(body.gameId, "receiveSelectData", { receiverId: receiverId, nickname: senderNickname, selectData: body.selectData })
             .catch((error: any) => {
                 console.log(error);
-            });
+        });
         
-        return NextResponse.json({});
+        return new NextResponse('Sent SelectData', { status: 200 });
 
     } catch(error) {
-        console.error("error in sending selectData") 
-        return new NextResponse('InternalError', { status: 500 });
+        console.error("Error in sending selectData") 
+        return new NextResponse('Internal Server Error', { status: 500 });
     };
 
     async function findUser() {        

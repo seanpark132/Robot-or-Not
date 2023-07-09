@@ -4,8 +4,8 @@ interface Settings {
 };
 
 interface Props {
-    settings: Settings;
-    setSettings: (value: ((value: Settings) => Settings)) => void;
+    numRounds: number;
+    setNumRounds: (value: number) => void;
 }
 
 export default function LobbySettings(props: Props) {
@@ -13,26 +13,26 @@ export default function LobbySettings(props: Props) {
     const RoundsButton = (rounds :number) => {
         return(
             <button 
-                className={props.settings.numRounds === rounds ? 'lobby-highlight': 'px-1'} 
+                className={props.numRounds === rounds ? 'lobby-highlight': 'px-1'} 
                 type='button' 
-                onClick={() => handleSettingButton('numRounds', rounds)}
+                onClick={() => props.setNumRounds(rounds)}
             >
             {rounds}
             </button>
         );
     };
 
-    const TimerButton = (seconds: number) => {
-        return(
-            <button 
-                className={props.settings.timerSeconds === seconds ? 'lobby-highlight': 'px-1'} 
-                type='button' 
-                onClick={() => handleSettingButton('timerSeconds', seconds)}
-            >
-            {`${seconds}s`}
-            </button>
-        );
-    };
+    // const TimerButton = (seconds: number) => {
+    //     return(
+    //         <button 
+    //             className={props.settings.timerSeconds === seconds ? 'lobby-highlight': 'px-1'} 
+    //             type='button' 
+    //             onClick={() => handleSettingButton('timerSeconds', seconds)}
+    //         >
+    //         {`${seconds}s`}
+    //         </button>
+    //     );
+    // };
 
     return(
         <>
@@ -56,15 +56,5 @@ export default function LobbySettings(props: Props) {
                 </div>     */}
             </div>   
         </> 
-    );
-
-    function handleSettingButton(setting:string, n: number) {
-        props.setSettings(prev => {
-            return {
-                ...prev,
-                [setting]: n
-            }
-        });
-    };
-    
+    );    
 };
