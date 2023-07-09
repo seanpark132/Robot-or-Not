@@ -24,7 +24,7 @@ export async function updateGameInfo(gameId: string, numPlayers: number, numRoun
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
-            },          
+            },     
             body: JSON.stringify({ gameId: gameId, numPlayers: numPlayers, numRounds: numRounds })
     });   
 

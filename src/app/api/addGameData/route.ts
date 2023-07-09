@@ -6,6 +6,7 @@ export async function POST(request: Request) {
 
     try {       
         const users = await findUsers(body.gameId); 
+
         const userIds = users.map(user => user.id);  
         const numRounds = body.questions.length / userIds.length;
 
