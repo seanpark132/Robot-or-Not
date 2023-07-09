@@ -1,6 +1,6 @@
 'use client'
 
-import { readyCheck } from '@root/lib/utils';
+import { readyCheck, updateScore } from '@root/lib/utils';
 import { useState, useEffect } from 'react';
 import Correct from './Correct';
 import Incorrect from './Incorrect';
@@ -61,6 +61,7 @@ export default function Score(props: Props) {
         setDidUserSubmit(true);   
         try {
             if (props.roundNumber === props.numRounds) {
+                await updateScore(props.userId, props.score);
                 await readyCheck(props.gameId, "endScreen"); 
                 return;
             }; 

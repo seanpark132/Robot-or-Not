@@ -31,7 +31,7 @@ export default function EndScreen(props: Props) {
     return(
         <>
             {allUserData.length > 0 && 
-            <div className='text-center'>
+            <div className='text-center fade-in'>
                 <h2 className="text-5xl">Game over!</h2>
                 <div className='border-4 border-yellow-500 rounded-xl mt-6'>
                     <h1 className='border-b-4 border-yellow-500 py-3'>SCOREBOARD</h1>

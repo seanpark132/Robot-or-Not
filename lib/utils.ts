@@ -229,6 +229,22 @@ export async function sendSelectData(gameId: string, userId: string, selectData:
     };
 };
 
+
+export async function updateScore(userId: string, score: number) {
+    const res = await fetch('../api/updateScore', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },          
+        body: JSON.stringify({userId: userId, score: score})
+    });
+
+    if (!res.ok) {
+        throw new Error("error");
+    };
+};
+
+
 export async function getAllUsers(gameId: string) {
     const res = await fetch('../api/getAllUsers', {
         method: "POST",
