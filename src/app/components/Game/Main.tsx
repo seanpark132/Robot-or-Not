@@ -19,7 +19,7 @@ interface Props {
 export default function Main(props: Props) {
     const [gamePeriod, setGamePeriod] = useState("write")  
     const [score, setScore] = useState(0);
-    const [roundNumber, setRoundNumber] = useState(5);
+    const [roundNumber, setRoundNumber] = useState(1);
     const [selectQuestion, setSelectQuestion] = useState("");
     const [selectResponse1, setSelectResponse1] = useState("");
     const [selectResponse2, setSelectResponse2] = useState("");
