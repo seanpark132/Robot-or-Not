@@ -3,7 +3,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { PusherContext } from '@root/lib/pusherContext';
 import LobbySettings from './LobbySettings';
-import { addUser, animals, sendNumRounds, initGame, retrieveNames, updateName, updateNumPlayers } from '@root/lib/utils';
+import { addUser, animals, sendNumRounds, initGame, retrieveNames, updateName, updateGameInfo } from '@root/lib/utils';
 
 interface Props { 
     setIsError: (value: boolean) => void;
@@ -113,7 +113,7 @@ export default function LobbyMaster(props: Props) {
         };
 
         try {
-            await updateNumPlayers(props.gameId, nameArray.length);
+            await updateGameInfo(props.gameId, nameArray.length, props.numRounds);
             await sendNumRounds(props.gameId, props.numRounds);    
             props.setGameActive(true);
         } catch(error) {

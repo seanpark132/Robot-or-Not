@@ -19,13 +19,13 @@ export async function initGame(gameId: string) {
     };
 };
 
-export async function updateNumPlayers(gameId: string, numPlayers: number) {
-    const res = await fetch('../api/updateNumPlayers', {
+export async function updateGameInfo(gameId: string, numPlayers: number, numRounds: number) {
+    const res = await fetch('../api/updateGameInfo', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
-            },          
-            body: JSON.stringify({ gameId: gameId, numPlayers: numPlayers})
+            },     
+            body: JSON.stringify({ gameId: gameId, numPlayers: numPlayers, numRounds: numRounds })
     });   
 
     if (!res.ok) {
@@ -227,4 +227,33 @@ export async function sendSelectData(gameId: string, userId: string, selectData:
     if (!res.ok) {
         throw new Error("error");
     };
+};
+
+
+export async function updateScore(userId: string, score: number) {
+    const res = await fetch('../api/updateScore', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },          
+        body: JSON.stringify({userId: userId, score: score})
+    });
+
+    if (!res.ok) {
+        throw new Error("error");
+    };
+};
+
+
+export async function getAllUsers(gameId: string) {
+    const res = await fetch('../api/getAllUsers', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ gameId: gameId })
+    });
+   
+    const json = await res.json();
+    return json.response;
 };

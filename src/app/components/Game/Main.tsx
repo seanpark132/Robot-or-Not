@@ -122,7 +122,7 @@ export default function Main(props: Props) {
             />
             }         
             {gamePeriod === "endScreen" &&
-            <EndScreen />
+            <EndScreen gameId={props.gameId} />
             }
         </div>
     );

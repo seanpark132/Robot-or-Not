@@ -79,6 +79,13 @@
     border-radius: 1rem;  
 }
 
+.scoreboard-name {
+    max-width: 60vw;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 @media (min-width: 40rem) {
     .input-human-response {
         height: 6.375rem;
