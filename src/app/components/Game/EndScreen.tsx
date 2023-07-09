@@ -20,7 +20,8 @@ export default function EndScreen(props: Props) {
 
     useEffect(() => {
         const getAllUserData = async () => {
-            const data: UserData[] = await getAllUsers(props.gameId);           
+            const data: UserData[] = await getAllUsers(props.gameId);      
+            data.sort((a,b) => b.score - a.score)
             setAllUserData(data);
         };
 
