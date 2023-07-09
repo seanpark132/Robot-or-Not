@@ -5,7 +5,8 @@ export async function POST(request: Request) {
     const body = await request.json();
 
     try {
-        await updateNumPlayers(body.gameId, body.numPlayers);       
+        await updateGameInfo(body.gameId, body.numPlayers, body.numRounds);    
+
         return new NextResponse('Updated numPlayers', { status: 200 });
 
     } catch(error) {
@@ -13,13 +14,14 @@ export async function POST(request: Request) {
         return new NextResponse('DatabaseError', { status: 500 });
     };
 
-    async function updateNumPlayers(gameId: string, numPlayers: number) {        
+    async function updateGameInfo(gameId: string, numPlayers: number, numRounds: number) {        
         await prisma.game.update({
             where: {
                 id: gameId        
             },
             data: {
-                numPlayers: numPlayers
+                numPlayers: numPlayers,
+                rounds: numRounds
             }
         });         
     };
