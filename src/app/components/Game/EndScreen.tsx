@@ -35,7 +35,7 @@ export default function EndScreen(props: Props) {
                 <div className='border-4 border-yellow-500 rounded-xl mt-6'>
                     <h1 className='border-b-4 border-yellow-500 py-3'>SCOREBOARD</h1>
                     {allUserData.map((userData: UserData) => (
-                        <div className='m-3 px-2 flex'>
+                        <div key={userData.id} className='m-3 px-2 flex'>
                             <h2 className='scoreboard-name'>{userData.nickname}</h2>                   
                             <h2 className='ml-auto'>{userData.score}</h2>
                         </div>                    
