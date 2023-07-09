@@ -111,10 +111,12 @@
     position: absolute;
     top: 0;
     left: 0;
-    background-color: red;
+    background-color: rgb(255, 238, 0);
     height: 2rem;
     width: 2rem;
-    animation: moving 3s linear infinite alternate forwards;
+    border: transparent;
+    border-radius: 1rem;
+    animation: moving 3s cubic-bezier(0.39, 0.09, 0.51, 0.8) infinite alternate forwards;
 }
 
 .fade-in {
