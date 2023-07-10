@@ -81,7 +81,7 @@ export default function LobbyMaster(props: Props) {
                             id="nickname"
                             onChange={(e) => setInputName(e.target.value)}
                         />        
-                        <button className="bg-dark-blue py-2 px-4-5" type="button" onClick={async () => await handleUpdateName()}>OK</button>            
+                        <button className="bg-dark-blue py-2 px-4-5" type="button" onClick={() => handleUpdateName()}>OK</button>            
                     </div>                        
                     <LobbySettings numRounds={props.numRounds} setNumRounds={props.setNumRounds} />    
                 </section>               
@@ -90,8 +90,8 @@ export default function LobbyMaster(props: Props) {
         </div>        
     );
  
-    function handleCopy() {
-        navigator.clipboard.writeText(`${PAGE_URL}?id=${props.gameId}`);
+    async function handleCopy() {
+        await navigator.clipboard.writeText(`${PAGE_URL}?id=${props.gameId}`);
         alert("URL copied to clipboard");
     };
 
