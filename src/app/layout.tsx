@@ -1,26 +1,26 @@
-import './globals.css';
-import { Inter } from 'next/font/google';
-import type { Metadata } from 'next';
-import Navbar from './components/Navbar';
+import "./globals.css";
+import { Inter } from "next/font/google";
+import type { Metadata } from "next";
+import Navbar from "./components/Navbar";
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Robot or Not',
-  description: 'some description',
+	title: "Robot or Not",
+	description: "some description",
 };
 
 export default function RootLayout({
-  children,
+	children,
 }: {
-  children: React.ReactNode
+	children: React.ReactNode;
 }) {
-  return (
-    <html lang="en">      
-      <body className={inter.className}>   
-        <Navbar />    
-        {children}
-      </body>
-    </html>
-  )
-};
+	return (
+		<html lang="en">
+			<body className={inter.className}>
+				<Navbar />
+				{children}
+			</body>
+		</html>
+	);
+}

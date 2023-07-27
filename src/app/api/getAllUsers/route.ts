@@ -1,26 +1,24 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@root/lib/prismaClient";
 
-export async function POST(request: Request) {        
-    const body = await request.json();
+export async function POST(request: Request) {
+	const body = await request.json();
 
-    try {
-        const users = await findUsers(body.gameId);                   
+	try {
+		const users = await findUsers(body.gameId);
 
-        return NextResponse.json({ response: users })
+		return NextResponse.json({ response: users });
+	} catch (error) {
+		console.error("Error in getting All Users");
+		return new NextResponse("DatabaseError", { status: 500 });
+	}
 
-    } catch(error) {
-        console.error("Error in getting All Users") 
-        return new NextResponse('DatabaseError', { status: 500 });
-    };
-
-    async function findUsers(gameId: string) {        
-        const users = await prisma.user.findMany({
-            where: {
-                gameId: gameId               
-            }
-        });       
-        return users;
-    };
-
-};
+	async function findUsers(gameId: string) {
+		const users = await prisma.user.findMany({
+			where: {
+				gameId: gameId,
+			},
+		});
+		return users;
+	}
+}

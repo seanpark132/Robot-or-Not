@@ -1,86 +1,84 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@root/lib/prismaClient";
 
-export async function POST(request: Request) {        
-    const body = await request.json();
+export async function POST(request: Request) {
+	const body = await request.json();
 
-    try {               
-        // To prevent multiple clients from randomizing user ids (only needs to be done once / round)
-        const game = await findGame();   
-                   
-        if (game!.isRandomized === true) {
-            return new NextResponse('Already randomized', { status: 200 });
-        };
-                
-        await updateIsRandomized();
+	try {
+		// To prevent multiple clients from randomizing user ids (only needs to be done once / round)
+		const game = await findGame();
 
-        const users = await findUsers();
-        const userIds = users.map(user => user.id);
-    
-        const shuffledIds = shuffleArrayWithNewPositions(userIds);
-   
-        for (let i = 0; i < userIds.length; i++ ) {            
-            await updateSendToUserId(userIds[i], shuffledIds[i] ); 
-        };
-                           
-        return new NextResponse('Randomized SendToUserIds', { status: 200 });
+		if (game!.isRandomized === true) {
+			return new NextResponse("Already randomized", { status: 200 });
+		}
 
-    } catch(error) {
-        console.error("Error in randomizing sendToUserIds") 
-        return new NextResponse('DatabaseError', { status: 500 });
-    };
+		await updateIsRandomized();
 
-    async function findGame() {        
-        const game = await prisma.game.findFirst({
-            where: {
-                id: body.gameId
-            }   
-        });       
-        return game;
-    };
+		const users = await findUsers();
+		const userIds = users.map((user) => user.id);
 
-    async function updateIsRandomized() {
-        await prisma.game.update({
-            where: {
-                id: body.gameId
-            },
-            data: {
-                isRandomized: true
-            }
-        });
-    };
+		const shuffledIds = shuffleArrayWithNewPositions(userIds);
 
-    async function findUsers() {        
-        const users = await prisma.user.findMany({
-            where: {
-                gameId: body.gameId                
-            }
-        });       
-        return users;
-    };
+		for (let i = 0; i < userIds.length; i++) {
+			await updateSendToUserId(userIds[i], shuffledIds[i]);
+		}
 
-    function shuffleArrayWithNewPositions(array: string[]) {
-        const arrayCopy = [...array];
+		return new NextResponse("Randomized SendToUserIds", { status: 200 });
+	} catch (error) {
+		console.error("Error in randomizing sendToUserIds");
+		return new NextResponse("DatabaseError", { status: 500 });
+	}
 
-        for (let i = array.length - 1; i >= 1 ; i-- ) {
-            let j = Math.floor(Math.random() * i);
-            let tmp = arrayCopy[i];
-            arrayCopy[i] = arrayCopy[j];
-            arrayCopy[j] = tmp;
-        };
+	async function findGame() {
+		const game = await prisma.game.findFirst({
+			where: {
+				id: body.gameId,
+			},
+		});
+		return game;
+	}
 
-        return arrayCopy;
-    };
+	async function updateIsRandomized() {
+		await prisma.game.update({
+			where: {
+				id: body.gameId,
+			},
+			data: {
+				isRandomized: true,
+			},
+		});
+	}
 
-    async function updateSendToUserId(selfId: string, sendToId: string) {
-        await prisma.user.update({
-            where: {
-                id: selfId
-            },
-            data: {
-                sendToUserId: sendToId
-            }
-        });
-    };
+	async function findUsers() {
+		const users = await prisma.user.findMany({
+			where: {
+				gameId: body.gameId,
+			},
+		});
+		return users;
+	}
 
-};
+	function shuffleArrayWithNewPositions(array: string[]) {
+		const arrayCopy = [...array];
+
+		for (let i = array.length - 1; i >= 1; i--) {
+			let j = Math.floor(Math.random() * i);
+			let tmp = arrayCopy[i];
+			arrayCopy[i] = arrayCopy[j];
+			arrayCopy[j] = tmp;
+		}
+
+		return arrayCopy;
+	}
+
+	async function updateSendToUserId(selfId: string, sendToId: string) {
+		await prisma.user.update({
+			where: {
+				id: selfId,
+			},
+			data: {
+				sendToUserId: sendToId,
+			},
+		});
+	}
+}
