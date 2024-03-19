@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import _ from "lodash";
+import {cloneDeep} from "lodash";
 import {
 	randomizeSendToUserIds,
 	randomizedToFalse,
@@ -97,6 +97,13 @@ export default function Write(props: Props) {
 			return;
 		}
 
+		if (inputUserResponse === currentRoundData.aiResponse) {
+			alert(
+				"You cannot write a response that is exactly the same as the robot's :["
+			);
+			return;
+		}
+
 		if (inputUserResponse.length < 1) {
 			alert("Please enter a response with at least 1 word");
 			return;
@@ -104,7 +111,7 @@ export default function Write(props: Props) {
 
 		setDidUserSubmit(true);
 
-		let deepClone = _.cloneDeep(props.selfGameData);
+		let deepClone = cloneDeep(props.selfGameData);
 		deepClone[props.roundNumber - 1].userResponse = inputUserResponse;
 		const selectData = deepClone[props.roundNumber - 1];
 

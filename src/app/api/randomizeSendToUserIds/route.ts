@@ -25,7 +25,7 @@ export async function POST(request: Request) {
 
 		return new NextResponse("Randomized SendToUserIds", { status: 200 });
 	} catch (error) {
-		console.error("Error in randomizing sendToUserIds");
+		console.error(error);
 		return new NextResponse("DatabaseError", { status: 500 });
 	}
 

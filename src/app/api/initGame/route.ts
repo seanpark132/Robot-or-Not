@@ -8,7 +8,7 @@ export async function POST(request: Request) {
 		await initGame(body.gameId);
 		return new NextResponse("Initialized game", { status: 200 });
 	} catch (error) {
-		console.error("error");
+		console.error(error);
 		return new NextResponse("Database Error", { status: 500 });
 	}
 

@@ -13,7 +13,7 @@ export async function POST(request: Request) {
 
 		return new NextResponse("Distributed GameData", { status: 200 });
 	} catch (error) {
-		console.error("Error in distributing gameData");
+		console.error(error);
 		return new NextResponse("Internal Server Error", { status: 500 });
 	}
 
@@ -44,7 +44,7 @@ export async function POST(request: Request) {
 				await pusherServer
 					.trigger(body.gameId, "receiveGameData", dataInfo)
 					.catch((error: any) => {
-						console.log(error);
+						console.log("TriggerGameDataSend error",error);
 					});
 			})
 		);

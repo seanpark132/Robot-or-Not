@@ -9,7 +9,7 @@ export async function POST(request: Request) {
 
 		return new NextResponse("Updated name", { status: 200 });
 	} catch (error) {
-		console.error("error in updating names");
+		console.error(error);
 		return new NextResponse("DatabaseError", { status: 500 });
 	}
 

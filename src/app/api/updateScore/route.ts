@@ -8,7 +8,7 @@ export async function POST(request: Request) {
 		await updateScore(body.userId, body.score);
 		return new NextResponse("Updated score", { status: 200 });
 	} catch (error) {
-		console.error("error in updating score");
+		console.error(error);
 		return new NextResponse("DatabaseError", { status: 500 });
 	}
 

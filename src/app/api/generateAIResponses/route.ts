@@ -66,7 +66,7 @@ export async function POST(request: Request) {
 				})
 				.catch((error) => {
 					clearTimeout(timeout);
-					reject("Error in generating a response");
+					reject(error);
 				});
 		});
 	}

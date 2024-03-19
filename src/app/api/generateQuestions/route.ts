@@ -36,7 +36,7 @@ export async function POST(request: Request) {
 
 		return NextResponse.json({ response: questions });
 	} catch (error) {
-		console.error("Error in generating questions (OpenAI API)");
+		console.error(error);
 		return new NextResponse("Internal Server Error", { status: 500 });
 	}
 }

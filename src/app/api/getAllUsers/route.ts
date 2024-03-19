@@ -9,7 +9,7 @@ export async function POST(request: Request) {
 
 		return NextResponse.json({ response: users });
 	} catch (error) {
-		console.error("Error in getting All Users");
+		console.error(error);
 		return new NextResponse("DatabaseError", { status: 500 });
 	}
 

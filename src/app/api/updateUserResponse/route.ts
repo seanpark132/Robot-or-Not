@@ -19,7 +19,7 @@ export async function PATCH(request: Request) {
 		await updateUserResponse();
 		return new NextResponse("Updated user response", { status: 200 });
 	} catch (error) {
-		console.error("error in updating userResponse");
+		console.error(error);
 		return new NextResponse("DatabaseError", { status: 500 });
 	}
 }
