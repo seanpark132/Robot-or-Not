@@ -1,11 +1,8 @@
-import { Configuration, OpenAIApi } from "openai";
+import OpenAI from "openai";
 import { NextResponse } from "next/server";
-import { prisma } from "@root/lib/prismaClient";
+import { prisma } from "@root/lib/prismaClient"
 
-const configuration = new Configuration({
-	apiKey: process.env.OPENAI_API_KEY,
-});
-const openai = new OpenAIApi(configuration);
+const openai = new OpenAI()
 
 export async function POST(request: Request) {
 	try {
@@ -15,7 +12,7 @@ export async function POST(request: Request) {
 		const numPlayers = gameInfo?.numPlayers;
 		const totalQuestions = numRounds! * numPlayers!;
 
-		const questionCompletion = await openai.createChatCompletion({
+		const questionCompletion = await openai.chat.completions.create({
 			model: "gpt-3.5-turbo",
 			messages: [
 				{
@@ -31,7 +28,7 @@ export async function POST(request: Request) {
 			max_tokens: 80,
 		});
 
-		const choices = questionCompletion.data.choices;
+		const choices = questionCompletion.choices;
 		const questions = destructureChoices(choices);
 
 		return NextResponse.json({ response: questions });
