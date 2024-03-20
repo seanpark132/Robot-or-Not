@@ -49,7 +49,7 @@ export default function LobbyGuest(props: Props) {
           userId: props.userId,
           nickname: name,
         });
-        await apiRequestNoResponse("retrieve", "POST", {
+        await apiRequestNoResponse("retrieveNames", "POST", {
           gameId: props.gameId,
         });
       } catch (error) {
