@@ -35,7 +35,7 @@ export default function Select(props: Props) {
 
     setTimeout(() => {
       setIsAnimationsRunning(false);
-    }, 4500);
+    }, 2500);
 
     reset();
   }, []);
@@ -91,7 +91,7 @@ export default function Select(props: Props) {
             </h1>
           ) : (
             <button
-              className="btn-submit fade-in-4"
+              className="btn-submit fade-in-2"
               onClick={() => handleSubmit()}
             >
               Submit
