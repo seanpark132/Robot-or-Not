@@ -1,85 +1,94 @@
 "use client";
 
-import { readyCheck, updateScore } from "@/app/lib/utils";
+import { apiRequestNoResponse } from "@/app/utils/apiCalls";
 import { useState, useEffect } from "react";
 import Correct from "./Correct";
 import Incorrect from "./Incorrect";
 
 interface Props {
-	setIsError: (value: boolean) => void;
-	gameId: string;
-	userId: string;
-	score: number;
-	roundNumber: number;
-	numRounds: number;
-	selectedResponse: string;
-	humanResponse: string;
-	senderNickname: string;
-	setRoundNumber: (value: (value: number) => number) => void;
+  setIsError: (value: boolean) => void;
+  gameId: string;
+  userId: string;
+  score: number;
+  roundNumber: number;
+  numRounds: number;
+  selectedResponse: string;
+  humanResponse: string;
+  senderNickname: string;
+  setRoundNumber: (value: (value: number) => number) => void;
 }
 
 export default function Score(props: Props) {
-	const [didUserSubmit, setDidUserSubmit] = useState(false);
-	const [isCorrect, setIsCorrect] = useState<boolean>(true);
-	const [isAnimationsRunning, setIsAnimationsRunning] = useState(true);
+  const [didUserSubmit, setDidUserSubmit] = useState(false);
+  const [isCorrect, setIsCorrect] = useState<boolean>(true);
+  const [isAnimationsRunning, setIsAnimationsRunning] = useState(true);
 
-	useEffect(() => {
-		const reset = async () => {
-			if (props.humanResponse === props.selectedResponse) {
-				setIsCorrect(true);
-			} else {
-				setIsCorrect(false);
-			}
-		};
+  useEffect(() => {
+    const reset = async () => {
+      if (props.humanResponse === props.selectedResponse) {
+        setIsCorrect(true);
+      } else {
+        setIsCorrect(false);
+      }
+    };
 
-		setTimeout(() => {
-			setIsAnimationsRunning(false);
-		}, 3000);
+    setTimeout(() => {
+      setIsAnimationsRunning(false);
+    }, 3000);
 
-		reset();
-	}, []);
+    reset();
+  }, []);
 
-	return (
-		<>
-			{isCorrect ? (
-				<Correct
-					score={props.score}
-					selectedResponse={props.selectedResponse}
-					humanResponse={props.humanResponse}
-					senderNickname={props.senderNickname}
-					didUserSubmit={didUserSubmit}
-					handleNextRound={handleNextRound}
-				/>
-			) : (
-				<Incorrect
-					score={props.score}
-					selectedResponse={props.selectedResponse}
-					humanResponse={props.humanResponse}
-					senderNickname={props.senderNickname}
-					didUserSubmit={didUserSubmit}
-					handleNextRound={handleNextRound}
-				/>
-			)}
-		</>
-	);
+  return (
+    <>
+      {isCorrect ? (
+        <Correct
+          score={props.score}
+          selectedResponse={props.selectedResponse}
+          humanResponse={props.humanResponse}
+          senderNickname={props.senderNickname}
+          didUserSubmit={didUserSubmit}
+          handleNextRound={handleNextRound}
+        />
+      ) : (
+        <Incorrect
+          score={props.score}
+          selectedResponse={props.selectedResponse}
+          humanResponse={props.humanResponse}
+          senderNickname={props.senderNickname}
+          didUserSubmit={didUserSubmit}
+          handleNextRound={handleNextRound}
+        />
+      )}
+    </>
+  );
 
-	async function handleNextRound() {
-		if (isAnimationsRunning) {
-			return;
-		}
+  async function handleNextRound() {
+    if (isAnimationsRunning) {
+      return;
+    }
 
-		setDidUserSubmit(true);
-		try {
-			if (props.roundNumber === props.numRounds) {
-				await updateScore(props.userId, props.score);
-				await readyCheck(props.gameId, "endScreen");
-				return;
-			}
+    setDidUserSubmit(true);
+    try {
+      if (props.roundNumber === props.numRounds) {
+        await apiRequestNoResponse("updateScore", "POST", {
+          userId: props.userId,
+          score: props.score,
+        });
+        await apiRequestNoResponse("readyCheck", "POST", {
+          gameId: props.gameId,
+          nextGamePeriod: "endScreen",
+        });
+        return;
+      }
 
-			props.setRoundNumber((prev) => prev + 1);
-			await readyCheck(props.gameId, "write");
-		} catch (error) {
-			props.setIsError(true);
-		}
-	}
+      props.setRoundNumber((prev) => prev + 1);
+      await apiRequestNoResponse("readyCheck", "POST", {
+        gameId: props.gameId,
+        nextGamePeriod: "write",
+      });
+    } catch (error) {
+      props.setIsError(true);
+    }
+  }
 }

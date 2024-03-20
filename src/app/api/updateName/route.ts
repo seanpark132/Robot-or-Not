@@ -1,26 +1,26 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/app/lib/prismaClient";
+import { prisma } from "@root/lib/prismaClient";
 
 export async function POST(request: Request) {
-	const body = await request.json();
+  const body = await request.json();
 
-	try {
-		await updateName(body.userId, body.newNickName);
+  try {
+    await updateName(body.userId, body.nickname);
 
-		return new NextResponse("Updated name", { status: 200 });
-	} catch (error) {
-		console.error(error);
-		return new NextResponse("DatabaseError", { status: 500 });
-	}
+    return new NextResponse("Updated name", { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return new NextResponse("DatabaseError", { status: 500 });
+  }
 
-	async function updateName(id: string, nickname: string) {
-		await prisma.user.update({
-			where: {
-				id: id,
-			},
-			data: {
-				nickname: nickname,
-			},
-		});
-	}
+  async function updateName(id: string, nickname: string) {
+    await prisma.user.update({
+      where: {
+        id: id,
+      },
+      data: {
+        nickname: nickname,
+      },
+    });
+  }
 }
