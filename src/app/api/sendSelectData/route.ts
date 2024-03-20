@@ -17,7 +17,7 @@ export async function POST(request: Request) {
 				selectData: body.selectData,
 			})
 			.catch((error: any) => {
-				console.log(error);
+				console.error(error);
 			});
 
 		return new NextResponse("Sent SelectData", { status: 200 });

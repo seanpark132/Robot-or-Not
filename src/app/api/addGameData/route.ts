@@ -23,7 +23,7 @@ export async function POST(request: Request) {
 
 		return new NextResponse("Added GameData", { status: 200 });
 	} catch (error) {
-		console.error("error in adding gameData");
+		console.error(error);
 		return new NextResponse("Database Error", { status: 500 });
 	}
 

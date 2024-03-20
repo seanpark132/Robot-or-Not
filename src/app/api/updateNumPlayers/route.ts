@@ -8,7 +8,7 @@ export async function POST(request: Request) {
 		await updateNumPlayers(body.gameId, body.numPlayers);
 		return new NextResponse("Updated numPlayers", { status: 200 });
 	} catch (error) {
-		console.error("error in updating numPlayers");
+		console.error(error);
 		return new NextResponse("DatabaseError", { status: 500 });
 	}
 

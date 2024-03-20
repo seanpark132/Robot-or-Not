@@ -17,7 +17,7 @@ export async function POST(request: Request) {
 
 		return new NextResponse("Set isRandomized to false", { status: 200 });
 	} catch (error) {
-		console.error("Error in setting isRandomized to false");
+		console.error(error);
 		return new NextResponse("DatabaseError", { status: 500 });
 	}
 

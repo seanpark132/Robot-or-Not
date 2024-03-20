@@ -8,12 +8,12 @@ export async function POST(request: Request) {
 		await pusherServer
 			.trigger(body.gameId, "receiveNumRounds", body.numRounds)
 			.catch((error: any) => {
-				console.log(error);
+				console.error(error);
 			});
 
 		return new NextResponse("numRounds sent", { status: 200 });
 	} catch (error) {
-		console.error("Error in sending numRounds");
+		console.error(error);
 		return new NextResponse("Internal Server Error", { status: 500 });
 	}
 }

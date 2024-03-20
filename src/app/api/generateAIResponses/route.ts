@@ -1,11 +1,9 @@
-import { Configuration, OpenAIApi } from "openai";
+import OpenAI from "openai";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-	const configuration = new Configuration({
-		apiKey: process.env.OPENAI_API_KEY,
-	});
-	const openai = new OpenAIApi(configuration);
+	
+	const openai = new OpenAI()
 
 	try {
 		const body = await request.json();
@@ -45,7 +43,7 @@ export async function POST(request: Request) {
 			}, 9000);
 
 			openai
-				.createChatCompletion({
+				.chat.completions.create({
 					model: "gpt-3.5-turbo",
 					messages: [
 						{
@@ -59,14 +57,14 @@ export async function POST(request: Request) {
 				})
 				.then((responseCompletion) => {
 					clearTimeout(timeout);
-					const choices = responseCompletion.data.choices;
+					const choices = responseCompletion.choices;
 					const response = choices[0].message?.content;
 					const aiResponse = response?.replace(/"/g, "");
 					resolve(aiResponse);
 				})
 				.catch((error) => {
 					clearTimeout(timeout);
-					reject("Error in generating a response");
+					reject(error);
 				});
 		});
 	}

@@ -12,12 +12,12 @@ export async function POST(request: Request) {
 		await pusherServer
 			.trigger(body.gameId, "updateNames", names)
 			.catch((error: any) => {
-				console.log(error);
+				console.error(error);
 			});
 
 		return new NextResponse("Updated lobby names", { status: 200 });
 	} catch (error) {
-		console.error("Error in retrieving names");
+		console.error(error);
 		return new NextResponse("DatabaseError", { status: 500 });
 	}
 

@@ -15,7 +15,7 @@ export async function POST(request: Request) {
 			await pusherServer
 				.trigger(body.gameId, "allReady", body.nextGamePeriod)
 				.catch((error: any) => {
-					console.log(error);
+					console.error(error);
 				});
 
 			await resetNumReady(body.gameId);
@@ -23,7 +23,7 @@ export async function POST(request: Request) {
 
 		return new NextResponse("Ready check done", { status: 200 });
 	} catch (error) {
-		console.error("Error in ready check");
+		console.error(error);
 		return new NextResponse("DatabaseError", { status: 500 });
 	}
 
