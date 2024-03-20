@@ -43,7 +43,7 @@ export default function Write(props: Props) {
 
     setTimeout(() => {
       setIsAnimationsRunning(false);
-    }, 3000);
+    }, 2000);
 
     reset();
   }, []);

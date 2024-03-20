@@ -34,7 +34,7 @@ export default function Score(props: Props) {
 
     setTimeout(() => {
       setIsAnimationsRunning(false);
-    }, 3000);
+    }, 1000);
 
     reset();
   }, []);
