@@ -1,6 +1,6 @@
 "use client";
 
-import { getAllUsers } from "@root/lib/utils";
+import { getAllUsers } from "@/app/lib/utils";
 import { useState, useEffect } from "react";
 
 interface Props {

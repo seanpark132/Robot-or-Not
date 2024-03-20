@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useEffect, useContext } from "react";
-import { PusherContext } from "@root/lib/pusherContext";
+import { PusherContext } from "@/app/lib/pusherContext";
 import {
 	addGameData,
 	distributeGameData,
 	generateAIResponses,
 	generateQuestions,
-} from "@root/lib/utils";
+} from "@/app/lib/utils";
 import Loading from "./Loading";
 import Main from "./Main";
 

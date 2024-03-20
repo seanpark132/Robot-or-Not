@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 import { NextResponse } from "next/server";
-import { prisma } from "@root/lib/prismaClient"
+import { prisma } from "@/app/lib/prismaClient"
 
 const openai = new OpenAI()
 

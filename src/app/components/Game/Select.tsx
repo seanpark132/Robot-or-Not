@@ -1,6 +1,6 @@
 "use client";
 
-import { readyCheck } from "@root/lib/utils";
+import { readyCheck } from "@/app/lib/utils";
 import { useEffect, useState } from "react";
 
 interface Props {

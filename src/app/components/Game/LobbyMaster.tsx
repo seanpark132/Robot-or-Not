@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useContext } from "react";
-import { PusherContext } from "@root/lib/pusherContext";
+import { PusherContext } from "@/app/lib/pusherContext";
 import LobbySettings from "./LobbySettings";
 import {
 	addUser,
@@ -11,7 +11,7 @@ import {
 	retrieveNames,
 	updateName,
 	updateGameInfo,
-} from "@root/lib/utils";
+} from "@/app/lib/utils";
 
 interface Props {
 	setIsError: (value: boolean) => void;

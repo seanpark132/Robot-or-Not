@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect, useContext } from "react";
-import { addUser, animals, retrieveNames, updateName } from "@root/lib/utils";
-import { PusherContext } from "@root/lib/pusherContext";
+import { addUser, animals, retrieveNames, updateName } from "@/app/lib/utils";
+import { PusherContext } from "@/app/lib/pusherContext";
 
 interface Props {
 	setIsError: (value: boolean) => void;

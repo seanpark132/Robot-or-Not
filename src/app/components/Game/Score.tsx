@@ -1,6 +1,6 @@
 "use client";
 
-import { readyCheck, updateScore } from "@root/lib/utils";
+import { readyCheck, updateScore } from "@/app/lib/utils";
 import { useState, useEffect } from "react";
 import Correct from "./Correct";
 import Incorrect from "./Incorrect";

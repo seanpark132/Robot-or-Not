@@ -5,7 +5,7 @@ import Select from "./Select";
 import Score from "./Score";
 import EndScreen from "./EndScreen";
 import { useState, useEffect, useContext } from "react";
-import { PusherContext } from "@root/lib/pusherContext";
+import { PusherContext } from "@/app/lib/pusherContext";
 
 interface Props {
 	setIsError: (value: boolean) => void;

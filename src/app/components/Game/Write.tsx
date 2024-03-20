@@ -8,7 +8,7 @@ import {
 	readyCheck,
 	sendSelectData,
 	updateUserResponse,
-} from "@root/lib/utils";
+} from "@/app/lib/utils";
 
 interface Props {
 	setIsError: (value: boolean) => void;
