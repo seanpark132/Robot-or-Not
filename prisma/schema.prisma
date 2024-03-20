@@ -1,6 +1,6 @@
 datasource db {
-  provider     = "mysql"
-  url          = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
   relationMode = "prisma"
 }
 
@@ -19,24 +19,24 @@ model Game {
 }
 
 model User {
-  id           String     @id
+  id           String    @id
   nickname     String
   score        Int
   gameId       String
   sendToUserId String?
-  game         Game       @relation(fields: [gameId], references: [id])
+  game         Game      @relation(fields: [gameId], references: [id])
 
   @@index([gameId])
 }
 
 model GameData {
-  id             Int     @id @default(autoincrement())
-  question       String  @db.VarChar(700)
-  aiResponse     String  @db.VarChar(700)
-  userResponse   String? @db.VarChar(255)
-  gameId         String 
+  id             Int      @id @default(autoincrement())
+  question       String
+  aiResponse     String
+  userResponse   String?
+  gameId         String
   userId         String
-  game           Game    @relation(fields: [gameId], references: [id])
- 
+  game           Game     @relation(fields: [gameId], references: [id])
+
   @@index([gameId])
 }
