@@ -17,23 +17,19 @@ export async function POST(request: Request) {
       messages: [
         {
           role: "user",
-          content: `Generate ${totalQuestions} random questions that people and ChatGPT would have unique responses to, limited to 150 characters each. Put each question as a string in an array. In the response ONLY return the array, no other text. 
+          content: `Generate ${numRounds} random questions that people and ChatGPT would have unique responses to, limited to 150 characters each. Put each question as a string in an array. In the response ONLY return the array, no other text. 
         Do not generate a controversial question that ChatGPT would not be able to answer. Make sure that each question is different. Here are two examples:
         If you could only eat one food for the rest of your life, what would it be? 
         If you could have dinner with any historical figure, who would it be?`,
         },
       ],
       temperature: 1.4,
+      n: numPlayers,
       max_tokens: 80 * totalQuestions,
     });
 
-    const questions = JSON.parse(
-      questionCompletion.choices[0].message.content!.replace(
-        /```json\s*|\s*```/g,
-        ""
-      )
-    );
-    console.log(questions);
+    const choices = questionCompletion.choices;
+    const questions = destructureChoices(choices);
 
     if (
       !Array.isArray(questions) ||
@@ -56,4 +52,17 @@ async function findGameInfo(gameId: string) {
   });
 
   return gameInfo;
+}
+
+function destructureChoices(choices: any) {
+  let questions: string[] = [];
+  for (let i = 0; i < choices.length; i++) {
+    const questionsArray = JSON.parse(
+      choices[i].message.content!.replace(/```json\s*|\s*```/g, "")
+    );
+
+    questionsArray.forEach((q: string) => questions.push(q));
+  }
+
+  return questions;
 }
