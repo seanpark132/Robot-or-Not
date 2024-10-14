@@ -19,12 +19,8 @@ interface Props {
 }
 
 export default function Select(props: Props) {
-  const [btnStyle1, setBtnStyle1] = useState(
-    "btn-select-unselected left-to-right"
-  );
-  const [btnStyle2, setBtnStyle2] = useState(
-    "btn-select-unselected right-to-left"
-  );
+  const [btnStyle1, setBtnStyle1] = useState("btn-select-unselected fade-in-1");
+  const [btnStyle2, setBtnStyle2] = useState("btn-select-unselected fade-in-2");
   const [didUserSubmit, setDidUserSubmit] = useState(false);
   const [isAnimationsRunning, setIsAnimationsRunning] = useState(true);
 
@@ -54,7 +50,7 @@ export default function Select(props: Props) {
           <button
             className={btnStyle1}
             onClick={() => {
-              if (!didUserSubmit) {
+              if (!didUserSubmit && !isAnimationsRunning) {
                 setBtnStyle1("btn-select-selected");
                 setBtnStyle2("btn-select-unselected");
                 props.setSelectedResponse(props.selectResponse1);
@@ -71,7 +67,7 @@ export default function Select(props: Props) {
           <button
             className={btnStyle2}
             onClick={() => {
-              if (!didUserSubmit) {
+              if (!didUserSubmit && !isAnimationsRunning) {
                 setBtnStyle2("btn-select-selected");
                 setBtnStyle1("btn-select-unselected");
                 props.setSelectedResponse(props.selectResponse2);
@@ -91,7 +87,7 @@ export default function Select(props: Props) {
             </h1>
           ) : (
             <button
-              className="btn-submit fade-in-2"
+              className="btn-submit fade-in-3"
               onClick={() => handleSubmit()}
             >
               Submit
